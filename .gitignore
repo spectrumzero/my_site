@@ -6,3 +6,10 @@ node_modules/
 public/
 .deploy*/
 _multiconfig.yml
+.idea/
+*.iml
+.tern-port
+yarn.lock
+package-lock.json
+node_modules/
+.vscode
