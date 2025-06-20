@@ -5,13 +5,10 @@
 # Site
 title: spectrumzero's blog
 subtitle: ""
-description: ""
+description: "Write for better code."
 keywords:
 author: spectrumzero
-language: 
-  - en
-  - ja
-  - zh-CN
+language: en
 timezone: ""
 
 # URL

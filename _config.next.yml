@@ -156,7 +156,7 @@ site_state: false
 # Key is the link label showing to end users.
 # Value before `||` delimiter is the target permalink, value after `||` delimiter is the name of Font Awesome icon.
 social:
-  GitHub: https://github.com/yourname || fab fa-github
+  GitHub: https://github.com/spectrumzero || fab fa-github
   StackOverflow: https://stackoverflow.com/users/23611397/lllspecter || fab fa-stack-overflow
   Twitter: https://x.com/akaaprogrammer || fab fa-twitter
   Telegram: https://t.me/Bourdieu || fab fa-telegram
@@ -199,7 +199,7 @@ toc:
 # ---------------------------------------------------------------
 
 # Show multilingual switcher in footer.
-language_switcher: true
+language_switcher: false
 
 footer:
   # Specify the year when the site was setup. If not defined, current year will be used.
@@ -210,15 +210,15 @@ footer:
     # Icon name in Font Awesome. See: https://fontawesome.com/icons
     name: fa fa-heart
     # If you want to animate the icon, set it to true.
-    animated: false
+    animated: true
     # Change the color of icon, using Hex Code.
     color: "#ff0000"
 
   # If not defined, `author` from Hexo `_config.yml` will be used.
   # Set to `false` to disable the copyright statement.
   author: spectrumzero
-  description: Write for better code.
   copyright:
+  description:
 
   # Powered by Hexo & NexT
   powered: true
@@ -394,8 +394,7 @@ reading_progress:
   # Available values: top | bottom
   position: top
   reversed: false
-  # color: "#60ccfc"
-  color: "#1959d4"
+  color: "#60ccfd"
   height: 4px
 
 # Bookmark Support
@@ -410,7 +409,7 @@ bookmark:
 # `Follow me on GitHub` banner in the top-right corner.
 github_banner:
   enable: true
-  permalink: https://github.com/spectrumzero
+  permalink: https://github.com/spectrumzero/my_site
 
 # ---------------------------------------------------------------
 # Font Settings
