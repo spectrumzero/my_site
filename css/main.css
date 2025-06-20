@@ -1332,7 +1332,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #0340ff;
+    background: #3dde67;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -1711,6 +1711,7 @@ pre code {
   color: #f00;
   display: inline-block;
   margin: 0 5px;
+  animation: icon-animate 1.33s ease-in-out infinite;
 }
 @keyframes icon-animate {
   0%, 100% {
@@ -1748,7 +1749,7 @@ pre code {
 }
 .reading-progress-bar {
   --progress: 0;
-  background: #1959d4;
+  background: #60ccfd;
   height: 4px;
   position: fixed;
   z-index: 50;
