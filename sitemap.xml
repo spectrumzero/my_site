@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.spectrumzero.me/2025/06/24/build-site/</loc>
+    
+    <lastmod>2025-06-24</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.spectrumzero.me/2025/06/20/hello-world/</loc>
     
     <lastmod>2025-06-20</lastmod>
@@ -40,15 +49,22 @@
 
   <url>
     <loc>https://www.spectrumzero.me/</loc>
-    <lastmod>2025-06-20</lastmod>
+    <lastmod>2025-06-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
   <url>
+    <loc>https://www.spectrumzero.me/tags/guide/</loc>
+    <lastmod>2025-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.spectrumzero.me/tags/test/</loc>
-    <lastmod>2025-06-20</lastmod>
+    <lastmod>2025-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
