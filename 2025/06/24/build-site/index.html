@@ -45,7 +45,7 @@
 <meta property="og:image" content="https://www.spectrumzero.me/2025/06/24/build-site/17.png">
 <meta property="og:image" content="https://www.spectrumzero.me/2025/06/24/build-site/18.png">
 <meta property="article:published_time" content="2025-06-24T13:08:23.000Z">
-<meta property="article:modified_time" content="2025-06-24T14:17:20.267Z">
+<meta property="article:modified_time" content="2025-06-24T15:08:09.777Z">
 <meta property="article:author" content="spectrumzero">
 <meta property="article:tag" content="guide">
 <meta name="twitter:card" content="&lt;twitter:card&gt;">
@@ -268,7 +268,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2025-06-24 21:08:23 / Modified: 22:17:20" itemprop="dateCreated datePublished" datetime="2025-06-24T21:08:23+08:00">2025-06-24</time>
+      <time title="Created: 2025-06-24 21:08:23 / Modified: 23:08:09" itemprop="dateCreated datePublished" datetime="2025-06-24T21:08:23+08:00">2025-06-24</time>
     </span>
 
   
@@ -346,7 +346,7 @@
 <h4 id="下一步的配置"><a href="#下一步的配置" class="headerlink" title="下一步的配置"></a>下一步的配置</h4><p>后续的自定义其实很丰富了。但有必要再强调一下：</p>
 <ul>
 <li>当你想要自定义<strong>不</strong>依赖于主题的选项时，如：<ul>
-<li>创建新的页面——例如<code>about</code>用来展示自己，<code>links</code>用来放你和你的朋友们，<code>tags</code>来展示文章标签——应该去看的是<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/commands">hexo 的文档</a>，<a target="_blank" rel="noopener" href="https://theme-next.js.org/docs/theme-settings/custom-pages">next 的相关文档</a>可以作为支持。</li>
+<li>创建新的页面——例如<code>about</code>用来展示自己，<code>links</code>用来放你和你的朋友们，<code>tags</code>来展示文章标签——应该去看的是<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/commands">hexo 的文档</a>，<a target="_blank" rel="noopener" href="https://theme-next.js.org/docs/theme-settings/custom-pages">next 的相关文档</a>可以作为更全面的支持。</li>
 <li>创建新的文章或制定文章的 scaffold，查看<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/writing">hexo 的文档</a>。</li>
 <li>配置网站的标题、描述、作者名、网址等等这些不依赖于任何主题的选项时，查看<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/configuration">hexo 的文档</a>。</li>
 </ul>
@@ -372,7 +372,7 @@
 <li>设置 github 的公钥，让自己有推送权限，如果没有设置，将来 push 的时候会提醒你设置。</li>
 </ol>
 <p>这二者麻烦自行 ai。然后我们查看<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/one-command-deployment">hexo 文档</a>，继续下一步。</p>
-<p>在<code>_config.yml</code>中配置部署方式。指定部署的类型，刚刚在 github 上新建的远程仓库的名称，以及远程 repo 的分支。这里以我的仓库为例，建议使用 ssh 来指定仓库，避免网络问题：</p>
+<p>在<code>_config.yml</code>中配置部署方式。指定部署的类型，刚刚在 github 上新建的远程仓库的名称，以及远程 repo 的分支。这里以我的仓库为例，建议使用 ssh 来指定仓库，避免网络问题（下面的repo项好像被阻挡了不能正常显示，完整的应为<code>git@github.com:spectrumzero/my_site.git</code>）：</p>
 <figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">&quot;git&quot;</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:spectrumzero/my_site.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">gh-pages</span></span><br></pre></td></tr></table></figure>
 
 <p><img src="/2025/06/24/build-site/1.png"></p>
@@ -428,7 +428,7 @@
 
 <p>之后，在项目的根目录执行<code>hexo c</code>-&gt;<code>hexo g</code>-&gt;<code>hexo d</code>，你的项目就会部署到指定的域名上了。第一次部署的时间可能会稍微会长一点，耐心等待即可。稍后即可以你喜欢的域名访问你的网站了。</p>
 <h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>现在我们可以通过<code>github.username.io</code>，或者是自定义的域名来访问我们的网站了。这也是我的这个网站诞生的过程。网站只是一种呈现的方式，而在哪里记录则有十分丰富的选择。所以写作的流程不一定是<code>hexo new &quot;Hello World&quot;</code>，然后就很规矩地在这个网站项目的本地文件夹中写。我更喜欢的方式是，先在专门的 Obsidian Vault 中写好，然后再把文字复制到那个新的博客 markdown 中，把图片放到对应的文件夹里。这样就最大程度地避免因为呈现的繁琐而不愿意呈现。某种程度上，”<em>Learn in public</em>“确实很有道理。</p>
-<p><em>提示：为了方便管理图片，很推荐一篇文章一个文件夹的做法，可以参看这个<a target="_blank" rel="noopener" href="https://chrismroberts.com/2020/01/06/using-markdown-in-hexo-to-add-images/">链接</a>。以及对于那些非文章的图片，也就是可能用来配置网站的图片，建议放在根目录下的<code>source/images</code>文件夹下。这一点也可以参照<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/asset-folders#%E6%96%87%E7%AB%A0%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%E5%A4%B9">hexo 官方文档</a></em>。</p>
+<p><em>提示：为了方便管理图片，很推荐一篇文章一个文件夹的做法，可以参看这个<a target="_blank" rel="noopener" href="https://chrismroberts.com/2020/01/06/using-markdown-in-hexo-to-add-images/">链接</a>。以及对于那些非文章的图片，也就是可能用来配置网站的图片，建议放在根目录下的<code>source/images</code>文件夹下。这一点也可以参照<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/asset-folders">hexo 官方文档</a></em>。</p>
 <p>现在，远程仓库只有一个分支，也就是<code>gh-pages</code>分支。这个分支是由源代码构建的产物。你可以选择将你的源代码推送到远程仓库的<strong>另外一个分支</strong>，以便实现更好的管理。需要先在网站根目录中执行<code>git init .</code>来将整个项目纳入 git 的追踪，之后的步骤则请自行 ai。</p>
 <p>最后，如果需要的话，你也可以参考我的<a target="_blank" rel="noopener" href="https://github.com/spectrumzero/my_site/tree/main">源代码分支</a>。</p>
 
