@@ -98,7 +98,7 @@
 <p>在<code>_config.yml</code>中配置部署方式。指定部署的类型，刚刚在 github 上新建的远程仓库的名称，以及远程 repo 的分支。这里以我的仓库为例，建议使用 ssh 来指定仓库，避免网络问题（下面的repo项好像被阻挡了不能正常显示，完整的应为<code>git@github.com:spectrumzero/my_site.git</code>）：</p>
 <figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">&quot;git&quot;</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:spectrumzero/my_site.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">gh-pages</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/24/build-site/1.png"></p>
+<p><img data-src="/2025/06/24/build-site/1.png"></p>
 <p><em>注意，之所以将分支设置为<code>gh-pages</code>，是为了将整个项目的源代码和经过生成部署后的产物分开，以便更好地管理我的整个网站项目。在部署的时候，部署产物（Build Output）将会被推送到<code>gh-pages</code>分支，在此之后，自己则可以选择是否要将源代码推送到 main 分支。</em></p>
 <p>最后在同一个文件中指定网站的<code>url</code>即可，比如对于选项一：</p>
 <figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="string">https://spectrumzero.github.io/</span></span><br></pre></td></tr></table></figure>
@@ -113,39 +113,39 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
 
 <p>然后去远程 repo 中查看：</p>
-<p><img src="/2025/06/24/build-site/2.png"></p>
+<p><img data-src="/2025/06/24/build-site/2.png"></p>
 <p>当<code>github-pages</code>旁边的图标变成绿色的，我们就完成了部署，可以直接通过域名访问更新后的网站了，在地址栏输入<code>github.username.io</code>或<code>github.username.io/sitename</code>即可。</p>
 <h3 id="自定义域名"><a href="#自定义域名" class="headerlink" title="自定义域名"></a>自定义域名</h3><p>如果想要获得更加个性化的域名，那么请阅读这一节。</p>
 <h4 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h4><p>有很多地方可以买到域名。我个人比较推荐的是<a href="https://porkbun.com/">porkbun</a>，因为你可以看到下一年续费需要多少钱，这个方面是比较透明的。而且也比其他商家比如 Namecheap 便宜，当然，也没有备案的说法。还有，如果你办理了<a href="https://education.github.com/pack">GitHub Student Developer Pack</a>，那么 Namecheap 好像可以免费提供域名<a href="https://education.github.com/experiences/virtual_event_kit">^2</a>（可惜我当时没有看到）。porkbun 支持 alipay，其他的商家可能不支持，但即便不支持，你或许也可以谷歌一下 wildcard。</p>
 <p>下面以猪肉包举例：</p>
 <ol>
-<li>注册并登陆，进入这个页面，然后搜索你想要的域名<br><img src="/2025/06/24/build-site/3.png"></li>
+<li>注册并登陆，进入这个页面，然后搜索你想要的域名<br><img data-src="/2025/06/24/build-site/3.png"></li>
 <li>之后就会探出很多不同后缀的域名，选择喜欢的，购买结账就可以了。</li>
-<li>购买成功之后，你的域名就会在首页的下方展示，点击<code>details</code>，并关注<code>NAMESERVERS</code>选项，因为后面会用到：<br><img src="/2025/06/24/build-site/4.png"></li>
+<li>购买成功之后，你的域名就会在首页的下方展示，点击<code>details</code>，并关注<code>NAMESERVERS</code>选项，因为后面会用到：<br><img data-src="/2025/06/24/build-site/4.png"></li>
 </ol>
 <h4 id="添加自定义域名文件-CNAME"><a href="#添加自定义域名文件-CNAME" class="headerlink" title="添加自定义域名文件 CNAME"></a>添加自定义域名文件 CNAME</h4><p>在项目的<strong>根目录下的<code>source/</code>文件夹中</strong>，创建<code>CNAME</code>文件，没有后缀，全部大写，然后在文件夹中写入我们购买的域名，比如我的：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">www.spectrumzero.me</span><br></pre></td></tr></table></figure>
 
 <p>这一步是告诉 github pages，我们的项目最终会绑定哪个域名。</p>
-<h4 id="设置-github-pages"><a href="#设置-github-pages" class="headerlink" title="设置 github pages"></a>设置 github pages</h4><p>如下图所示，点到指定的区域，重点关注红框区域中的内容，<code>Source</code>中选择<code>Deploy from a branch</code>，然后在<code>Branch</code>中选择我们之前在<code>_config.yml</code>的<code>deploy</code>部分所指定的分支，以及<code>/root</code>目录：<br><img src="/2025/06/24/build-site/5.png"></p>
+<h4 id="设置-github-pages"><a href="#设置-github-pages" class="headerlink" title="设置 github pages"></a>设置 github pages</h4><p>如下图所示，点到指定的区域，重点关注红框区域中的内容，<code>Source</code>中选择<code>Deploy from a branch</code>，然后在<code>Branch</code>中选择我们之前在<code>_config.yml</code>的<code>deploy</code>部分所指定的分支，以及<code>/root</code>目录：<br><img data-src="/2025/06/24/build-site/5.png"></p>
 <h4 id="设置域名-DNS-解析"><a href="#设置域名-DNS-解析" class="headerlink" title="设置域名 DNS 解析"></a>设置域名 DNS 解析</h4><p>我们使用<a href="https://www.cloudflare.com/zh-cn/">Cloudflare</a>来完成最终的域名解析。</p>
 <h5 id="登陆-Cloudflare-并获取新的域名服务器地址"><a href="#登陆-Cloudflare-并获取新的域名服务器地址" class="headerlink" title="登陆 Cloudflare 并获取新的域名服务器地址"></a>登陆 Cloudflare 并获取新的域名服务器地址</h5><p>一般如果是新用户，就会有新手引导界面，跟随引导界面即可。如果没有，可以如图点击：</p>
-<p><img src="/2025/06/24/build-site/6.png"></p>
-<p><img src="/2025/06/24/build-site/7.png"></p>
-<p><img src="/2025/06/24/build-site/8.png"></p>
-<p><img src="/2025/06/24/build-site/9.png"></p>
-<p><img src="/2025/06/24/build-site/10.png"></p>
-<p><img src="/2025/06/24/build-site/11.png"></p>
-<p>在最终的界面中，这两个就是我们需要的域名服务器的地址，把它们复制下来。<br><img src="/2025/06/24/build-site/12.png"></p>
-<h5 id="更改-porkbun-中默认的域名服务器地址"><a href="#更改-porkbun-中默认的域名服务器地址" class="headerlink" title="更改 porkbun 中默认的域名服务器地址"></a>更改 porkbun 中默认的域名服务器地址</h5><p>回到猪肉包中，改变<code>NAMESERVERS</code>中的内容即可。先清空，再把上面的两个地址一个一个粘贴进去，提交后就是下面的样子。<br><img src="/2025/06/24/build-site/13.png"></p>
-<p>之后再回到 cloudflare 的界面，检查一下域名服务器：<br><img src="/2025/06/24/build-site/14.png"></p>
-<p>这个过程一般会在 10 分钟之内完成。当这里变为“Active”的时候，我们就可以进行最后一步了。<br><img src="/2025/06/24/build-site/15.png"></p>
-<p>最后一步也很简单，点进我的截图所指的位置：<br><img src="/2025/06/24/build-site/16.png"></p>
-<p>你一共需要在弹出框中填写两次列表，我还是以我的为例：<br><img src="/2025/06/24/build-site/17.png"></p>
+<p><img data-src="/2025/06/24/build-site/6.png"></p>
+<p><img data-src="/2025/06/24/build-site/7.png"></p>
+<p><img data-src="/2025/06/24/build-site/8.png"></p>
+<p><img data-src="/2025/06/24/build-site/9.png"></p>
+<p><img data-src="/2025/06/24/build-site/10.png"></p>
+<p><img data-src="/2025/06/24/build-site/11.png"></p>
+<p>在最终的界面中，这两个就是我们需要的域名服务器的地址，把它们复制下来。<br><img data-src="/2025/06/24/build-site/12.png"></p>
+<h5 id="更改-porkbun-中默认的域名服务器地址"><a href="#更改-porkbun-中默认的域名服务器地址" class="headerlink" title="更改 porkbun 中默认的域名服务器地址"></a>更改 porkbun 中默认的域名服务器地址</h5><p>回到猪肉包中，改变<code>NAMESERVERS</code>中的内容即可。先清空，再把上面的两个地址一个一个粘贴进去，提交后就是下面的样子。<br><img data-src="/2025/06/24/build-site/13.png"></p>
+<p>之后再回到 cloudflare 的界面，检查一下域名服务器：<br><img data-src="/2025/06/24/build-site/14.png"></p>
+<p>这个过程一般会在 10 分钟之内完成。当这里变为“Active”的时候，我们就可以进行最后一步了。<br><img data-src="/2025/06/24/build-site/15.png"></p>
+<p>最后一步也很简单，点进我的截图所指的位置：<br><img data-src="/2025/06/24/build-site/16.png"></p>
+<p>你一共需要在弹出框中填写两次列表，我还是以我的为例：<br><img data-src="/2025/06/24/build-site/17.png"></p>
 <p>第一次：<code>CNAME</code>-&gt;<code>www</code>-&gt;<code>spectrumzero.github.io</code>-&gt;<code>proxied</code>-&gt;<code>Auto</code><br>第二次：<code>CNAME</code>-&gt;<code>@</code>-&gt;<code>spectrumzero.github.io</code>-&gt;<code>proxied</code>-&gt;<code>Auto</code></p>
 <p>第二次是为了方便别人可以直接通过<code>spectrumzero.me</code>来访问我的网站，而不必输入<code>www.spectrumzero.me</code>。</p>
 <p><em>请注意，这里的<code>Target</code>应该是 github pages 的根域名，后面没有路径</em>。</p>
-<p>最后记得保存即可，效果：<br><img src="/2025/06/24/build-site/18.png"></p>
+<p>最后记得保存即可，效果：<br><img data-src="/2025/06/24/build-site/18.png"></p>
 <p>然后回到<code>_config.yml</code>文件中，将<code>url</code>一行换成你最终自定义的域名即可，如：</p>
 <figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="string">https://www.spectrumzero.me</span></span><br></pre></td></tr></table></figure>
 
@@ -186,7 +186,7 @@
 
 <h1 id="图片和链接支持"><a href="#图片和链接支持" class="headerlink" title="图片和链接支持"></a>图片和链接支持</h1><p>现在来测试图片。确保使用的是<code>post_asset_folder</code>，这样会节约从obsidian迁移文档到<code>_post</code>文件夹中的时间。可以参考这个<a href="https://chrismroberts.com/2020/01/06/using-markdown-in-hexo-to-add-images/">链接</a>。</p>
 <p>下面是一张图片，推上找的。因为今天下雨了。</p>
-<p><img src="/2025/06/20/hello-world/1.png"></p>
+<p><img data-src="/2025/06/20/hello-world/1.png"></p>
 <h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1><p>嗯，好了。可以慢慢往上面搬东西。评论和目录功能也良好。i18n和l10n以后再做吧。</p>
 ]]></content>
       <tags>
