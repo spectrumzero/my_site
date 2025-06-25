@@ -579,7 +579,7 @@ pjax: true
 
 # FancyBox is a tool that offers a nice and elegant way to add zooming functionality for images.
 # For more information: https://fancyapps.com/fancybox/
-fancybox: false
+fancybox: true
 
 # Medium Zoom is a JavaScript library for zooming images like Medium.
 # Warning: Do not enable both `fancybox` and `mediumzoom`.
@@ -588,7 +588,7 @@ mediumzoom: false
 
 # Vanilla JavaScript plugin for lazyloading images.
 # For more information: https://apoorv.pro/lozad.js/demo/
-lazyload: false
+lazyload: true
 
 # Automatically insert whitespace between CJK and half-width characters.
 # For more information: https://github.com/vinta/pangu.js
@@ -749,10 +749,11 @@ isso: # <data_isso>
 
 # AddToAny Share. See: https://www.addtoany.com
 addtoany:
-  enable: false
+  enable: true
   buttons:
     - facebook
     - twitter
+    - mastodon
 
 # ---------------------------------------------------------------
 # Statistics and Analytics
@@ -762,7 +763,7 @@ addtoany:
 # Google Analytics
 # See: https://analytics.google.com
 google_analytics:
-  tracking_id: # <app_id>
+  tracking_id: G-VQ0ZXEJL60
   # By default, NexT will load an external gtag.js script on your site.
   # If you only need the pageview feature, set the following option to true to get a better performance.
   only_pageview: false
@@ -811,8 +812,8 @@ plausible:
 # You can visit https://www.leancloud.cn to get AppID and AppKey.
 leancloud_visitors:
   enable: false
-  app_id: # <your app id>
-  app_key: # <your app key>
+  app_id:
+  app_key:
   # Required for apps from CN region
   server_url: # <your server url>
   # Dependencies: https://github.com/theme-next/hexo-leancloud-counter-security
@@ -826,8 +827,8 @@ leancloud_visitors:
 firestore:
   enable: false
   collection: articles # Required, a string collection name to access firestore database
-  apiKey: # Required
-  projectId: # Required
+  apiKey:
+  projectId:
 
 # Show Views / Visitors of the website / page with busuanzi.
 # For more information: http://ibruce.info/2015/04/04/busuanzi/
