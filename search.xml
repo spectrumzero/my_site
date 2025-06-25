@@ -17,6 +17,7 @@
 <li>其他操作系统的用户可以根据自己的操作系统来决定。我使用的是 yay。</li>
 </ul>
 </li>
+<li>一个代码编辑器，比如<a href="https://code.visualstudio.com/docs">vscode</a>。它被用来编辑配置文件，也可以用来编辑我们的博客文章。在 terminal 中使用包管理器安装即可，具体如何安装和使用请自行 ai 或查阅对应文档。</li>
 <li><strong>通畅的网络环境</strong>。遇到网络问题请使用代理+tun 模式。Mihomo 和 Clash 都支持 tun 模式。还有一种比较少见的情况是，尽管你开了代理和 tun，但 shell 没有使用代理，因此获取不到资源，那么这个时候你就应该设置一下 shell 的代理。</li>
 </ol>
 <h3 id="安装-Hexo-与初始化项目"><a href="#安装-Hexo-与初始化项目" class="headerlink" title="安装 Hexo 与初始化项目"></a>安装 Hexo 与初始化项目</h3><p>这个部分请先查阅<a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85">官方文档</a>。</p>
@@ -95,7 +96,7 @@
 <li>设置 github 的公钥，让自己有推送权限，如果没有设置，将来 push 的时候会提醒你设置。</li>
 </ol>
 <p>这二者麻烦自行 ai。然后我们查看<a href="https://hexo.io/zh-cn/docs/one-command-deployment">hexo 文档</a>，继续下一步。</p>
-<p>在<code>_config.yml</code>中配置部署方式。指定部署的类型，刚刚在 github 上新建的远程仓库的名称，以及远程 repo 的分支。这里以我的仓库为例，建议使用 ssh 来指定仓库，避免网络问题（下面的repo项好像被阻挡了不能正常显示，完整的应为<code>git@github.com:spectrumzero/my_site.git</code>）：</p>
+<p>在<code>_config.yml</code>中配置部署方式。指定部署的类型，刚刚在 github 上新建的远程仓库的名称，以及远程 repo 的分支。这里以我的仓库为例，建议使用 ssh 来指定仓库，避免网络问题（下面的 repo 项好像被阻挡了不能正常显示，完整的应为<code>git@github.com:spectrumzero/my_site.git</code>）：</p>
 <figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">&quot;git&quot;</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:spectrumzero/my_site.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">gh-pages</span></span><br></pre></td></tr></table></figure>
 
 <p><img data-src="/2025/06/24/build-site/1.png"></p>
