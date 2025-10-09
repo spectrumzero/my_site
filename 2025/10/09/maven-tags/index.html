@@ -20,29 +20,32 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.spectrumzero.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"base16/harmonic16-light","dark":"base16/zenburn"},"prism":{"light":"prism-dark","dark":"prism-dark"},"copy_button":{"enable":"flat","style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#6fc2fc","save":"manual"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="Write for better code.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="spectrumzero&#39;s blog">
-<meta property="og:url" content="https://www.spectrumzero.me/index.html">
+    <meta name="description" content="总结了pom文件中常常出现的一些标签。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="maven常见标签">
+<meta property="og:url" content="https://www.spectrumzero.me/2025/10/09/maven-tags/index.html">
 <meta property="og:site_name" content="spectrumzero&#39;s blog">
-<meta property="og:description" content="Write for better code.">
+<meta property="og:description" content="总结了pom文件中常常出现的一些标签。">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-10-09T09:46:59.000Z">
+<meta property="article:modified_time" content="2025-10-09T09:50:10.988Z">
 <meta property="article:author" content="spectrumzero">
+<meta property="article:tag" content="maven">
 <meta name="twitter:card" content="&lt;twitter:card&gt;">
-<meta name="twitter:image" content="https://www.spectrumzero.me/%3Ctwitter:image%3E">
+<meta name="twitter:image" content="https://www.spectrumzero.me/2025/10/09/maven-tags/%3Ctwitter:image%3E">
 <meta name="twitter:creator" content="@&lt;twitter:creator&gt;">
 <meta name="twitter:site" content="<twitter:site>">
 <meta property="fb:admins" content="&lt;fb:admin_id&gt;">
 <meta property="fb:app_id" content="&lt;fb:app_id&gt;">
 
 
-<link rel="canonical" href="https://www.spectrumzero.me/">
+<link rel="canonical" href="https://www.spectrumzero.me/2025/10/09/maven-tags/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"en","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.spectrumzero.me/2025/10/09/maven-tags/","path":"2025/10/09/maven-tags/","title":"maven常见标签"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>spectrumzero's blog</title>
+<title>maven常见标签 | spectrumzero's blog</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VQ0ZXEJL60"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-VQ0ZXEJL60","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -102,7 +105,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">spectrumzero's blog</h1>
+      <p class="site-title">spectrumzero's blog</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -155,7 +158,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -168,6 +171,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E5%9D%90%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">基础坐标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">依赖管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%85%B3%E7%B3%BB"><span class="nav-number">3.</span> <span class="nav-text">项目关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">构建配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E4%BF%A1%E6%81%AF"><span class="nav-number">6.</span> <span class="nav-text">其他信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -213,16 +217,17 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
     <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2025/10/09/maven-tags/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -236,13 +241,13 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | spectrumzero's blog">
+      <meta itemprop="name" content="maven常见标签 | spectrumzero's blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/10/09/maven-tags/" class="post-title-link" itemprop="url">maven常见标签</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          maven常见标签
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -272,17 +277,58 @@
     
     
     
-    <div class="post-body" itemprop="articleBody">
-          总结了pom文件中常常出现的一些标签。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/10/09/maven-tags/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+    <div class="post-body" itemprop="articleBody"><h2 id="基础坐标"><a href="#基础坐标" class="headerlink" title="基础坐标"></a>基础坐标</h2><ul>
+<li><code>&lt;groupId&gt;</code>: 项目组 ID。通常是公司或组织的反向域名。groupId 一般分为多段，通常情况下，第一段为域，第二段为公司名称，第三段为项目名称。</li>
+<li><code>&lt;artifactId&gt;</code>: 项目 ID。它是在 groupId 内唯一的项目名称。</li>
+<li><code>&lt;version&gt;</code>: 项目版本号。例如 0.0.1-SNAPSHOT。<ul>
+<li>SNAPSHOT 后缀表示这是一个不稳定的开发版本。</li>
+</ul>
+</li>
+<li><code>&lt;packaging&gt;</code>: 项目的打包方式。<ul>
+<li>jar (默认): 打包成 Java Archive 文件。</li>
+<li>war: 打包成 Web Application Archive 文件，用于部署到 Web 服务器。</li>
+<li>pom: 用于<strong>父模块</strong>或聚合模块，表示<strong>它只管理其他模块，本身不产生构建产物</strong>。</li>
+</ul>
+</li>
+</ul>
+<h2 id="依赖管理"><a href="#依赖管理" class="headerlink" title="依赖管理"></a>依赖管理</h2><ul>
+<li><code>&lt;dependencies&gt;</code>: 根标签，包含所有具体的依赖项。</li>
+<li><code>&lt;dependency&gt;</code>: 定义一个具体的依赖项。<ul>
+<li><code>&lt;groupId&gt;</code>, <code>&lt;artifactId&gt;</code>, <code>&lt;version&gt;</code>: 依赖项自身的 GAV 坐标。</li>
+<li><code>&lt;type&gt;</code>: 用来指定依赖项的类型。默认为 jar，也有可能为 pom——在这种情况下<strong>常常与<code>&lt;scope&gt;import&lt;/scope&gt;</code>一起使用</strong>，以实现 BOM ( Bill of Materials ) 机制，导入依赖版本配置。</li>
+<li><code>&lt;scope&gt;</code>: 依赖的范围，非常重要，决定了<strong>依赖在何时生效</strong>。<ul>
+<li>compile (默认): 编译、测试、运行时都需要。会被打包到最终产物中。</li>
+<li>provided: 编译和测试时需要，但运行时由环境（如 JDK 或 Web 容器）提供。例如 servlet-api。</li>
+<li>runtime: 编译时不需要，但运行时需要。例如 JDBC 驱动。</li>
+<li>test: 只在测试编译和运行时需要。例如 JUnit。</li>
+<li>import: 特殊，只在 <code>&lt;dependencyManagement&gt;</code> 中使用，用于从其他 POM 文件（“物料清单”）中导入依赖版本配置。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&lt;dependencyManagement&gt;</code>: 依赖管理声明。<strong>它不直接引入依赖，而是用于统一管理所有子模块中依赖的版本号</strong>。在<strong>父 POM</strong>中使用此标签声明版本后，子模块在引入该依赖时就无需再写 <code>&lt;version&gt;</code>，从而保证了所有模块版本一致，避免了版本冲突。</li>
+<li><strong>注意</strong>： 定义在父 POM 的 <code>&lt;dependencies&gt;</code> 里的依赖，会被所有子模块自动继承<strong>并引入</strong>；而定义在 <code>&lt;dependencyManagement&gt;</code> 里的依赖，<strong>仅仅是声明版本</strong>，如果子模块不通过自己的 <code>&lt;dependencies&gt;</code> 标签去引入它，那么这个依赖是不会被下载的。</li>
+</ul>
+<h2 id="项目关系"><a href="#项目关系" class="headerlink" title="项目关系"></a>项目关系</h2><ul>
+<li><code>&lt;parent&gt;</code>: 在子模块中声明其父项目。子模块会继承父项目 pom.xml 中的配置（如依赖版本、插件配置等）。</li>
+<li><code>&lt;modules&gt;</code>: 在父模块（<packaging>pom</packaging>）中声明其包含的所有子模块。</li>
+</ul>
+<h2 id="构建配置"><a href="#构建配置" class="headerlink" title="构建配置"></a>构建配置</h2><ul>
+<li><code>&lt;build&gt;</code>: 构建配置的根标签。</li>
+<li><code>&lt;plugins&gt;</code>: 包含所有构建过程中使用的插件。</li>
+<li><code>&lt;plugin&gt;</code>: 定义一个具体的插件，例如 maven-compiler-plugin (用于编译代码) 或 spotless-maven-plugin (用于格式化代码)。</li>
+<li><code>&lt;resources&gt;</code>: 定义需要被包含到最终产物中的资源文件（非 .java 文件，如 .xml, .properties）。默认目录是 src&#x2F;main&#x2F;resources。</li>
+</ul>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><ul>
+<li><code>&lt;properties&gt;</code>: 属性的根标签。用于定义可复用的变量，使配置更灵活、易于维护。比如可以在这里定义版本号、配置参数等，然后在<strong>该 POM 的其他地方</strong>通过 ${…} 的形式引用。</li>
+</ul>
+<h2 id="其他信息"><a href="#其他信息" class="headerlink" title="其他信息"></a>其他信息</h2><ul>
+<li><code>&lt;name&gt;</code>: 项目的名称，更具可读性。</li>
+<li><code>&lt;description&gt;</code>: 项目的详细描述。</li>
+<li><code>&lt;developers&gt;</code>: 项目开发者信息。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://javaguide.cn/">Java Guide</a></p>
+
     </div>
 
     
@@ -290,182 +336,44 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>spectrumzero
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.spectrumzero.me/2025/10/09/maven-tags/" title="maven常见标签">https://www.spectrumzero.me/2025/10/09/maven-tags/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
 </div>
 
+          <div class="post-tags">
+              <a href="/tags/maven/" rel="tag"># maven</a>
+          </div>
 
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2025/06/24/build-site/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avt.jpg">
-      <meta itemprop="name" content="spectrumzero">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="spectrumzero's blog">
-      <meta itemprop="description" content="Write for better code.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | spectrumzero's blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/24/build-site/" class="post-title-link" itemprop="url">使用github pages搭建你的个人网站</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-06-24 21:08:23" itemprop="dateCreated datePublished" datetime="2025-06-24T21:08:23+08:00">2025-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-06-25 14:46:37" itemprop="dateModified" datetime="2025-06-25T14:46:37+08:00">2025-06-25</time>
-    </span>
-
-  
-    <span class="post-meta-item" title="Word count in article">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">Word count in article: </span>
-      <span>4.5k</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          一份建站Guide。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/06/24/build-site/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
+  <div class="social-like a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_facebook"></a>
+      <a class="a2a_button_twitter"></a>
+      <a class="a2a_button_mastodon"></a>
+  </div>
 
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2025/06/20/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avt.jpg">
-      <meta itemprop="name" content="spectrumzero">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="spectrumzero's blog">
-      <meta itemprop="description" content="Write for better code.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | spectrumzero's blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/20/hello-world/" class="post-title-link" itemprop="url">hello world</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2025-06-20 16:40:33 / Modified: 20:06:39" itemprop="dateCreated datePublished" datetime="2025-06-20T16:40:33+08:00">2025-06-20</time>
-    </span>
-
-  
-    <span class="post-meta-item" title="Word count in article">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">Word count in article: </span>
-      <span>432</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          这是一个打招呼笔记。快速打招呼。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/06/20/hello-world/#more" rel="contents">
-                Read more &raquo;
-              </a>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/24/build-site/" rel="prev" title="使用github pages搭建你的个人网站">
+                  <i class="fa fa-angle-left"></i> 使用github pages搭建你的个人网站
+                </a>
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
@@ -474,6 +382,8 @@
 
 
 
+
+    <div class="comments utterances-container"></div>
 </div>
   </main>
 
