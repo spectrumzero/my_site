@@ -20,29 +20,32 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.spectrumzero.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"base16/harmonic16-light","dark":"base16/zenburn"},"prism":{"light":"prism-dark","dark":"prism-dark"},"copy_button":{"enable":"flat","style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#6fc2fc","save":"manual"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="Write for better code.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="spectrumzero&#39;s blog">
-<meta property="og:url" content="https://www.spectrumzero.me/archives/2025/index.html">
+    <meta name="description" content="简明扼要。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从继承到接口">
+<meta property="og:url" content="https://www.spectrumzero.me/2025/10/10/inheritance-and-interface/index.html">
 <meta property="og:site_name" content="spectrumzero&#39;s blog">
-<meta property="og:description" content="Write for better code.">
+<meta property="og:description" content="简明扼要。">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-10-10T09:11:55.000Z">
+<meta property="article:modified_time" content="2025-10-10T09:13:26.831Z">
 <meta property="article:author" content="spectrumzero">
+<meta property="article:tag" content="Core Java">
 <meta name="twitter:card" content="&lt;twitter:card&gt;">
-<meta name="twitter:image" content="https://www.spectrumzero.me/archives/2025/%3Ctwitter:image%3E">
+<meta name="twitter:image" content="https://www.spectrumzero.me/2025/10/10/inheritance-and-interface/%3Ctwitter:image%3E">
 <meta name="twitter:creator" content="@&lt;twitter:creator&gt;">
 <meta name="twitter:site" content="<twitter:site>">
 <meta property="fb:admins" content="&lt;fb:admin_id&gt;">
 <meta property="fb:app_id" content="&lt;fb:app_id&gt;">
 
 
-<link rel="canonical" href="https://www.spectrumzero.me/archives/2025/">
+<link rel="canonical" href="https://www.spectrumzero.me/2025/10/10/inheritance-and-interface/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":"","permalink":"","path":"archives/2025/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.spectrumzero.me/2025/10/10/inheritance-and-interface/","path":"2025/10/10/inheritance-and-interface/","title":"从继承到接口"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Archive | spectrumzero's blog</title>
+<title>从继承到接口 | spectrumzero's blog</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VQ0ZXEJL60"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-VQ0ZXEJL60","only_pageview":false,"measure_protocol_api_secret":null}</script>
@@ -102,7 +105,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">spectrumzero's blog</h1>
+      <p class="site-title">spectrumzero's blog</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -155,7 +158,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -168,6 +171,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF"><span class="nav-number">1.</span> <span class="nav-text">继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E7%88%B6%E7%B1%BB%E7%9A%84%E7%BB%A7%E6%89%BF"><span class="nav-number">2.</span> <span class="nav-text">抽象父类的继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.</span> <span class="nav-text">接口</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -213,110 +217,164 @@
 
     </div>
 
-    <div class="main-inner archive posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <span class="collection-header">Um..! 4 posts in total. Keep on posting.</span>
-      </div>
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2025/10/10/inheritance-and-interface/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avt.jpg">
+      <meta itemprop="name" content="spectrumzero">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="spectrumzero's blog">
+      <meta itemprop="description" content="Write for better code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从继承到接口 | spectrumzero's blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从继承到接口
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2025<span class="collection-year-count">4</span></span>
+
+      <time title="Created: 2025-10-10 17:11:55 / Modified: 17:13:26" itemprop="dateCreated datePublished" datetime="2025-10-10T17:11:55+08:00">2025-10-10</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.6k</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><ol>
+<li><strong>核心关系：</strong> “is-a”（是一种）关系。子类是父类的一种更具体的类型（例如：Car is-a Vehicle）。</li>
+<li><strong>实现方式：</strong>  使用  extends  关键字来声明继承关系，例如  class Child extends Parent。</li>
+<li><strong>继承内容：</strong>  子类自动继承父类所有非  private  的成员变量和成员方法，可以直接使用。</li>
+<li><strong>不继承内容：</strong>  构造方法和被  private  修饰的成员不能被子类直接继承或访问。</li>
+<li><strong>构造方法规则：</strong>  子类的构造方法第一行必须调用父类的构造方法或本类的另一个构造方法 this(…)。如果未显式使用  super(…)  调用，编译器会自动添加一个无参的  super()。如果父类没有无参构造方法，子类必须在其所有构造方法中显式调用父类的有参构造方法。</li>
+<li><strong>方法重写 (Overriding)：</strong>  子类可以提供一个与父类方法签名（方法名、参数列表）完全相同的新实现来覆盖父类的行为。建议使用  @Override  注解进行标记。</li>
+<li><strong>重写规则：</strong>  重写的方法访问权限不能比父类更严格，返回类型必须相同或者是父类返回类型的子类。</li>
+<li><strong>成员变量隐藏 (Hiding)：</strong>  成员变量只能被隐藏，不能被重写。当子类定义了与父类同名的变量时，具体访问哪个变量取决于<strong>引用的类型</strong>，而不是对象的实际类型。</li>
+<li><strong>super  关键字：</strong>  在子类中，使用  super.成员   来访问父类中被隐藏的变量或被重写的方法；使用  super()  来调用父类的构造方法。</li>
+<li><strong>多态 (Polymorphism)：</strong>  父类的引用可以指向子类的对象（Parent p &#x3D; new Child();），这被称为向上转型。</li>
+<li><strong>多态表现：</strong>  当通过父类引用调用一个被重写的方法时，实际执行的是子类中的方法版本。</li>
+<li><strong>向下转型 (Downcasting)：</strong>  将父类引用强制转换回子类引用（Child c &#x3D; (Child) p;），这存在  ClassCastException  的风险。</li>
+<li><strong>instanceof  关键字：</strong>  在进行向下转型之前，应使用  instanceof  关键字检查引用的实际对象类型，以确保类型安全，避免异常。</li>
+<li><strong>final  关键字：</strong>  被  final  修饰的类不能被继承；被  final  修饰的方法不能被子类重写。</li>
+<li><strong>单继承原则：</strong> Java 只支持单继承，即一个类最多只能有一个直接父类，但可以通过实现多个接口来弥补。</li>
+</ol>
+<h2 id="抽象父类的继承"><a href="#抽象父类的继承" class="headerlink" title="抽象父类的继承"></a>抽象父类的继承</h2><ol>
+<li><strong>核心关系：</strong>  既是 “is-a” 关系，又是一种<strong>不完整</strong>的设计模板。它代表一个抽象的概念，其本身不能被完整地实现。</li>
+<li><strong>声明方式：</strong>  类本身必须使用  abstract  关键字声明。类中可以包含抽象方法，也必须用  abstract  声明且没有方法体。</li>
+<li><strong>不可实例化：</strong>  不能使用  new  关键字直接创建抽象类的实例，因为它是不完整的。</li>
+<li><strong>成员构成：</strong>  抽象类是普通类和接口的混合体，它可以包含<strong>成员变量、常量、构造方法、具体方法</strong>和<strong>抽象方法</strong>。</li>
+<li><strong>强制规则：</strong>  任何包含一个或多个抽象方法的类，<strong>必须</strong>被声明为抽象类。但抽象类可以不包含任何抽象方法。</li>
+<li><strong>子类责任：</strong>  继承抽象类的具体子类<strong>必须</strong>实现（重写）父类中所有的抽象方法。如果子类不想全部实现，那么该子类也必须被声明为抽象类。</li>
+<li><strong>构造方法用途：</strong>  抽象类可以有构造方法，其唯一目的是为了被子类的构造方法通过  super()  调用，以初始化从父类继承来的成员变量。</li>
+<li><strong>核心用途：</strong>  完美地结合了<strong>代码复用</strong>和<strong>行为规范</strong>。它为所有子类提供公共的状态和行为（通过成员变量和具体方法），同时强制它们必须实现某些特定的行为（通过抽象方法）。</li>
+</ol>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><ol>
+<li><strong>核心关系：</strong> “can-do”（能做什么）或行为契约。接口定义了一组类必须遵守的规范或能力，强调“能做什么”，而不是“是什么”。</li>
+<li><strong>实现方式：</strong>  使用  implements  关键字来实现一个或多个接口，例如  class MyClass implements MyInterface。</li>
+<li><strong>多实现：</strong>  一个类可以同时实现多个接口，从而获得多种不同的能力。这是 Java 实现“类多重继承”效果的方式。</li>
+<li><strong>实现承诺：</strong>  实现类必须为接口中所有的抽象方法提供具体实现（方法体）。如果未能全部实现，该类必须被声明为抽象类 (abstract class)。</li>
+<li><strong>抽象方法：</strong>  接口中的方法默认是  public abstract  的，没有方法体。实现类在重写时必须使用  public  访问修饰符。</li>
+<li><strong>常量：</strong>  接口中声明的任何变量都默认是  public static final  的，即全局常量，必须在声明时初始化。</li>
+<li><strong>默认方法 (Default Methods - Java 8+)：</strong>  使用  default  关键字，接口可以提供方法的默认实现。实现类可以选择直接继承使用，也可以重写它。</li>
+<li><strong>静态方法 (Static Methods - Java 8+)：</strong>  接口可以包含  static  方法。这些方法只能通过   接口名.方法名()  的方式调用，不能被实现类继承或重写。</li>
+<li><strong>多态应用：</strong>  接口引用可以指向其任何实现类的对象（MyInterface ref &#x3D; new MyClass();），这是实现多态和程序解耦的关键。</li>
+<li><strong>不可实例化：</strong>  接口不能被直接实例化（不能使用  new  关键字创建接口自身的实例）。</li>
+<li><strong>接口间的继承：</strong>  一个接口可以使用  extends  关键字继承一个或多个其他接口，从而<strong>将父接口的所有成员合并到自身</strong>。</li>
+<li><strong>默认方法冲突：</strong>  如果一个类实现的多个接口中包含签名相同的默认方法，该类必须重写此方法以解决冲突。</li>
+<li><strong>无状态与构造方法：</strong>  接口没有成员变量（只有常量）和构造方法。它只定义行为，不关心状态的存储。</li>
+</ol>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2025-10-10T17:11:55+08:00"
-              content="2025-10-10">
-          10-10
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2025/10/10/inheritance-and-interface/" itemprop="url">
-            <span itemprop="name">从继承到接口</span>
-          </a>
-      </div>
+    <footer class="post-footer">
+          
 
-      
-    </header>
-  </article>
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>spectrumzero
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.spectrumzero.me/2025/10/10/inheritance-and-interface/" title="从继承到接口">https://www.spectrumzero.me/2025/10/10/inheritance-and-interface/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2025-10-09T17:46:59+08:00"
-              content="2025-10-09">
-          10-09
-        </time>
-      </div>
+          <div class="post-tags">
+              <a href="/tags/Core-Java/" rel="tag"># Core Java</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2025/10/09/maven-tags/" itemprop="url">
-            <span itemprop="name">maven常见标签</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2025-06-24T21:08:23+08:00"
-              content="2025-06-24">
-          06-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2025/06/24/build-site/" itemprop="url">
-            <span itemprop="name">使用github pages搭建你的个人网站</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2025-06-20T16:40:33+08:00"
-              content="2025-06-20">
-          06-20
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2025/06/20/hello-world/" itemprop="url">
-            <span itemprop="name">hello world</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-
-    </div>
+        
+  <div class="social-like a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_facebook"></a>
+      <a class="a2a_button_twitter"></a>
+      <a class="a2a_button_mastodon"></a>
   </div>
-  
-  
-  
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/10/09/maven-tags/" rel="prev" title="maven常见标签">
+                  <i class="fa fa-angle-left"></i> maven常见标签
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
 </div>
   </main>
 

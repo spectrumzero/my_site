@@ -1,3 +1,4 @@
+https://www.spectrumzero.me/2025/10/10/inheritance-and-interface/
 https://www.spectrumzero.me/2025/10/09/maven-tags/
 https://www.spectrumzero.me/2025/06/24/build-site/
 https://www.spectrumzero.me/2025/06/20/hello-world/
@@ -7,4 +8,5 @@ https://www.spectrumzero.me/tags/index.html
 https://www.spectrumzero.me/
 https://www.spectrumzero.me/tags/guide/
 https://www.spectrumzero.me/tags/test/
+https://www.spectrumzero.me/tags/Core-Java/
 https://www.spectrumzero.me/tags/maven/
