@@ -161,6 +161,22 @@
       </tags>
   </entry>
   <entry>
+    <title>GET 和 POST 方法的区别</title>
+    <url>/2025/11/14/get-and-post/</url>
+    <content><![CDATA[<p>GET 和 POST 是 HTTP 协议中两种常用的请求方法，它们在不同的场景和目的下有不同的特点和用法。一般来说，可以从以下几个方面来区分它们：</p>
+<ul>
+<li>语义上的区别：GET 通常用于获取或查询资源，而 POST 通常用于创建或修改资源。GET 请求应该是幂等的，即多次重复执行不会改变资源的状态，而 POST 请求则可能有副作用，即每次执行可能会产生不同的结果或影响资源的状态。</li>
+<li>格式上的区别：GET 请求的参数通常放在 URL 中，形成查询字符串（querystring），而 POST 请求的参数通常放在请求体（body）中，可以有多种编码格式，如 application&#x2F;x-www-form-urlencoded、multipart&#x2F;form-data、application&#x2F;json 等。GET 请求的 URL 长度受到浏览器和服务器的限制，而 POST 请求的 body 大小则没有明确的限制。</li>
+<li>缓存上的区别：由于 GET 请求是幂等的，它可以被浏览器或其他中间节点（如代理、网关）缓存起来，以提高性能和效率。而 POST 请求则不适合被缓存，因为它可能有副作用，每次执行可能需要实时的响应。</li>
+<li>安全性上的区别：GET 请求和 POST 请求都不是绝对安全的，因为 HTTP 协议本身是明文传输的，无论是 URL、header 还是 body 都可能被窃取或篡改。为了保证安全性，必须使用 HTTPS 协议来加密传输数据。不过，在一些场景下，GET 请求相比 POST 请求更容易泄露敏感数据，因为 GET 请求的参数会出现在 URL 中，而 URL 可能会被记录在浏览器历史、服务器日志、代理日志等地方。因此，一般情况下，私密数据传输应该使用 POST + body。</li>
+</ul>
+<p>上述内容参考了：<a href="https://javaguide.cn/">Java Guide</a>。</p>
+]]></content>
+      <tags>
+        <tag>RESTFUL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>hello world</title>
     <url>/2025/06/20/hello-world/</url>
     <content><![CDATA[<p>基于hexo博客框架，使用NexT Gemini主题。打造独特书写体验。</p>
@@ -342,9 +358,8 @@
 <h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><h3 id="Review：异常的层次结构"><a href="#Review：异常的层次结构" class="headerlink" title="Review：异常的层次结构"></a>Review：异常的层次结构</h3><ul>
 <li><strong>Throwable</strong>：所有错误和异常的超类。</li>
 <li><strong>Error</strong>：严重错误，通常是 JVM 自身的问题，如  OutOfMemoryError、StackOverflowError。程序通常无法处理和恢复，我们一般不捕获  Error。</li>
-<li><strong>Exception</strong>：程序本身可以处理的异常。它又分为两类： - <strong>Checked Exceptions (受检异常)</strong>：在编译时就必须处理的异常。编译器会强制你使用  try-catch  捕获或者使用  throws  声明抛出。例如  IOException、SQLException。它们通常是程序在与外部环境（如文件、网络、数据库）交互时可能发生的、可预见的问题。 - <strong>Unchecked Exceptions (非受检异常)</strong>：也叫  <strong>RuntimeException</strong>。在编译时不会被检查，在运行时才可能抛出。例如  NullPointerException、ArrayIndexOutOfBoundsException。它们通常是由于程序逻辑错误（Bugs）导致的，是应该在编码阶段就避免的。</li>
+<li><strong>Exception</strong>：程序本身可以处理的异常。它又分为两类： - <strong>Checked Exceptions (受检异常)</strong>：在编译时就必须处理的异常。编译器会强制你使用  try-catch  捕获或者使用  throws  声明抛出。例如  IOException、SQLException。它们通常是程序在与外部环境（如文件、网络、数据库）交互时可能发生的、可预见的问题。 - <strong>Unchecked Exceptions (非受检异常)</strong>：也叫  <strong>RuntimeException</strong>。在编译时不会被检查，在运行时才可能抛出。例如  NullPointerException、ArrayIndexOutOfBoundsException。它们通常是由于程序逻辑错误（Bugs）导致的，是应该在编码阶段就避免的。<br>![[Pasted image 20251013211511.png]]</li>
 </ul>
-<p><img data-src="/2025/10/20/springboot-annotations/1.png"></p>
 <h3 id="Review：异常处理的五个关键字"><a href="#Review：异常处理的五个关键字" class="headerlink" title="Review：异常处理的五个关键字"></a>Review：异常处理的五个关键字</h3><ul>
 <li><strong>try</strong>：包裹可能会<strong>抛出</strong>异常的代码块。</li>
 <li><strong>catch</strong>：用于<strong>捕获</strong>并处理  try  块中抛出的特定类型的异常。可以有多个  catch  块来处理不同类型的异常，捕获时遵循<strong>从小到大</strong>的原则（子类异常在前，父类异常在后）。</li>
@@ -386,8 +401,9 @@
 <li><code>@Slf4j</code>: “Simple Logging Facade for Java” 的缩写。它是一个日志门面，可以与多种日志实现（如 Logback, Log4j2）配合使用。当你给一个类加上 <code>@Slf4j</code> 注解后，Lombok 会在编译时自动为你生成一个名为 log 的静态 final 日志记录器对象。</li>
 </ul>
 <h3 id="MyBatis-Plus"><a href="#MyBatis-Plus" class="headerlink" title="MyBatis-Plus"></a>MyBatis-Plus</h3><ul>
-<li><code>@TableName</code>: 用于类上，将类映射到数据库中的表。</li>
-<li><code>@TableField</code>: 用于字段上，用于当字段名与表的列名不一致时进行映射，或者配置自动填充策略。</li>
+<li><code>@TableName</code>: 该注解用于指定实体类对应的数据库表名。当实体类名与数据库表名不一致，或者实体类名不是数据库表名的驼峰写法时，您需要使用这个注解来明确指定表名。</li>
+<li><code>@TableId</code>: 该注解用于标记实体类中的主键字段，如果一致则可以省略。</li>
+<li><code>@TableField</code>: 用于非主键字段上，用于当字段名与表的列名不一致，或不是列名的驼峰写法时进行映射。该注解也用来配置自动填充策略。</li>
 </ul>
 <h3 id="Swagger"><a href="#Swagger" class="headerlink" title="Swagger"></a>Swagger</h3><ul>
 <li><code>@Tag(name = &quot;...&quot;)</code>: 为控制器类提供一个分组标签，在 API 文档中进行分类。</li>
@@ -404,6 +420,34 @@
 ]]></content>
       <tags>
         <tag>springboot</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mybatis-plus的配置与使用</title>
+    <url>/2025/11/14/use-mybatis-plus/</url>
+    <content><![CDATA[<h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><p>在 <code>pom.xml</code> 文件中，加入 <code>mybatis-plus-boot-starter</code> 的依赖。<code>mybatis-plus-boot-starter</code> 是一个“全家桶”，它会自动帮你引入 Mybatis-Plus 核心库、MyBatis 核心库以及与 Spring Boot 集成的所有必要组件。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span> <span class="comment">&lt;!-- 请根据需要选择合适的版本 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 你还需要数据库驱动，比如 MySQL --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置数据源"><a href="#配置数据源" class="headerlink" title="配置数据源"></a>配置数据源</h3><p>在 <code>src/main/resources/application.yaml</code> 中，配置数据库的连接信息。</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/my_database?serverTimezone=UTC</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">your_password</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建绑定"><a href="#创建绑定" class="headerlink" title="创建绑定"></a>创建绑定</h3><p>使用 @TableName 创建实体类 Entity 和数据库表的绑定；使用 @TableId、@TableField 来创建属性和字段的绑定。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@TableName(&quot;tb_user&quot;)</span> <span class="comment">// 将这个类映射到数据库的 &quot;tb_user&quot; 表</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="meta">@TableId(value = &quot;id&quot;, type = IdType.AUTO)</span> <span class="comment">// 声明主键，并设置为自增</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>让 Mapper 接口继承 <code>BaseMapper&lt;T&gt;</code>。通过继承 <code>BaseMapper&lt;User&gt;</code>，<code>UserMapper</code> 接口就拥有了一整套强大的、无需编写 SQL 的 CRUD 方法，例如 <code>insert</code>, <code>selectById</code>, <code>updateById</code>, <code>delete</code>, <code>selectList</code> 等。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 传入你的实体类 User</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserMapper</span> <span class="keyword">extends</span> <span class="title class_">BaseMapper</span>&lt;User&gt; &#123;</span><br><span class="line">    <span class="comment">// 通常这里是空的，因为 BaseMapper 已经提供了所有常用方法</span></span><br><span class="line">    <span class="comment">// 如果有特别复杂的 SQL，可以在这里自定义方法，并配合 XML 文件实现</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>UserMapper</code> 还是一个接口，没有实现类，所以最后还需在 Spring Boot 主启动类上，添加 <code>@MapperScan</code> 注解。<code>@MapperScan</code> 注解会告诉 Spring Boot 在启动时去扫描指定的包，为所有继承了 <code>BaseMapper</code> 的接口动态地创建一个<strong>代理实现类</strong>，并注册到 Spring 容器中。这样，你才能在其他地方通过 <code>@Autowired</code> 或 <code>@Resource</code> 注入 <code>UserMapper</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@MapperScan(&quot;com.example.project.mapper&quot;)</span> <span class="comment">// 告诉 Spring 去哪里找你的 Mapper 接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProjectApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(ProjectApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="进阶：Service-层"><a href="#进阶：Service-层" class="headerlink" title="进阶：Service 层"></a>进阶：Service 层</h3><p>让 Service 层的接口继承 <code>IService&lt;T&gt;</code>接口，Service 的实现类继承 <code>ServiceImpl&lt;M, T&gt;</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Service 接口还要继承一个接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">IUserService</span> <span class="keyword">extends</span> <span class="title class_">IService</span>&lt;User&gt; &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Service 实现类要实现它接口中定义的所有抽象方法，这通过继承 ServiceImpl 而实现</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">extends</span> <span class="title class_">ServiceImpl</span>&lt;UserMapper, User&gt; <span class="keyword">implements</span> <span class="title class_">IUserService</span> &#123;</span><br><span class="line">    <span class="comment">// 这里可以编写你的业务逻辑</span></span><br><span class="line">    <span class="comment">// 你可以直接使用 ServiceImpl 提供的方法，如 getById(), save(), list()，也可以使用 query(), update() 来进行链式操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="进阶：插件"><a href="#进阶：插件" class="headerlink" title="进阶：插件"></a>进阶：插件</h3><p>创建 Mybatis-Plus 的配置类，用来添加分页插件、乐观锁插件等。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisPlusConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MybatisPlusInterceptor <span class="title function_">mybatisPlusInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">MybatisPlusInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MybatisPlusInterceptor</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1. 添加分页插件 (最常用)</span></span><br><span class="line">        interceptor.addInnerInterceptor(<span class="keyword">new</span> <span class="title class_">PaginationInnerInterceptor</span>(DbType.MYSQL));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 添加乐观锁插件 (如果需要)</span></span><br><span class="line">        <span class="comment">// interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>framework</tag>
       </tags>
   </entry>
 </search>

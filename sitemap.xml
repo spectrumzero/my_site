@@ -2,9 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.spectrumzero.me/2025/11/14/get-and-post/</loc>
+    
+    <lastmod>2025-11-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.spectrumzero.me/2025/11/14/use-mybatis-plus/</loc>
+    
+    <lastmod>2025-11-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.spectrumzero.me/2025/10/20/springboot-annotations/</loc>
     
-    <lastmod>2025-10-20</lastmod>
+    <lastmod>2025-11-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -76,7 +94,7 @@
 
   <url>
     <loc>https://www.spectrumzero.me/</loc>
-    <lastmod>2025-10-20</lastmod>
+    <lastmod>2025-11-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -84,35 +102,49 @@
   
   <url>
     <loc>https://www.spectrumzero.me/tags/guide/</loc>
-    <lastmod>2025-10-20</lastmod>
+    <lastmod>2025-11-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.spectrumzero.me/tags/RESTFUL/</loc>
+    <lastmod>2025-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.spectrumzero.me/tags/test/</loc>
-    <lastmod>2025-10-20</lastmod>
+    <lastmod>2025-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.spectrumzero.me/tags/Core-Java/</loc>
-    <lastmod>2025-10-20</lastmod>
+    <lastmod>2025-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.spectrumzero.me/tags/maven/</loc>
-    <lastmod>2025-10-20</lastmod>
+    <lastmod>2025-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.spectrumzero.me/tags/springboot/</loc>
-    <lastmod>2025-10-20</lastmod>
+    <lastmod>2025-11-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.spectrumzero.me/tags/framework/</loc>
+    <lastmod>2025-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
