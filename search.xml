@@ -358,7 +358,7 @@
 <h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><h3 id="Review：异常的层次结构"><a href="#Review：异常的层次结构" class="headerlink" title="Review：异常的层次结构"></a>Review：异常的层次结构</h3><ul>
 <li><strong>Throwable</strong>：所有错误和异常的超类。</li>
 <li><strong>Error</strong>：严重错误，通常是 JVM 自身的问题，如  OutOfMemoryError、StackOverflowError。程序通常无法处理和恢复，我们一般不捕获  Error。</li>
-<li><strong>Exception</strong>：程序本身可以处理的异常。它又分为两类： - <strong>Checked Exceptions (受检异常)</strong>：在编译时就必须处理的异常。编译器会强制你使用  try-catch  捕获或者使用  throws  声明抛出。例如  IOException、SQLException。它们通常是程序在与外部环境（如文件、网络、数据库）交互时可能发生的、可预见的问题。 - <strong>Unchecked Exceptions (非受检异常)</strong>：也叫  <strong>RuntimeException</strong>。在编译时不会被检查，在运行时才可能抛出。例如  NullPointerException、ArrayIndexOutOfBoundsException。它们通常是由于程序逻辑错误（Bugs）导致的，是应该在编码阶段就避免的。<br>![[Pasted image 20251013211511.png]]</li>
+<li><strong>Exception</strong>：程序本身可以处理的异常。它又分为两类： - <strong>Checked Exceptions (受检异常)</strong>：在编译时就必须处理的异常。编译器会强制你使用  try-catch  捕获或者使用  throws  声明抛出。例如  IOException、SQLException。它们通常是程序在与外部环境（如文件、网络、数据库）交互时可能发生的、可预见的问题。 - <strong>Unchecked Exceptions (非受检异常)</strong>：也叫  <strong>RuntimeException</strong>。在编译时不会被检查，在运行时才可能抛出。例如  NullPointerException、ArrayIndexOutOfBoundsException。它们通常是由于程序逻辑错误（Bugs）导致的，是应该在编码阶段就避免的。<br><img data-src="/2025/10/20/springboot-annotations/1.png"></li>
 </ul>
 <h3 id="Review：异常处理的五个关键字"><a href="#Review：异常处理的五个关键字" class="headerlink" title="Review：异常处理的五个关键字"></a>Review：异常处理的五个关键字</h3><ul>
 <li><strong>try</strong>：包裹可能会<strong>抛出</strong>异常的代码块。</li>
