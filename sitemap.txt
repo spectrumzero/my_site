@@ -1,3 +1,5 @@
+https://www.spectrumzero.me/2026/01/11/basic-concept-of-db/
+https://www.spectrumzero.me/2026/01/11/use-nginx/
 https://www.spectrumzero.me/2025/10/20/springboot-annotations/
 https://www.spectrumzero.me/2025/11/14/get-and-post/
 https://www.spectrumzero.me/2025/11/14/use-mybatis-plus/
@@ -9,6 +11,8 @@ https://www.spectrumzero.me/about/index.html
 https://www.spectrumzero.me/404/index.html
 https://www.spectrumzero.me/tags/index.html
 https://www.spectrumzero.me/
+https://www.spectrumzero.me/tags/concept/
+https://www.spectrumzero.me/tags/Database/
 https://www.spectrumzero.me/tags/guide/
 https://www.spectrumzero.me/tags/RESTFUL/
 https://www.spectrumzero.me/tags/test/
@@ -16,3 +20,4 @@ https://www.spectrumzero.me/tags/Core-Java/
 https://www.spectrumzero.me/tags/maven/
 https://www.spectrumzero.me/tags/springboot/
 https://www.spectrumzero.me/tags/framework/
+https://www.spectrumzero.me/tags/tips/

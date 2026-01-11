@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>数据库基本概念</title>
+    <url>/2026/01/11/basic-concept-of-db/</url>
+    <content><![CDATA[<ul>
+<li><p><strong>元组</strong>：数据库表中的每行就是一个元组。</p>
+</li>
+<li><p><strong>码</strong>：码就是能唯一标识实体的属性，对应表中的列。</p>
+</li>
+<li><p><strong>候选码</strong>：若关系中的某一属性或属性组的值能唯一的标识一个元组，而其任何子集都不能再标识，则称该属性组为候选码。例如：在学生实体中，“学号”是能唯一的区分学生实体的，同时又假设“姓名”、“班级”的属性组合足以区分学生实体，那么{学号}和{姓名，班级}都是候选码。</p>
+</li>
+<li><p><strong>主码</strong> : 主码也叫主键。主码是从候选码中选出来的。 一个实体集中只能有一个主码，但可以有多个候选码。</p>
+</li>
+<li><p><strong>外码</strong> : 外码也叫外键。如果一个关系中的一个属性是另外一个关系中的主码则这个属性为外码。一个表可以有多个外键，可以与多个表建立联系。</p>
+</li>
+<li><p><strong>主属性</strong>：候选码中出现过的属性称为主属性。比如关系：工人（工号，身份证号，姓名，性别，部门）。显然工号和身份证号都能够唯一标示这个关系，所以都是候选码。工号、身份证号这两个属性就是主属性。如果主码是一个属性组，那么属性组中的属性都是主属性。</p>
+</li>
+<li><p><strong>非主属性：</strong> 不包含在任何一个候选码中的属性称为非主属性。比如在关系：学生（学号，姓名，年龄，性别，班级）中，主码是“学号”，那么其他的“姓名”、“年龄”、“性别”、“班级”就都可以称为非主属性。</p>
+</li>
+<li><p><strong>ER 图</strong>：全称是 Entity Relationship Diagram（实体联系图），提供了表示实体类型、属性和联系的方法。由下面 3 个要素组成：</p>
+<ul>
+<li><em>实体</em>：通常是现实世界的业务对象。比如对于一个校园管理系统，会涉及学生、教师、课程、班级等等实体。在 ER 图中，实体使用<strong>矩形框</strong>表示。</li>
+<li><em>属性</em>：即某个实体拥有的属性，属性用来描述组成实体的要素。在 ER 图中，属性使用椭<strong>圆形</strong>表示。</li>
+<li><em>联系</em>：即实体与实体之间的关系，在 ER 图中用<strong>菱形</strong>表示，这个关系不仅有业务关联关系，还能通过数字表示实体之间的数量对照关系。例如，一个班级会有多个学生就是一种实体间的联系。</li>
+</ul>
+<p>下图是一个学生选课的 ER 图，每个学生可以选若干门课程，同一门课程也可以被若干人选择，所以它们之间的关系是多对多（M: N）。另外，还有其他两种实体之间的关系是：1 对 1（1:1）、1 对多（1: N）。 <img data-src="/2026/01/11/basic-concept-of-db/1.png" alt="学生与课程之间联系的E-R图"></p>
+</li>
+</ul>
+<ul>
+<li><strong>数据库基本范式</strong>：<ul>
+<li>第一范式：属性（对应于表中的字段）不能再被分割，也就是这个字段只能是一个值，不能再分为多个其他的字段了。<strong>1NF 是所有关系型数据库的最基本要求</strong> ，也就是说关系型数据库中创建的表一定满足第一范式。</li>
+<li>第二范式：2NF 在 1NF 的基础之上，消除了非主属性对于码的<strong>部分函数依赖</strong>。<ul>
+<li><strong>函数依赖（functional dependency）</strong>：若在一张表中，在属性（或属性组）X 的值确定的情况下，必定能确定属性 Y 的值，那么就可以说 Y 函数依赖于 X，写作 X → Y。</li>
+<li><strong>部分函数依赖（partial functional dependency）</strong>：如果 X→Y，<strong>并且存在 X 的一个真子集 X0</strong>，使得 X0→Y，则称 Y 对 X 部分函数依赖。</li>
+<li><strong>传递函数依赖</strong>：在关系模式 R(U)中，设 X，Y，Z 是 U 的不同的属性子集，如果 X 确定 Y、Y 确定 Z，且有 X 不包含 Y，Y 不确定 X，（X∪Y）∩Z&#x3D;空集合，则称 Z 传递函数依赖（transitive functional dependency）于 X。传递函数依赖会导致数据冗余和异常。传递函数依赖的 Y 和 Z 子集往往同属于某一个事物，因此可将其合并放到一个表中。比如在关系 R（学号 , 姓名, 系名，系主任）中，学号 → 系名，系名 → 系主任，所以存在非主属性系主任对于学号的传递函数依赖。</li>
+</ul>
+</li>
+<li>第三范式：3NF 在 2NF 的基础之上，消除了非主属性对于码的传递函数依赖 。符合 3NF 要求的数据库设计，<strong>基本</strong>上解决了数据冗余过大，插入异常，修改异常，删除异常的问题。</li>
+</ul>
+</li>
+</ul>
+<p>上述内容参考了：<a href="https://javaguide.cn/">Java Guide</a>。</p>
+]]></content>
+      <tags>
+        <tag>concept</tag>
+        <tag>Database</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用github pages搭建你的个人网站</title>
     <url>/2025/06/24/build-site/</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>首先，这不是一个完全手把手的指导，说明并不会事无巨细地展开。原因有两个，一是我认为我所略过的部分，完全可以通过查阅官方文档而<strong>快速而精准</strong>地解决，而不需要经过二次加工；第二是如果嫌麻烦，也完全可以问 ai 来解决——关于 ai，我十分推荐谷歌面向开发者的<a href="https://aistudio.google.com/prompts/new_chat">Google AI Studio</a>。我所提供的不是信息的重复，而是信息的聚合与组织，让你<strong>足以</strong>根据这个线路搭建自己的个人网站。</p>
@@ -448,6 +495,28 @@
 ]]></content>
       <tags>
         <tag>framework</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用 Nginx 的小提示</title>
+    <url>/2026/01/11/use-nginx/</url>
+    <content><![CDATA[<h2 id="Nginx-的配置"><a href="#Nginx-的配置" class="headerlink" title="Nginx 的配置"></a>Nginx 的配置</h2><p>nginx 在 arch linux 中的配置，主要是注意两个路径：</p>
+<ol>
+<li><code>/etc/nginx</code>里面的<code>nginx.conf</code>文件用来配置 root，root 指向项目文件夹（是项目的 index.html 所在的文件夹，而不是 nginx 默认的欢迎页面 index.html 所在的文件夹。前者是后者的子目录）</li>
+<li>需要把项目文件夹放在<code>/usr/share/nginx/html</code>这个文件夹下。如前所述，最终 root 指向的是<code>/usr/share/nginx/html/project</code></li>
+</ol>
+<h2 id="启动-Nginx"><a href="#启动-Nginx" class="headerlink" title="启动 Nginx"></a>启动 Nginx</h2><ul>
+<li>设置 nginx 开机自启动：<code>systemctl enable nginx</code>；</li>
+<li>验证是否成功开启：<code>systemctl is-enabled nginx</code></li>
+<li>手动开&#x2F;关&#x2F;重载：<code>systemctl start/stop/reload nginx</code></li>
+<li>查看状态：<code>systemctl status nginx</code></li>
+</ul>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ol>
+<li>浏览器中的请求 URL 中的<code>api</code>来标识这是一个发向 tomcat 服务的请求。所以一般来说，对于静态资源的请求是没有<code>api</code>标识的，直接加载。</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>tips</tag>
       </tags>
   </entry>
 </search>
