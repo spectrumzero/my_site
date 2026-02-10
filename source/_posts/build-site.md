@@ -2,7 +2,7 @@
 title: 使用github pages搭建你的个人网站
 date: 2025-06-24 21:08:23
 tags:
-  - guide
+  - [tips]
 excerpt: 一份建站Guide。
 ---
 
