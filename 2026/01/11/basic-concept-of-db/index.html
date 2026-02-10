@@ -20,18 +20,17 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.spectrumzero.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"base16/harmonic16-light","dark":"base16/zenburn"},"prism":{"light":"prism-dark","dark":"prism-dark"},"copy_button":{"enable":"flat","style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#6fc2fc","save":"manual"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="补课。">
+    <meta name="description" content="元组：数据库表中的每行就是一个元组。  码：码就是能唯一标识实体的属性，对应表中的列。  候选码：若关系中的某一属性或属性组的值能唯一的标识一个元组，而其任何子集都不能再标识，则称该属性组为候选码。例如：在学生实体中，“学号”是能唯一的区分学生实体的，同时又假设“姓名”、“班级”的属性组合足以区分学生实体，那么{学号}和{姓名，班级}都是候选码。  主码 : 主码也叫主键。主码是从候选码中选出来">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据库基本概念">
 <meta property="og:url" content="https://www.spectrumzero.me/2026/01/11/basic-concept-of-db/index.html">
 <meta property="og:site_name" content="spectrumzero&#39;s blog">
-<meta property="og:description" content="补课。">
+<meta property="og:description" content="元组：数据库表中的每行就是一个元组。  码：码就是能唯一标识实体的属性，对应表中的列。  候选码：若关系中的某一属性或属性组的值能唯一的标识一个元组，而其任何子集都不能再标识，则称该属性组为候选码。例如：在学生实体中，“学号”是能唯一的区分学生实体的，同时又假设“姓名”、“班级”的属性组合足以区分学生实体，那么{学号}和{姓名，班级}都是候选码。  主码 : 主码也叫主键。主码是从候选码中选出来">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.spectrumzero.me/2026/01/11/basic-concept-of-db/1.png">
 <meta property="article:published_time" content="2026-01-11T12:07:27.000Z">
-<meta property="article:modified_time" content="2026-01-11T12:17:20.065Z">
+<meta property="article:modified_time" content="2026-02-10T05:48:27.299Z">
 <meta property="article:author" content="spectrumzero">
-<meta property="article:tag" content="concept">
 <meta property="article:tag" content="Database">
 <meta name="twitter:card" content="&lt;twitter:card&gt;">
 <meta name="twitter:image" content="https://www.spectrumzero.me/2026/01/11/basic-concept-of-db/%3Ctwitter:image%3E">
@@ -257,9 +256,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2026-01-11 20:07:27 / Modified: 20:17:20" itemprop="dateCreated datePublished" datetime="2026-01-11T20:07:27+08:00">2026-01-11</time>
+      <time title="Created: 2026-01-11 20:07:27" itemprop="dateCreated datePublished" datetime="2026-01-11T20:07:27+08:00">2026-01-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-10 13:48:27" itemprop="dateModified" datetime="2026-02-10T13:48:27+08:00">2026-02-10</time>
     </span>
 
   
@@ -342,7 +347,6 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/concept/" rel="tag"># concept</a>
               <a href="/tags/Database/" rel="tag"># Database</a>
           </div>
 

@@ -223,6 +223,106 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2026/02/10/mysql-datatype/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avt.jpg">
+      <meta itemprop="name" content="spectrumzero">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="spectrumzero's blog">
+      <meta itemprop="description" content="Write for better code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | spectrumzero's blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/10/mysql-datatype/" class="post-title-link" itemprop="url">MySQL中的数据类型</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-02-10 13:37:45 / Modified: 13:51:17" itemprop="dateCreated datePublished" datetime="2026-02-10T13:37:45+08:00">2026-02-10</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1k</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="MySQL-的三大数据类型"><a href="#MySQL-的三大数据类型" class="headerlink" title="MySQL 的三大数据类型"></a>MySQL 的三大数据类型</h2><ol>
+<li><strong>数值类型</strong>：整型（TINYINT、SMALLINT、MEDIUMINT、INT 和 BIGINT）、浮点型（FLOAT 和 DOUBLE）、定点型（DECIMAL）。<ul>
+<li>整型可以使用可选的 UNSIGNED 属性来表示不允许负值的无符号整数，这可以将正整数的上限提高一倍，因为它不需要存储负数值。例如， TINYINT UNSIGNED 类型的取值范围是 0 ~ 255，而普通的 TINYINT 类型的值范围是 -128 ~ 127。</li>
+</ul>
+</li>
+<li><strong>字符串类型</strong>：CHAR、VARCHAR、TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT、TINYBLOB、BLOB、MEDIUMBLOB 和 LONGBLOB 等，最常用的是 CHAR 和 VARCHAR。CHAR 是定长字符串，VARCHAR 是变长字符串。CHAR(M) 和 VARCHAR(M) 的 M 都代表能够保存的字符数的最大值，且无论是字母、数字还是中文，每个都只占用一个字符。<ul>
+<li>注意，针对 VARCHAR，虽说 VARCHAR(100) 和 VARCHAR(10) 能存储的字符范围不同，但二者存储相同的字符串，所占用<strong>磁盘</strong>的存储空间其实是一样的，不过，VARCHAR(100) 会消耗更多的<strong>内存</strong>。此外，存储手机号<strong>强烈推荐使用 VARCHAR 类型</strong>，而不是 INT 或 BIGINT。这是为了保证格式的兼容性（手机号可能有各种前导）、查询的灵活性（VARCHAR 可以配合 <code>Like</code> 快速拼接）、以及<strong>加密的要求</strong>（INT 或 BIGINT 类型无法存储加密后变长的字符串密文）。</li>
+<li>DECIMAL 和 FLOAT&#x2F;DOUBLE 的区别是：DECIMAL 是定点数，FLOAT&#x2F;DOUBLE 是浮点数。DECIMAL 可以存储精确的小数值，FLOAT&#x2F;DOUBLE 只能存储近似的小数值——因为浮点数会直接截断在二进制下无法除尽的小数，而定点数则采用了另外一种表示小数的方式，确保小数的精确性。</li>
+<li>数据库规范通常不推荐使用 TEXT 和 BLOB 类型。因为检索效率较低，可能会消耗大量的网络和 IO 带宽等等。尽管它们能存储更长的字符串和二进制大对象。</li>
+</ul>
+</li>
+<li><strong>日期时间类型</strong>：YEAR、TIME、DATE、DATETIME 和 TIMESTAMP 等。<ul>
+<li>TIMESTAMP 有时区信息，DATETIME 类型没有；TIMESTAMP 使用 4 个字节的存储空间，DATETIME 需要耗费 8 个字节。但是，Timestamp 表示的时间范围更小。TIMESTAMP 的核心优势在于其内建的时区处理能力。</li>
+<li>有了专门的表示时间的类型，一般就不建议用字符串来存储日期了。与 MySQL 内建的日期时间类型相比，字符串通常需要占用更多的存储空间来表示相同的时间信息，且查询、索引性能更差，计算功能也会受到限制。</li>
+<li>然而，实践中会常用整数类型（<code>INT</code> 或 <code>BIGINT</code>）来存储所谓的“Unix 时间戳”（即从 1970 年 1 月 1 日 00:00:00 UTC 起至目标时间的总秒数（10 位），或毫秒数（13 位）），即<strong>数值型时间戳</strong>。这种存储方式具有 <code>TIMESTAMP</code> 类型的所具有一些优点，并且使用它进行日期排序以及对比等操作的效率会更高，跨系统也很方便，毕竟只是存放的数值。缺点也很明显，就是无法直观地看到具体时间。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>MySQL 中没有专门的布尔类型，而是用 TINYINT(1) 类型来表示布尔值。TINYINT(1) 类型可以存储 0 或 1，分别对应 false 或 true。</p>
+</blockquote>
+<h2 id="关于-NULL"><a href="#关于-NULL" class="headerlink" title="关于 NULL"></a>关于 NULL</h2><p><code>NULL</code> 代表一个不确定的值，它不等于任何值，包括它自身。因此，<code>SELECT NULL = NULL</code> 的结果是 <code>NULL</code>，而不是 <code>true</code> 或 <code>false</code>。<code>NULL</code> 意味着缺失或未知的信息。任何值与 <code>NULL</code> 进行比较的结果都是 <code>NULL</code>，表示结果不确定。要判断一个值是否为 <code>NULL</code>，必须使用 <code>IS NULL</code> 或 <code>IS NOT NULL</code>。</p>
+<p>此外，<code>COUNT(*)</code> 会统计所有行数，包括包含 <code>NULL</code> 值的行，<code>COUNT(列名)</code> 却会统计指定列中非 <code>NULL</code> 值的行数，聚合函数对 <code>NULL</code> 的行为差异会增大代码出 Bug 的可能性。所以一般都不建议以它作为列的默认值。</p>
+<p>内容参考：<a target="_blank" rel="noopener" href="https://javaguide.cn/">Java Guide</a>。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2026/01/11/use-nginx/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -335,9 +435,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2026-01-11 20:07:27 / Modified: 20:17:20" itemprop="dateCreated datePublished" datetime="2026-01-11T20:07:27+08:00">2026-01-11</time>
+      <time title="Created: 2026-01-11 20:07:27" itemprop="dateCreated datePublished" datetime="2026-01-11T20:07:27+08:00">2026-01-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-10 13:48:27" itemprop="dateModified" datetime="2026-02-10T13:48:27+08:00">2026-02-10</time>
     </span>
 
   
@@ -357,15 +463,45 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          补课。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/01/11/basic-concept-of-db/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <ul>
+<li><p><strong>元组</strong>：数据库表中的每行就是一个元组。</p>
+</li>
+<li><p><strong>码</strong>：码就是能唯一标识实体的属性，对应表中的列。</p>
+</li>
+<li><p><strong>候选码</strong>：若关系中的某一属性或属性组的值能唯一的标识一个元组，而其任何子集都不能再标识，则称该属性组为候选码。例如：在学生实体中，“学号”是能唯一的区分学生实体的，同时又假设“姓名”、“班级”的属性组合足以区分学生实体，那么{学号}和{姓名，班级}都是候选码。</p>
+</li>
+<li><p><strong>主码</strong> : 主码也叫主键。主码是从候选码中选出来的。 一个实体集中只能有一个主码，但可以有多个候选码。</p>
+</li>
+<li><p><strong>外码</strong> : 外码也叫外键。如果一个关系中的一个属性是另外一个关系中的主码则这个属性为外码。一个表可以有多个外键，可以与多个表建立联系。</p>
+</li>
+<li><p><strong>主属性</strong>：候选码中出现过的属性称为主属性。比如关系：工人（工号，身份证号，姓名，性别，部门）。显然工号和身份证号都能够唯一标示这个关系，所以都是候选码。工号、身份证号这两个属性就是主属性。如果主码是一个属性组，那么属性组中的属性都是主属性。</p>
+</li>
+<li><p><strong>非主属性：</strong> 不包含在任何一个候选码中的属性称为非主属性。比如在关系：学生（学号，姓名，年龄，性别，班级）中，主码是“学号”，那么其他的“姓名”、“年龄”、“性别”、“班级”就都可以称为非主属性。</p>
+</li>
+<li><p><strong>ER 图</strong>：全称是 Entity Relationship Diagram（实体联系图），提供了表示实体类型、属性和联系的方法。由下面 3 个要素组成：</p>
+<ul>
+<li><em>实体</em>：通常是现实世界的业务对象。比如对于一个校园管理系统，会涉及学生、教师、课程、班级等等实体。在 ER 图中，实体使用<strong>矩形框</strong>表示。</li>
+<li><em>属性</em>：即某个实体拥有的属性，属性用来描述组成实体的要素。在 ER 图中，属性使用椭<strong>圆形</strong>表示。</li>
+<li><em>联系</em>：即实体与实体之间的关系，在 ER 图中用<strong>菱形</strong>表示，这个关系不仅有业务关联关系，还能通过数字表示实体之间的数量对照关系。例如，一个班级会有多个学生就是一种实体间的联系。</li>
+</ul>
+<p>下图是一个学生选课的 ER 图，每个学生可以选若干门课程，同一门课程也可以被若干人选择，所以它们之间的关系是多对多（M: N）。另外，还有其他两种实体之间的关系是：1 对 1（1:1）、1 对多（1: N）。 <img data-src="/2026/01/11/basic-concept-of-db/1.png" alt="学生与课程之间联系的E-R图"></p>
+</li>
+</ul>
+<ul>
+<li><strong>数据库基本范式</strong>：<ul>
+<li>第一范式：属性（对应于表中的字段）不能再被分割，也就是这个字段只能是一个值，不能再分为多个其他的字段了。<strong>1NF 是所有关系型数据库的最基本要求</strong> ，也就是说关系型数据库中创建的表一定满足第一范式。</li>
+<li>第二范式：2NF 在 1NF 的基础之上，消除了非主属性对于码的<strong>部分函数依赖</strong>。<ul>
+<li><strong>函数依赖（functional dependency）</strong>：若在一张表中，在属性（或属性组）X 的值确定的情况下，必定能确定属性 Y 的值，那么就可以说 Y 函数依赖于 X，写作 X → Y。</li>
+<li><strong>部分函数依赖（partial functional dependency）</strong>：如果 X→Y，<strong>并且存在 X 的一个真子集 X0</strong>，使得 X0→Y，则称 Y 对 X 部分函数依赖。</li>
+<li><strong>传递函数依赖</strong>：在关系模式 R(U)中，设 X，Y，Z 是 U 的不同的属性子集，如果 X 确定 Y、Y 确定 Z，且有 X 不包含 Y，Y 不确定 X，（X∪Y）∩Z&#x3D;空集合，则称 Z 传递函数依赖（transitive functional dependency）于 X。传递函数依赖会导致数据冗余和异常。传递函数依赖的 Y 和 Z 子集往往同属于某一个事物，因此可将其合并放到一个表中。比如在关系 R（学号 , 姓名, 系名，系主任）中，学号 → 系名，系名 → 系主任，所以存在非主属性系主任对于学号的传递函数依赖。</li>
+</ul>
+</li>
+<li>第三范式：3NF 在 2NF 的基础之上，消除了非主属性对于码的传递函数依赖 。符合 3NF 要求的数据库设计，<strong>基本</strong>上解决了数据冗余过大，插入异常，修改异常，删除异常的问题。</li>
+</ul>
+</li>
+</ul>
+<p>上述内容参考了：<a target="_blank" rel="noopener" href="https://javaguide.cn/">Java Guide</a>。</p>
+
       
     </div>
 
@@ -419,9 +555,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2025-11-14 21:20:34 / Modified: 21:23:07" itemprop="dateCreated datePublished" datetime="2025-11-14T21:20:34+08:00">2025-11-14</time>
+      <time title="Created: 2025-11-14 21:20:34" itemprop="dateCreated datePublished" datetime="2025-11-14T21:20:34+08:00">2025-11-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-10 13:46:40" itemprop="dateModified" datetime="2026-02-10T13:46:40+08:00">2026-02-10</time>
     </span>
 
   
@@ -441,15 +583,27 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          初步归纳，等待后续更新。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/11/14/use-mybatis-plus/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><p>在 <code>pom.xml</code> 文件中，加入 <code>mybatis-plus-boot-starter</code> 的依赖。<code>mybatis-plus-boot-starter</code> 是一个“全家桶”，它会自动帮你引入 Mybatis-Plus 核心库、MyBatis 核心库以及与 Spring Boot 集成的所有必要组件。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span> <span class="comment">&lt;!-- 请根据需要选择合适的版本 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 你还需要数据库驱动，比如 MySQL --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置数据源"><a href="#配置数据源" class="headerlink" title="配置数据源"></a>配置数据源</h3><p>在 <code>src/main/resources/application.yaml</code> 中，配置数据库的连接信息。</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/my_database?serverTimezone=UTC</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">your_password</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建绑定"><a href="#创建绑定" class="headerlink" title="创建绑定"></a>创建绑定</h3><p>使用 @TableName 创建实体类 Entity 和数据库表的绑定；使用 @TableId、@TableField 来创建属性和字段的绑定。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@TableName(&quot;tb_user&quot;)</span> <span class="comment">// 将这个类映射到数据库的 &quot;tb_user&quot; 表</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="meta">@TableId(value = &quot;id&quot;, type = IdType.AUTO)</span> <span class="comment">// 声明主键，并设置为自增</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>让 Mapper 接口继承 <code>BaseMapper&lt;T&gt;</code>。通过继承 <code>BaseMapper&lt;User&gt;</code>，<code>UserMapper</code> 接口就拥有了一整套强大的、无需编写 SQL 的 CRUD 方法，例如 <code>insert</code>, <code>selectById</code>, <code>updateById</code>, <code>delete</code>, <code>selectList</code> 等。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 传入你的实体类 User</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserMapper</span> <span class="keyword">extends</span> <span class="title class_">BaseMapper</span>&lt;User&gt; &#123;</span><br><span class="line">    <span class="comment">// 通常这里是空的，因为 BaseMapper 已经提供了所有常用方法</span></span><br><span class="line">    <span class="comment">// 如果有特别复杂的 SQL，可以在这里自定义方法，并配合 XML 文件实现</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>UserMapper</code> 还是一个接口，没有实现类，所以最后还需在 Spring Boot 主启动类上，添加 <code>@MapperScan</code> 注解。<code>@MapperScan</code> 注解会告诉 Spring Boot 在启动时去扫描指定的包，为所有继承了 <code>BaseMapper</code> 的接口动态地创建一个<strong>代理实现类</strong>，并注册到 Spring 容器中。这样，你才能在其他地方通过 <code>@Autowired</code> 或 <code>@Resource</code> 注入 <code>UserMapper</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@MapperScan(&quot;com.example.project.mapper&quot;)</span> <span class="comment">// 告诉 Spring 去哪里找你的 Mapper 接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProjectApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(ProjectApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="进阶：Service-层"><a href="#进阶：Service-层" class="headerlink" title="进阶：Service 层"></a>进阶：Service 层</h3><p>让 Service 层的接口继承 <code>IService&lt;T&gt;</code>接口，Service 的实现类继承 <code>ServiceImpl&lt;M, T&gt;</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Service 接口还要继承一个接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">IUserService</span> <span class="keyword">extends</span> <span class="title class_">IService</span>&lt;User&gt; &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Service 实现类要实现它接口中定义的所有抽象方法，这通过继承 ServiceImpl 而实现</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">extends</span> <span class="title class_">ServiceImpl</span>&lt;UserMapper, User&gt; <span class="keyword">implements</span> <span class="title class_">IUserService</span> &#123;</span><br><span class="line">    <span class="comment">// 这里可以编写你的业务逻辑</span></span><br><span class="line">    <span class="comment">// 你可以直接使用 ServiceImpl 提供的方法，如 getById(), save(), list()，也可以使用 query(), update() 来进行链式操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="进阶：插件"><a href="#进阶：插件" class="headerlink" title="进阶：插件"></a>进阶：插件</h3><p>创建 Mybatis-Plus 的配置类，用来添加分页插件、乐观锁插件等。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisPlusConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MybatisPlusInterceptor <span class="title function_">mybatisPlusInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">MybatisPlusInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MybatisPlusInterceptor</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1. 添加分页插件 (最常用)</span></span><br><span class="line">        interceptor.addInnerInterceptor(<span class="keyword">new</span> <span class="title class_">PaginationInnerInterceptor</span>(DbType.MYSQL));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 添加乐观锁插件 (如果需要)</span></span><br><span class="line">        <span class="comment">// interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
       
     </div>
 
@@ -503,9 +657,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2025-11-14 21:14:26 / Modified: 21:25:18" itemprop="dateCreated datePublished" datetime="2025-11-14T21:14:26+08:00">2025-11-14</time>
+      <time title="Created: 2025-11-14 21:14:26" itemprop="dateCreated datePublished" datetime="2025-11-14T21:14:26+08:00">2025-11-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-10 13:48:14" itemprop="dateModified" datetime="2026-02-10T13:48:14+08:00">2026-02-10</time>
     </span>
 
   
@@ -525,15 +685,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          简单整理。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/11/14/get-and-post/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <p>GET 和 POST 是 HTTP 协议中两种常用的请求方法，它们在不同的场景和目的下有不同的特点和用法。一般来说，可以从以下几个方面来区分它们：</p>
+<ul>
+<li>语义上的区别：GET 通常用于获取或查询资源，而 POST 通常用于创建或修改资源。GET 请求应该是幂等的，即多次重复执行不会改变资源的状态，而 POST 请求则可能有副作用，即每次执行可能会产生不同的结果或影响资源的状态。</li>
+<li>格式上的区别：GET 请求的参数通常放在 URL 中，形成查询字符串（querystring），而 POST 请求的参数通常放在请求体（body）中，可以有多种编码格式，如 application&#x2F;x-www-form-urlencoded、multipart&#x2F;form-data、application&#x2F;json 等。GET 请求的 URL 长度受到浏览器和服务器的限制，而 POST 请求的 body 大小则没有明确的限制。</li>
+<li>缓存上的区别：由于 GET 请求是幂等的，它可以被浏览器或其他中间节点（如代理、网关）缓存起来，以提高性能和效率。而 POST 请求则不适合被缓存，因为它可能有副作用，每次执行可能需要实时的响应。</li>
+<li>安全性上的区别：GET 请求和 POST 请求都不是绝对安全的，因为 HTTP 协议本身是明文传输的，无论是 URL、header 还是 body 都可能被窃取或篡改。为了保证安全性，必须使用 HTTPS 协议来加密传输数据。不过，在一些场景下，GET 请求相比 POST 请求更容易泄露敏感数据，因为 GET 请求的参数会出现在 URL 中，而 URL 可能会被记录在浏览器历史、服务器日志、代理日志等地方。因此，一般情况下，私密数据传输应该使用 POST + body。</li>
+</ul>
+<p>上述内容参考了：<a target="_blank" rel="noopener" href="https://javaguide.cn/">Java Guide</a>。</p>
+
       
     </div>
 
@@ -595,7 +755,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-11-16 11:08:42" itemprop="dateModified" datetime="2025-11-16T11:08:42+08:00">2025-11-16</time>
+      <time title="Modified: 2026-02-10 13:46:45" itemprop="dateModified" datetime="2026-02-10T13:46:45+08:00">2026-02-10</time>
     </span>
 
   
@@ -615,15 +775,100 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          整理一下，按需补充。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/10/20/springboot-annotations/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><ul>
+<li><code>@SpringBootApplication</code>: Spring Boot 应用的核心注解，通常用于标注主启动类。可以把 <code>@SpringBootApplication</code>看作是下面<strong>三个注解的组合</strong>：<ul>
+<li><code>@EnableAutoConfiguration</code>：启用 Spring Boot 的自动配置机制。</li>
+</ul>
+<ul>
+<li><code>@ComponentScan</code>：扫描 <code>@Component</code>、<code>@Service</code>、<code>@Repository</code>、<code>@Controller</code> 等注解的类。</li>
+<li><code>@Configuration</code>：允许注册额外的 Spring Bean 或导入其他配置类。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><code>@MapperScan</code>: 这是 MyBatis-Spring 提供的注解。它告诉框架去哪里查找 Mapper 接口。它会扫描指定的包，并将其中定义的接口注册为 Spring Bean。</li>
+</ul>
+<h2 id="Bean-注册"><a href="#Bean-注册" class="headerlink" title="Bean 注册"></a>Bean 注册</h2><p>Spring 容器需要知道哪些类需要被管理为 Bean。除了使用 <code>@Bean</code> 方法显式声明（通常在 <code>@Configuration</code> 类中），更常见的方式是使用 Stereotype（构造型） 注解<strong>标记类</strong>，并配合组件扫描（Component Scanning）机制，让 Spring 自动发现并注册这些类作为 Bean。这些 Bean 后续可以通过 <code>@Autowired</code> 等方式注入到其他组件中。下面是常见的构造型注解：</p>
+<ul>
+<li><code>@Component</code>：通用的注解，可标注任意类为 Spring 的组件。如果一个 Bean 不知道属于哪个层，可以使用<code>@Component</code> 注解标注。</li>
+<li><code>@Repository</code> : 对应持久层即 Dao 层，主要用于数据库相关操作。</li>
+<li><code>@Service</code> : 对应服务层，主要涉及一些复杂的逻辑，需要用到 Dao 层。</li>
+<li><code>@Controller</code> : 对应 Spring MVC 控制层，主要用于接受用户请求并调用 Service 层返回数据给前端页面。主要用于传统的 Spring MVC 应用，方法返回值通常是逻辑视图名，需要视图解析器配合渲染页面。如果需要返回数据（如 JSON），则需要在方法上额外添加 <code>@ResponseBody</code> 注解。</li>
+<li><code>@RestController</code>：一个组合注解，等效于 <code>@Controller</code> + <code>@ResponseBody</code>。它专门用于构建 RESTful Web 服务的控制器。标注了 <code>@RestController</code> 的类，其所有处理器方法（handler methods）的返回值都会被自动序列化（通常为 JSON）并写入 HTTP 响应体，而不是被解析为视图名称。在现代前后端分离的应用中，<code>@RestController</code> 是更常用的选择。</li>
+<li><code>@Configuration</code>: 主要用于声明一个类是 Spring 的配置类。虽然也可以用 <code>@Component</code> 注解替代，但 <code>@Configuration</code> 能够更明确地表达该类的用途（定义 Bean）。</li>
+<li><code>@Bean</code>: 通常用于标注在方法上，位于一个  <code>@Configuration</code>  类中。它告诉 Spring “这个方法会返回一个对象，请把这个对象作为 Bean 注册起来”。它适用依赖注入于你无法修改源代码的第三方库中的类，或需要进行复杂逻辑来创建 Bean（例如，根据条件创建、需要配置多个属性）等情况。<br>如果  <code>@Component</code>  或  <code>@Bean</code>  注解没有明确指定 Bean 的名字，Spring 会根据一定的默认规则来生成 Bean 的名字。对于前者， Bean 的名字将是该类的非限定类名（simple class name）的<strong>首字母小写</strong>；对于后者，Bean 的名字将是  <code>@Bean</code> 所注解的方法的<strong>方法名</strong>。</li>
+</ul>
+<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><ul>
+<li><code>@Autowired</code> 用于自动注入依赖项（即其他 Spring Bean）。它可以标注在构造器、字段、Setter 方法或配置方法上，Spring 容器会<strong>自动查找匹配类型的 Bean 并将其注入</strong>。当存在多个相同类型的 Bean 时，<code>@Autowired</code> 默认按类型注入可能产生歧义，此时，可以与 <code>@Qualifier</code> 结合使用，通过<strong>指定 Bean 的名称</strong>来精确选择需要注入的实例。</li>
+<li><code>@Resource(name=&quot;beanName&quot;)</code>是 JSR-250 规范定义的注解，也用于依赖注入。它默认按<strong>名称 (by Name)</strong> 查找 Bean 进行注入。如果未指定 <code>name</code> 属性，它会尝试根据字段名或方法名查找，如果找不到，则回退到按类型查找（类似 <code>@Autowired</code>）。<code>@Resource</code>只能标注在字段 和 Setter 方法上，不支持构造器注入。</li>
+</ul>
+<h2 id="注入配置"><a href="#注入配置" class="headerlink" title="注入配置"></a>注入配置</h2><ul>
+<li><code>@Value(&quot;$&#123;app.name&#125;&quot;)</code>  注入配置文件（如  <code>application.properties</code>  或  <code>application.yml</code>）中的单个属性值给 Bean 对象的单个属性，可以以冒号的形式提供默认值，如<code>@Value(&quot;$&#123;server.port:8080&#125;&quot;)</code></li>
+<li><code>@ConfigurationProperties</code> 用于将一组相关的配置属性绑定到一个 Bean 对象上，它将配置文件的层次结构映射到 Bean 对象的属性结构。如<code>@ConfigurationProperties(prefix = &quot;mail&quot;)</code>会绑定以“mail”为前缀的配置文件配置项到一个类上。之后无需在每一个属性上都使用<code>@Value(&quot;$&#123;mail.name&#125;&quot;)</code>注解。</li>
+</ul>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><h3 id="Review：异常的层次结构"><a href="#Review：异常的层次结构" class="headerlink" title="Review：异常的层次结构"></a>Review：异常的层次结构</h3><ul>
+<li><strong>Throwable</strong>：所有错误和异常的超类。</li>
+<li><strong>Error</strong>：严重错误，通常是 JVM 自身的问题，如  OutOfMemoryError、StackOverflowError。程序通常无法处理和恢复，我们一般不捕获  Error。</li>
+<li><strong>Exception</strong>：程序本身可以处理的异常。它又分为两类： - <strong>Checked Exceptions (受检异常)</strong>：在编译时就必须处理的异常。编译器会强制你使用  try-catch  捕获或者使用  throws  声明抛出。例如  IOException、SQLException。它们通常是程序在与外部环境（如文件、网络、数据库）交互时可能发生的、可预见的问题。 - <strong>Unchecked Exceptions (非受检异常)</strong>：也叫  <strong>RuntimeException</strong>。在编译时不会被检查，在运行时才可能抛出。例如  NullPointerException、ArrayIndexOutOfBoundsException。它们通常是由于程序逻辑错误（Bugs）导致的，是应该在编码阶段就避免的。<br><img data-src="/2025/10/20/springboot-annotations/1.png"></li>
+</ul>
+<h3 id="Review：异常处理的五个关键字"><a href="#Review：异常处理的五个关键字" class="headerlink" title="Review：异常处理的五个关键字"></a>Review：异常处理的五个关键字</h3><ul>
+<li><strong>try</strong>：包裹可能会<strong>抛出</strong>异常的代码块。</li>
+<li><strong>catch</strong>：用于<strong>捕获</strong>并处理  try  块中抛出的特定类型的异常。可以有多个  catch  块来处理不同类型的异常，捕获时遵循<strong>从小到大</strong>的原则（子类异常在前，父类异常在后）。</li>
+<li><strong>finally</strong>：无论是否发生异常，finally  块中的代码<strong>总会</strong>执行（除非 JVM 退出，如  System.exit()）。通常用于释放资源，如关闭文件流、数据库连接等。</li>
+<li><strong>throw</strong>：在代码中手动抛出一个异常对象。通常用于在检测到错误条件时主动中断程序流程。</li>
+<li><strong>throws</strong>：用在方法签名上，声明该方法可能会抛出某些受检异常。<strong>它将处理异常的责任转移给了方法的调用者</strong>。</li>
+<li><strong>注意</strong>：try-with-resources (Java 7+)是对  finally  块中资源释放代码的巨大简化。任何实现了  java.lang.AutoCloseable  或  java.io.Closeable  接口的资源都可以使用此语法，JVM 会自动为你调用  close()  方法，从而替代了繁琐的 finally 块：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 传统方式 (繁琐且容易出错)</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">copyFileLegacy</span><span class="params">(String src, String dest)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="type">FileInputStream</span> <span class="variable">in</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">FileOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        in = <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(src);</span><br><span class="line">        out = <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(dest);</span><br><span class="line">        <span class="comment">// ... copy logic ...</span></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (in != <span class="literal">null</span>) in.close();</span><br><span class="line">        <span class="keyword">if</span> (out != <span class="literal">null</span>) out.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// try-with-resources 方式 (简洁、安全)</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">copyFileModern</span><span class="params">(String src, String dest)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="keyword">try</span> (<span class="type">FileInputStream</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(src);</span><br><span class="line">         <span class="type">FileOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(dest)) &#123;</span><br><span class="line">        <span class="comment">// ... copy logic ...</span></span><br><span class="line">    &#125; <span class="comment">// in 和 out 会在这里被自动关闭，即使发生异常</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-Spring-和第三方库进行全局异常处理"><a href="#使用-Spring-和第三方库进行全局异常处理" class="headerlink" title="使用 Spring 和第三方库进行全局异常处理"></a>使用 Spring 和第三方库进行全局异常处理</h3><p>传统的 Java Web 开发（如 Servlet）中，每个方法都可能需要写大量的  try-catch  块来<strong>捕获异常</strong>，导致业务逻辑和异常处理逻辑耦合在一起，代码非常臃肿。Spring 框架通过  <strong>AOP (面向切面编程)</strong>  的思想，<strong>将异常捕获的逻辑从业务代码中分离出来</strong>，进行集中管理，完美地解决了这个问题。这主要通过以下注解实现：</p>
+<ul>
+<li><code>@ControllerAdvice</code> &#x2F; <code>@RestControllerAdvice</code> : <code>@ControllerAdvice</code> 作用于一个类上，表明这个类是一个“全局异常处理器”。它可以<strong>拦截并处理</strong>所有（或指定包下）<code>@Controller</code> 中抛出的异常；<code>@RestControllerAdvice</code> 是 <code>@ControllerAdvice</code> 和 <code>@ResponseBody</code> 的组合。它不仅具备 <code>@ControllerAdvice</code> 的功能，还会自动将处理方法的返回值序列化为 JSON 格式。这在构建 RESTful API 时非常常用。</li>
+<li><code>@ExceptionHandler</code> : 这个注解作用于方法上，并且该方法必须位于一个被 <code>@ControllerAdvice</code> 或 <code>@RestControllerAdvice</code> 注解的类中。<strong>它指定了该方法专门负责处理哪种类型的异常</strong>。当控制器中抛出匹配类型的异常时，Spring 会自动调用这个被注解的方法，并将异常对象作为参数传入。</li>
+<li><code>@SneakyThrows</code>: 当你的方法调用了一个可能会抛出受检异常的、在方法签名上使用了 throws 关键字的方法时，编译器会强制你要么使用 try-catch 来在这里<strong>捕获受检异常</strong>，要么你的这个方法的签名上也加上 throws 关键字<strong>继续抛出受检异常</strong>传递给上层处理。而采用了全局异常处理体系的在现代分层架构中，受检异常，比如一个底层的  IOException  可能需要穿透好几层（Repository -&gt; Service -&gt; Controller）才能最终被  <code>@RestControllerAdvice</code>  捕获。这意味着每一层的每个方法签名都得加上  throws IOException。这非常繁琐。Lombok 库的 <code>@SneakyThrows</code> 的作用是利用 Java 泛型和类型擦除的一个漏洞，欺骗编译器，让它相信这个受检异常已经被处理了，允许这个受检异常被看作是非受检异常，无 throws 关键字地被抛出，进而简化了代码。当你确定某个受检异常在当前上下文中几乎不可能发生，或者你希望将它交由上层的全局异常处理器来统一处理时，可以使用它来简化代码。<ul>
+<li><em>注意</em>：受检异常是编译器强制你必须处理（try-catch  或  throws）的异常；而非受检异常则由你自行决定是否处理，编译器<strong>完全忽略</strong>它们。出于这个原因，有程序员会倾向于将自定义的业务异常（比如  UserNotFoundException, OrderStateException）定义为非受检异常，以此避免  throws  污染各层接口。</li>
+</ul>
+</li>
+</ul>
+<h2 id="控制层"><a href="#控制层" class="headerlink" title="控制层"></a>控制层</h2><ul>
+<li><code>@RequestMapping</code>: 最通用的请求映射注解，用于将 HTTP 请求（URL、请求方法等）映射到控制器的方法上。可以用于类级别（定义基础路径）和方法级别。</li>
+<li><code>@GetMapping</code>: 专门用于处理 HTTP GET 请求，<code>@GetMapping(&quot;users&quot;)</code> 等价于<code>@RequestMapping(value=&quot;/users&quot;,method=RequestMethod.GET)</code>。方法级别。</li>
+<li><code>@PathVariable</code>: 用于<strong>从 URL 的路径中提取值</strong>并绑定到方法参数上，用于参数绑定。例如，从  &#x2F;users&#x2F;{id}  中获取  id  的值。<ul>
+<li><em>注意</em>：URL 全称是  <strong>Uniform Resource Locator</strong>（统一资源定位符），一个 URL &#x3D; 协议+主机名（ip 地址或域名）+端口（80 和 443 会省略）+路径（资源在服务器上的具体位置）+ 查询参数（client 给服务器提供的额外信息，以 ? 开始，用 &amp; 分隔键值对）+片段（指向资源内部的特定部分，又称锚点，以 # 开始）。</li>
+</ul>
+</li>
+<li><code>@RequestParam</code>: 用于<strong>从请求参数或表单数据中提取值</strong>并绑定到方法参数上，用于参数绑定。例如，从 &#x2F;users?name&#x3D;john 中获取 name 的值。</li>
+<li><code>@RequestBody</code>: 用于将 HTTP 请求的 body 内容，即请求体（通常是 JSON 或 XML 数据）反序列化为一个 Java 对象，并绑定到方法参数上。用于参数绑定。</li>
+<li><code>@ResponseBody</code>: 标记方法的返回值应该被直接写入 HTTP 响应体中，而不是被解析为视图。@RestController  已经默认包含了此功能。标记在方法上。</li>
+<li><code>@ResponseStatus</code>: 用于指定方法成功执行后返回的 HTTP 状态码，例如  <code>@ResponseStatus(HttpStatus.CREATED)</code>  表示返回  201 Created。</li>
+</ul>
+<h2 id="第三方库"><a href="#第三方库" class="headerlink" title="第三方库"></a>第三方库</h2><h3 id="Lombok"><a href="#Lombok" class="headerlink" title="Lombok"></a>Lombok</h3><ul>
+<li><code>@Data</code>: 当你给一个类加上<code>@Data</code> 注解后，Lombok 会在编译时自动为你生成该类所有字段的 <code>getter</code> 方法 (例如 getName())；<code>setter</code> 方法 (例如 setName(…))；一个合适的 <code>toString()</code> 方法，用于打印对象内容；一个合适的 <code>equals()</code> 和 <code>hashCode()</code> 方法，用于比较对象是否相等；一个接收所有 final 字段的构造函数。可以把它看作包含了<code>@Getter</code>, <code>@Setter</code>, <code>@ToString</code>, <code>@EqualsAndHashCode</code> 和 <code>@RequiredArgsConstructor</code></li>
+<li><code>@Getter</code>: 当你给一个类加上 <code>@Getter</code> 注解后，Lombok 会在编译时，为该类中所有非静态的字段生成对应的 getXxx() 或 isXxx() 方法。</li>
+<li><code>@NoArgsConstructor</code>: 生成一个无参构造函数。</li>
+<li><code>@AllArgsConstructor</code>: 生成一个包含所有字段的构造函数。</li>
+<li><code>@RequiredArgsConstructor</code>: 为 final 或标记为 @NonNull 的字段生成构造函数。</li>
+<li><code>@Builder</code>: 实现建造者模式，可以链式调用来创建对象实例。</li>
+<li><code>@Slf4j</code>: “Simple Logging Facade for Java” 的缩写。它是一个日志门面，可以与多种日志实现（如 Logback, Log4j2）配合使用。当你给一个类加上 <code>@Slf4j</code> 注解后，Lombok 会在编译时自动为你生成一个名为 log 的静态 final 日志记录器对象。</li>
+</ul>
+<h3 id="MyBatis-Plus"><a href="#MyBatis-Plus" class="headerlink" title="MyBatis-Plus"></a>MyBatis-Plus</h3><ul>
+<li><code>@TableName</code>: 该注解用于指定实体类对应的数据库表名。当实体类名与数据库表名不一致，或者实体类名不是数据库表名的驼峰写法时，您需要使用这个注解来明确指定表名。</li>
+<li><code>@TableId</code>: 该注解用于标记实体类中的主键字段，如果一致则可以省略。</li>
+<li><code>@TableField</code>: 用于非主键字段上，用于当字段名与表的列名不一致，或不是列名的驼峰写法时进行映射。该注解也用来配置自动填充策略。</li>
+</ul>
+<h3 id="Swagger"><a href="#Swagger" class="headerlink" title="Swagger"></a>Swagger</h3><ul>
+<li><code>@Tag(name = &quot;...&quot;)</code>: 为控制器类提供一个分组标签，在 API 文档中进行分类。</li>
+<li><code>@Operation(summary = &quot;...&quot;)</code>: 为具体的 API 接口方法提供一个简短的摘要描述。</li>
+<li><code>@Schema(description = &quot;...&quot;)</code>: 为 DTO 的类或字段提供详细的描述和示例。</li>
+</ul>
+<h3 id="Jackson"><a href="#Jackson" class="headerlink" title="Jackson"></a>Jackson</h3><ul>
+<li><code>@JsonFormat</code>: 用于格式化日期时间字段，确保 Java 的日期对象能够按照一定的格式，如 yyyy-MM-dd HH:mm:ss，序列化为 JSON；同样也确保 JSON 可读字符串能够以一定的格式被转化为 Java 对象。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://javaguide.cn/">Java Guide</a></li>
+<li>《Java 核心技术 卷 1 开发基础（原书第十二版）》</li>
+</ul>
+
       
     </div>
 
@@ -667,7 +912,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/10/10/inheritance-and-interface/" class="post-title-link" itemprop="url">从继承到接口</a>
+          <a href="/2025/10/10/inheritance-and-interface/" class="post-title-link" itemprop="url">继承与接口的比较</a>
         </h2>
 
         <div class="post-meta-container">
@@ -677,9 +922,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2025-10-10 17:11:55 / Modified: 17:13:26" itemprop="dateCreated datePublished" datetime="2025-10-10T17:11:55+08:00">2025-10-10</time>
+      <time title="Created: 2025-10-10 17:11:55" itemprop="dateCreated datePublished" datetime="2025-10-10T17:11:55+08:00">2025-10-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-10 13:47:57" itemprop="dateModified" datetime="2026-02-10T13:47:57+08:00">2026-02-10</time>
     </span>
 
   
@@ -699,15 +950,49 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          简明扼要。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/10/10/inheritance-and-interface/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><ol>
+<li><strong>核心关系：</strong> “is-a”（是一种）关系。子类是父类的一种更具体的类型（例如：Car is-a Vehicle）。</li>
+<li><strong>实现方式：</strong>  使用  extends  关键字来声明继承关系，例如  class Child extends Parent。</li>
+<li><strong>继承内容：</strong>  子类自动继承父类所有非  private  的成员变量和成员方法，可以直接使用。</li>
+<li><strong>不继承内容：</strong>  构造方法和被  private  修饰的成员不能被子类直接继承或访问。</li>
+<li><strong>构造方法规则：</strong>  子类的构造方法第一行必须调用父类的构造方法或本类的另一个构造方法 this(…)。如果未显式使用  super(…)  调用，编译器会自动添加一个无参的  super()。如果父类没有无参构造方法，子类必须在其所有构造方法中显式调用父类的有参构造方法。</li>
+<li><strong>方法重写 (Overriding)：</strong>  子类可以提供一个与父类方法签名（方法名、参数列表）完全相同的新实现来覆盖父类的行为。建议使用  @Override  注解进行标记。</li>
+<li><strong>重写规则：</strong>  重写的方法访问权限不能比父类更严格，返回类型必须相同或者是父类返回类型的子类。</li>
+<li><strong>成员变量隐藏 (Hiding)：</strong>  成员变量只能被隐藏，不能被重写。当子类定义了与父类同名的变量时，具体访问哪个变量取决于<strong>引用的类型</strong>，而不是对象的实际类型。</li>
+<li><strong>super  关键字：</strong>  在子类中，使用  super.成员   来访问父类中被隐藏的变量或被重写的方法；使用  super()  来调用父类的构造方法。</li>
+<li><strong>多态 (Polymorphism)：</strong>  父类的引用可以指向子类的对象（Parent p &#x3D; new Child();），这被称为向上转型。</li>
+<li><strong>多态表现：</strong>  当通过父类引用调用一个被重写的方法时，实际执行的是子类中的方法版本。</li>
+<li><strong>向下转型 (Downcasting)：</strong>  将父类引用强制转换回子类引用（Child c &#x3D; (Child) p;），这存在  ClassCastException  的风险。</li>
+<li><strong>instanceof  关键字：</strong>  在进行向下转型之前，应使用  instanceof  关键字检查引用的实际对象类型，以确保类型安全，避免异常。</li>
+<li><strong>final  关键字：</strong>  被  final  修饰的类不能被继承；被  final  修饰的方法不能被子类重写。</li>
+<li><strong>单继承原则：</strong> Java 只支持单继承，即一个类最多只能有一个直接父类，但可以通过实现多个接口来弥补。</li>
+</ol>
+<h2 id="抽象父类的继承"><a href="#抽象父类的继承" class="headerlink" title="抽象父类的继承"></a>抽象父类的继承</h2><ol>
+<li><strong>核心关系：</strong>  既是 “is-a” 关系，又是一种<strong>不完整</strong>的设计模板。它代表一个抽象的概念，其本身不能被完整地实现。</li>
+<li><strong>声明方式：</strong>  类本身必须使用  abstract  关键字声明。类中可以包含抽象方法，也必须用  abstract  声明且没有方法体。</li>
+<li><strong>不可实例化：</strong>  不能使用  new  关键字直接创建抽象类的实例，因为它是不完整的。</li>
+<li><strong>成员构成：</strong>  抽象类是普通类和接口的混合体，它可以包含<strong>成员变量、常量、构造方法、具体方法</strong>和<strong>抽象方法</strong>。</li>
+<li><strong>强制规则：</strong>  任何包含一个或多个抽象方法的类，<strong>必须</strong>被声明为抽象类。但抽象类可以不包含任何抽象方法。</li>
+<li><strong>子类责任：</strong>  继承抽象类的具体子类<strong>必须</strong>实现（重写）父类中所有的抽象方法。如果子类不想全部实现，那么该子类也必须被声明为抽象类。</li>
+<li><strong>构造方法用途：</strong>  抽象类可以有构造方法，其唯一目的是为了被子类的构造方法通过  super()  调用，以初始化从父类继承来的成员变量。</li>
+<li><strong>核心用途：</strong>  完美地结合了<strong>代码复用</strong>和<strong>行为规范</strong>。它为所有子类提供公共的状态和行为（通过成员变量和具体方法），同时强制它们必须实现某些特定的行为（通过抽象方法）。</li>
+</ol>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><ol>
+<li><strong>核心关系：</strong> “can-do”（能做什么）或行为契约。接口定义了一组类必须遵守的规范或能力，强调“能做什么”，而不是“是什么”。</li>
+<li><strong>实现方式：</strong>  使用  implements  关键字来实现一个或多个接口，例如  class MyClass implements MyInterface。</li>
+<li><strong>多实现：</strong>  一个类可以同时实现多个接口，从而获得多种不同的能力。这是 Java 实现“类多重继承”效果的方式。</li>
+<li><strong>实现承诺：</strong>  实现类必须为接口中所有的抽象方法提供具体实现（方法体）。如果未能全部实现，该类必须被声明为抽象类 (abstract class)。</li>
+<li><strong>抽象方法：</strong>  接口中的方法默认是  public abstract  的，没有方法体。实现类在重写时必须使用  public  访问修饰符。</li>
+<li><strong>常量：</strong>  接口中声明的任何变量都默认是  public static final  的，即全局常量，必须在声明时初始化。</li>
+<li><strong>默认方法 (Default Methods - Java 8+)：</strong>  使用  default  关键字，接口可以提供方法的默认实现。实现类可以选择直接继承使用，也可以重写它。</li>
+<li><strong>静态方法 (Static Methods - Java 8+)：</strong>  接口可以包含  static  方法。这些方法只能通过   接口名.方法名()  的方式调用，不能被实现类继承或重写。</li>
+<li><strong>多态应用：</strong>  接口引用可以指向其任何实现类的对象（MyInterface ref &#x3D; new MyClass();），这是实现多态和程序解耦的关键。</li>
+<li><strong>不可实例化：</strong>  接口不能被直接实例化（不能使用  new  关键字创建接口自身的实例）。</li>
+<li><strong>接口间的继承：</strong>  一个接口可以使用  extends  关键字继承一个或多个其他接口，从而<strong>将父接口的所有成员合并到自身</strong>。</li>
+<li><strong>默认方法冲突：</strong>  如果一个类实现的多个接口中包含签名相同的默认方法，该类必须重写此方法以解决冲突。</li>
+<li><strong>无状态与构造方法：</strong>  接口没有成员变量（只有常量）和构造方法。它只定义行为，不关心状态的存储。</li>
+</ol>
+
       
     </div>
 
@@ -769,7 +1054,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-10-10 17:11:06" itemprop="dateModified" datetime="2025-10-10T17:11:06+08:00">2025-10-10</time>
+      <time title="Modified: 2026-02-10 13:46:53" itemprop="dateModified" datetime="2026-02-10T13:46:53+08:00">2026-02-10</time>
     </span>
 
   
@@ -789,15 +1074,60 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          总结了pom文件中常常出现的一些标签。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/10/09/maven-tags/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <h2 id="基础坐标"><a href="#基础坐标" class="headerlink" title="基础坐标"></a>基础坐标</h2><ul>
+<li><code>&lt;groupId&gt;</code>: 项目组 ID。通常是公司或组织的反向域名。groupId 一般分为多段，通常情况下，第一段为域，第二段为公司名称，第三段为项目名称。</li>
+<li><code>&lt;artifactId&gt;</code>: 项目 ID。它是在 groupId 内唯一的项目名称。</li>
+<li><code>&lt;version&gt;</code>: 项目版本号。例如 0.0.1-SNAPSHOT。<ul>
+<li>SNAPSHOT 后缀表示这是一个不稳定的开发版本。</li>
+</ul>
+</li>
+<li><code>&lt;packaging&gt;</code>: 项目的打包方式。<ul>
+<li>jar (默认): 打包成 Java Archive 文件。</li>
+<li>war: 打包成 Web Application Archive 文件，用于部署到 Web 服务器。</li>
+<li>pom: 用于<strong>父模块</strong>或聚合模块，表示<strong>它只管理其他模块，本身不产生构建产物</strong>。</li>
+</ul>
+</li>
+</ul>
+<h2 id="依赖管理"><a href="#依赖管理" class="headerlink" title="依赖管理"></a>依赖管理</h2><ul>
+<li><code>&lt;dependencies&gt;</code>: 根标签，包含所有具体的依赖项。</li>
+<li><code>&lt;dependency&gt;</code>: 定义一个具体的依赖项。<ul>
+<li><code>&lt;groupId&gt;</code>, <code>&lt;artifactId&gt;</code>, <code>&lt;version&gt;</code>: 依赖项自身的 GAV 坐标。</li>
+<li><code>&lt;type&gt;</code>: 用来指定依赖项的类型。默认为 jar，也有可能为 pom——在这种情况下<strong>常常与<code>&lt;scope&gt;import&lt;/scope&gt;</code>一起使用</strong>，以实现 BOM ( Bill of Materials ) 机制，导入依赖版本配置。</li>
+<li><code>&lt;scope&gt;</code>: 依赖的范围，非常重要，决定了<strong>依赖在何时生效</strong>。<ul>
+<li>compile (默认): 编译、测试、运行时都需要。会被打包到最终产物中。</li>
+<li>provided: 编译和测试时需要，但运行时由环境（如 JDK 或 Web 容器）提供。例如 servlet-api。</li>
+<li>runtime: 编译时不需要，但运行时需要。例如 JDBC 驱动。</li>
+<li>test: 只在测试编译和运行时需要。例如 JUnit。</li>
+<li>import: 特殊，只在 <code>&lt;dependencyManagement&gt;</code> 中使用，用于从其他 POM 文件（“物料清单”）中导入依赖版本配置。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&lt;dependencyManagement&gt;</code>: 依赖管理声明。<strong>它不直接引入依赖，而是用于统一管理所有子模块中依赖的版本号</strong>。在<strong>父 POM</strong>中使用此标签声明版本后，子模块在引入该依赖时就无需再写 <code>&lt;version&gt;</code>，从而保证了所有模块版本一致，避免了版本冲突。</li>
+<li><strong>注意</strong>： 定义在父 POM 的 <code>&lt;dependencies&gt;</code> 里的依赖，会被所有子模块自动继承<strong>并引入</strong>；而定义在 <code>&lt;dependencyManagement&gt;</code> 里的依赖，<strong>仅仅是声明版本</strong>，如果子模块不通过自己的 <code>&lt;dependencies&gt;</code> 标签去引入它，那么这个依赖是不会被下载的。</li>
+</ul>
+<h2 id="项目关系"><a href="#项目关系" class="headerlink" title="项目关系"></a>项目关系</h2><ul>
+<li><code>&lt;parent&gt;</code>: 在子模块中声明其父项目。子模块会继承父项目 pom.xml 中的配置（如依赖版本、插件配置等）。</li>
+<li><code>&lt;modules&gt;</code>: 在父模块（<packaging>pom</packaging>）中声明其包含的所有子模块。</li>
+</ul>
+<h2 id="构建配置"><a href="#构建配置" class="headerlink" title="构建配置"></a>构建配置</h2><ul>
+<li><code>&lt;build&gt;</code>: 构建配置的根标签。</li>
+<li><code>&lt;plugins&gt;</code>: 包含所有构建过程中使用的插件。</li>
+<li><code>&lt;plugin&gt;</code>: 定义一个具体的插件，例如 maven-compiler-plugin (用于编译代码) 或 spotless-maven-plugin (用于格式化代码)。</li>
+<li><code>&lt;resources&gt;</code>: 定义需要被包含到最终产物中的资源文件（非 .java 文件，如 .xml, .properties）。默认目录是 src&#x2F;main&#x2F;resources。</li>
+</ul>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><ul>
+<li><code>&lt;properties&gt;</code>: 属性的根标签。用于定义可复用的变量，使配置更灵活、易于维护。比如可以在这里定义版本号、配置参数等，然后在<strong>该 POM 的其他地方</strong>通过 ${…} 的形式引用。</li>
+</ul>
+<h2 id="其他信息"><a href="#其他信息" class="headerlink" title="其他信息"></a>其他信息</h2><ul>
+<li><code>&lt;name&gt;</code>: 项目的名称，更具可读性。</li>
+<li><code>&lt;description&gt;</code>: 项目的详细描述。</li>
+<li><code>&lt;developers&gt;</code>: 项目开发者信息。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://javaguide.cn/">Java Guide</a>.</li>
+</ul>
+
       
     </div>
 
@@ -859,7 +1189,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-06-25 14:46:37" itemprop="dateModified" datetime="2025-06-25T14:46:37+08:00">2025-06-25</time>
+      <time title="Modified: 2026-02-10 13:41:08" itemprop="dateModified" datetime="2026-02-10T13:41:08+08:00">2026-02-10</time>
     </span>
 
   
