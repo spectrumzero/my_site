@@ -401,6 +401,55 @@
       </tags>
   </entry>
   <entry>
+    <title>MySQL 的架构</title>
+    <url>/2026/02/12/mysql-framework/</url>
+    <content><![CDATA[<p>简单来说，MySQL 主要分为 Server 层和存储引擎层。</p>
+<p><img data-src="/2026/02/12/mysql-framework/1.png"></p>
+<h2 id="Server-层基本组件"><a href="#Server-层基本组件" class="headerlink" title="Server 层基本组件"></a>Server 层基本组件</h2><h3 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h3><p>连接器主要负责用户登录数据库，进行用户的身份认证，包括校验账户密码，全局权限的校验。在 <code>mysql -u root -p</code> 时候触发，粒度较粗。连接的过程需要先经过 TCP 三次握手，<strong>因为 MySQL 是基于 TCP 协议进行传输的</strong>。如果想知道当前 MySQL 服务器被多少个客户端连接了，可以执行 <code>show processlist</code> 命令进行查看。针对空闲连接（<code>sleep</code>），MySQL 定义了最大空闲时长，默认值是 8 小时（28800 秒），如果空闲连接超过了这个时间，连接器就会自动将它断开。</p>
+<p>在连接建立时，连接器会读取该用户的权限并保存在当前会话中，这保证了即便管理员后续修改了<strong>登录密码</strong>或<strong>全局连接限制</strong>，当前已建立的连接也不会被强制断开或改变。</p>
+<p>但在执行具体的 SQL 语句时（无论是命中缓存还是由执行器执行），MySQL 都会实时核对内存中最新的  <strong>ACL（权限控制列表）</strong>。由于  <code>GRANT</code>  或  <code>REVOKE</code>  等权限变更命令会立即刷新内存中的权限状态，因此一旦管理员收回了某张表的权限，该连接下的后续操作会<strong>立即受限并报错</strong>，而不会因为连接已经建立就“终身豁免”。</p>
+<h3 id="查询缓存（MySQL-8-0-版本后移除）"><a href="#查询缓存（MySQL-8-0-版本后移除）" class="headerlink" title="查询缓存（MySQL 8.0 版本后移除）"></a>查询缓存（MySQL 8.0 版本后移除）</h3><p>查询缓存以  <strong>Key-Value</strong>  形式存储  <strong>SELECT</strong>  语句及其结果集，其 Key 是 SQL 语句的<strong>完整字符串哈希值</strong>。当连接建立并发送查询后，MySQL 会先进行“盲匹配”（不需要后面的分析）：如果 SQL 字符串完全一致（包括空格和大小写），则判定为命中。</p>
+<p>但在返回结果前，MySQL 必须进行<strong>实时权限校验</strong>。它会根据缓存中记录的表信息，核对当前用户是否仍拥有这些表的查询权限。如果权限已被管理员收回，即便缓存存在也会拒绝返回并报错；只有校验通过，才会直接将结果集返回客户端。若未命中，则进入分析器等后续环节，并在执行完成后将结果存入缓存。</p>
+<p>注意，假如你对一个表更新，这个表上的所有的查询缓存都会被清空，因此查询缓存失效在实际业务场景中可能会非常频繁，所以 MySQL 查询不建议使用缓存。MySQL 8.0 版本后删除了缓存的功能。</p>
+<h3 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h3><p>MySQL 没有命中缓存，那么就会进入分析器。分析器会分为两步：</p>
+<p><strong>第一步，词法分析</strong>，一条 SQL 语句有多个字符串组成，首先要提取关键字，比如 select，提出查询的表，提出字段名，提出查询条件等等。做完这些操作后，就会进入第二步。</p>
+<p><strong>第二步，语法分析</strong>，判断你输入的 SQL 是否正确，是否符合 MySQL 的语法。</p>
+<p>如果我们输入的 SQL 语句语法不对，就会在解析器这个阶段报错；但如果是<em>表不存在或者字段不存在</em>这样的错误，其实是在解析器后，优化器前，<strong>预处理器</strong>的阶段检测并报错的。</p>
+<p>之后，MySQL 就准备开始执行了，但是如何执行，怎么执行是最好的结果呢？这个时候就需要优化器上场了。</p>
+<h3 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h3><p>优化器的作用制定它认为的最优的执行方案&#x2F;执行计划（有时候可能也不是真正的最优），比如多个索引的时候该如何选择索引，多表查询的时候如何选择关联顺序等。可以说，经过了优化器之后这个语句具体该如何执行就已经定下来。</p>
+<h3 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h3><p>当确定了执行计划后，MySQL 就准备开始执行了，首先执行前会校验该用户有没有对某一个表甚至是某一个字段进行操作的权限（更加细粒度的校验），如果没有权限，就会返回错误信息，如果有权限，就会去调用引擎的接口，返回接口执行的结果。</p>
+<p>在执行的过程中，执行器与存储引擎的交互是以数据行为单位的。</p>
+<h3 id="通用日志模块-binlog"><a href="#通用日志模块-binlog" class="headerlink" title="通用日志模块 binlog"></a>通用日志模块 binlog</h3><p>查询语句就基本遵循上述的顺序执行了，即：全局权限校验-&gt;（查询缓存，未命中则继续）-&gt;分析器-&gt;优化器-&gt;执行器-&gt;引擎。</p>
+<p>但是对于更新操作，需要记录日志。MySQL 自带的日志模块是 <strong>binlog（归档日志）</strong> ，所有的存储引擎都可以使用。</p>
+<p>默认的 InnoDB 引擎还自带了一个日志模块 <strong>redo log（重做日志）</strong>。如果是更新语句，那么流程会稍微有点变化：</p>
+<ol>
+<li>前面的阶段不会走查询缓存。</li>
+<li>到了执行器阶段，调用存储引擎的接口后，InnoDB 引擎把数据保存在内存中，同时记录 redo log，此时 redo log 进入 prepare 状态，然后告诉执行器，执行完成了，随时可以提交。执行器收到通知后记录 binlog，然后再调用引擎接口，提交 redo log 为 commit 状态。更新完成。</li>
+</ol>
+<p>所以是这样的：全局权限校验-&gt;分析器-&gt;优化器-&gt;执行器-&gt;引擎-&gt;redo log (prepare)-&gt;binlog-&gt;redo log (commit)。</p>
+<p>Server 层的  <strong>binlog</strong> 记录的是 SQL 语句的逻辑操作（如：给 ID&#x3D;1 的余额加 100），它是为了全量备份和主从复制而生的。而 InnoDB 引擎层的  <strong>redo log</strong>  记录的是物理页的修改（如：在某页某偏移量处改了某字节），它是为了崩溃恢复（Crash-safe）而存在的。</p>
+<p>如果不采用特殊机制，无论是先写 binlog 还是先写 redo log，只要中间发生宕机，都会造成数据不一致的问题。先写 redo 成功但 binlog 失败，会导致主库有数据而从库没数据；先写 binlog 成功但 redo 失败，会导致从库多出了主库丢失的数据。</p>
+<p>所以采用对 redo 采纳了两阶段提交的方案。任何时候，prepare  状态的 redo 去找对应的 binlog，如果 binlog 里有这条记录，事务被判定为有效并提交；如果 binlog 里找不到，说明中途夭折宕机，事务直接回滚。通过这种方式，确保数据恢复与主从同步的绝对统一。</p>
+<h2 id="MySQL-存储引擎"><a href="#MySQL-存储引擎" class="headerlink" title="MySQL 存储引擎"></a>MySQL 存储引擎</h2><p>MySQL 存储引擎采用的是 <strong>插件式架构</strong> ，支持多种存储引擎，甚至可以为不同的数据库表设置不同的存储引擎以适应不同场景的需要。<strong>存储引擎是基于表的，而不是数据库。</strong></p>
+<p>MySQL 当前默认的存储引擎是 InnoDB（MySQL 5.5.5 之前，默认存储引擎是 MyISAM）。并且，所有的存储引擎中只有 InnoDB 是事务性存储引擎，也就是说只有 InnoDB 支持事务。</p>
+<h3 id="MyISAM-与-InnoDB"><a href="#MyISAM-与-InnoDB" class="headerlink" title="MyISAM 与 InnoDB"></a>MyISAM 与 InnoDB</h3><p>MyISAM 只有表级锁(table-level locking)，也就是说，MyISAM 写任意一行都会用排他锁锁住整张表。而 InnoDB 支持行级锁(row-level locking)和表级锁，默认为行级锁。MyISAM 不支持 MVCC，而 InnoDB 支持。</p>
+<p>因此，InnoDB 的性能比 MyISAM 更强大，不管是在读写混合模式下还是只读模式下，随着 CPU 核数的增加，InnoDB 的读写能力呈线性增长。MyISAM 因为写不能并发，它的处理能力跟核数没关系；读也是低效并发读。</p>
+<p><img data-src="/2026/02/12/mysql-framework/2.png" alt="InnoDB 和 MyISAM 性能对比"></p>
+<p>MyISAM 不提供事务支持，也不支持外键。</p>
+<blockquote>
+<p>外键对于维护数据一致性非常有帮助，但是对性能有一定的损耗。因此，通常情况下，不建议在实际生产项目中使用外键。一般都在业务代码的层面来约束数据一致性。</p>
+</blockquote>
+<p>MyISAM 不具有 Crash-Safe 的能力，而使用 InnoDB 的数据库在异常崩溃后，数据库重新启动的时候会保证数据库恢复到崩溃前的状态。这个恢复的过程依赖于 redo log 。</p>
+<p>虽然 MyISAM 引擎和 InnoDB 引擎都是使用 B+Tree 作为索引结构，但是两者的实现方式不太一样。InnoDB 引擎中，其数据文件本身就是索引文件，其表数据文件本身就是按 B+Tree 组织的一个索引结构，树的叶节点 data 域保存了完整的数据记录。而 MyISAM 中，索引文件和数据文件是分离的。</p>
+<p>InnoDB 使用缓冲池（Buffer Pool）缓存数据页和索引页，MyISAM 使用键缓存（Key Cache）仅缓存索引页而不缓存数据页。</p>
+<p>内容参考：<br><a href="https://javaguide.cn/">Java Guide</a> &amp;&amp; <a href="https://xiaolincoding.com/">小林 coding</a>。</p>
+]]></content>
+      <tags>
+        <tag>Database</tag>
+        <tag>MYSQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SpringBoot常用注解</title>
     <url>/2025/10/20/springboot-annotations/</url>
     <content><![CDATA[<h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><ul>

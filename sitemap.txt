@@ -1,3 +1,4 @@
+https://www.spectrumzero.me/2026/02/12/mysql-framework/
 https://www.spectrumzero.me/2026/02/10/mysql-datatype/
 https://www.spectrumzero.me/2026/01/11/basic-concept-of-db/
 https://www.spectrumzero.me/2025/11/14/get-and-post/
@@ -19,4 +20,5 @@ https://www.spectrumzero.me/tags/test/
 https://www.spectrumzero.me/tags/Core-Java/
 https://www.spectrumzero.me/tags/maven/
 https://www.spectrumzero.me/tags/MySQL/
+https://www.spectrumzero.me/tags/MYSQL/
 https://www.spectrumzero.me/tags/framework/
