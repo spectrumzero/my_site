@@ -309,7 +309,7 @@
   <entry>
     <title>用 Docker 启动 MySQL 8.0.35</title>
     <url>/2026/03/04/learn-docker/</url>
-    <content><![CDATA[<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p><code>pacman</code> 把我的 mysql 滚到 9.6.0 了，太新了导致以前很多命令无法使用，而比如 <strong>canal</strong> 又依赖这些过去的命令，所以一直有报错写进 logs&#x2F;example.log: “Caused by: java.io.IOException: ErrorPacket [errorNumber&#x3D;1064, fieldCount&#x3D;-1, message&#x3D;You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘master status’ at line 1, sqlState&#x3D;42000, sqlStateMarker&#x3D;#] with command: show master status.” 即 <code>show master status</code> 在 9.0 的版本中是无法使用的。于是利用 <strong>docker</strong> 将 mysql 回退到之前的版本，退到 8.0.35。</p>
+    <content><![CDATA[<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p><code>pacman</code> 把我的 mysql 滚到 9.6.0 了，太新了导致以前很多命令无法使用，而比如 <strong>canal</strong> 又依赖这些过去的命令，所以一直有报错写进 logs&#x2F;example.log: “Caused by: java.io.IOException: ErrorPacket [errorNumber&#x3D;1064, fieldCount&#x3D;-1, message&#x3D;You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘master status’ at line 1, sqlState&#x3D;42000, sqlStateMarker&#x3D;#] with command: show master status.”即 <code>show master status</code> 在 9.0 的版本中是无法使用的。于是利用 <strong>docker</strong> 将 mysql 回退到之前的版本，退到 8.0.35。</p>
 <p>首先，从本地高版本数据库安全导出所需要的业务库表（ <code>\</code> 是换行符，增强可读性）：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u root -p \</span><br><span class="line">--databases one_coupon_rebuild_0 one_coupon_rebuild_1 sky_take_out myhmdp game \</span><br><span class="line">--single-transaction \</span><br><span class="line">--set-gtid-purged=OFF \</span><br><span class="line">&gt; all_biz_data.sql</span><br></pre></td></tr></table></figure>
 
@@ -330,7 +330,7 @@
 <ul>
 <li><strong><code>docker run</code></strong>: Docker 的核心命令，用于<strong>新建并运行</strong>一个容器。</li>
 <li><strong><code>--name mysql8-canal</code></strong>: 给容器指定一个自定义名称（<code>mysql8-canal</code>），方便后续通过名字进行管理，而不是使用随机生成的字符串 ID。</li>
-<li><strong><code>-p 3306:3306</code></strong>: 端口映射。格式为 <code>宿主机端口:容器内端口</code>。这里将宿主机（我的 linux）的 3306 端口映射到容器的 3306 端口，这样就很方便，发送到宿主机的 IP 的请求，经过 Docker 代理转发，从而访问到容器中的 mysqld。</li>
+<li><strong><code>-p 3306:3306</code></strong>: 端口映射。格式为 <code>宿主机端口:容器内端口</code>。这里将宿主机（我的 linux）的 3306 端口映射到容器的 3306 端口，这样就很方便，发送到宿主机的 IP 的请求，经过 Docker 代理转发，从而访问到容器中的 mysqld（它默认监听容器的 3306 端口）。注意需要显式指定 IP 地址，如 <code>mysql -h 127.0.0.1 -u root -p</code>，强制走 TCP 连接而不是 Socket 连接。</li>
 <li><strong><code>-v ~/mysql_data:/var/lib/mysql</code></strong>: 数据卷挂载（持久化）。将宿主机的 <code>~/mysql_data</code> 目录映射到容器内的数据库存储目录。这样即使容器被删除，数据库中的数据也不会丢失。</li>
 <li><strong><code>-e MYSQL_ROOT_PASSWORD=root</code></strong>: 设置环境变量。此处指定了 Docker 中的 MySQL实例的 <code>root</code> 用户的初始登录密码为 <code>root</code>，可以自行修改，也不要求和原本地上的 MySQL 实例一致，因为它们其实是独立的两个实例。</li>
 <li><strong><code>-d</code></strong>: 后台运行模式（Detached mode）。让容器在后台执行，不占用当前的终端窗口。</li>
@@ -378,8 +378,14 @@
 <p>之后回到 IDEA 中，在 DataGrip 中断开原数据库的连接，重启 IDEA，然后重新连接数据库即可，这次将连接到容器中 8.0.35 的实例。连接成功后，需要根据 IDEA 的提示，同步更新 JDBC 的驱动。最后结果如下：</p>
 <p><img data-src="/2026/03/04/learn-docker/1.png"></p>
 <p>8.0 版本的好处在于，基本上默认的配置是和 canal 兼容的，只需要设置 canal 的权限即可。剩下的根据需求，配置 canal 的全局配置文件 conf&#x2F;canal.properties 和 实例文件 conf&#x2F;example&#x2F;instance.properties 文件就好了。</p>
-<p>以及如果遇到需要删除容器的情况，就停止、删除旧容器，并清理本地数据目录，以确保整洁：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker stop mysql8-canal</span><br><span class="line">docker <span class="built_in">rm</span> mysql8-canal</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf ~/mysql_data</span><br></pre></td></tr></table></figure>
+<h2 id="其它命令"><a href="#其它命令" class="headerlink" title="其它命令"></a>其它命令</h2><p>如果遇到需要删除容器的情况，就停止、删除旧容器。这两步是可逆的。只要没有清除本地挂载的目录 ~&#x2F;mysql_data，状态在下次 <code>run</code> 的时候就能够挂载恢复。只有在需要彻底清理数据库的情况下，才应该删除这个目录中的数据。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker stop mysql8-canal</span><br><span class="line">docker <span class="built_in">rm</span> mysql8-canal</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf ~/mysql_data <span class="comment"># 危险！</span></span><br></pre></td></tr></table></figure>
+
+<p>如果你之前已经创建过这个容器，并且数据都在里面，直接启动它即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker start mysql8-canal</span><br></pre></td></tr></table></figure>
+
+<p>查看正在运行的容器：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
 
 <h2 id="镜像、容器与程序的关系"><a href="#镜像、容器与程序的关系" class="headerlink" title="镜像、容器与程序的关系"></a>镜像、容器与程序的关系</h2><p><strong>镜像（Image）</strong> 是一个包含应用程序及其完整运行时环境的<strong>只读分层文件系统（RootFS）</strong>。它在构建阶段（Build Time）就通过 <code>Dockerfile</code> 预装了二进制程序（如 <code>mysql</code> 客户端和服务端）、依赖库和系统工具。可以说，最小依赖，开箱即用。</p>
 <p><strong>容器（Container）</strong> 则是镜像的<strong>运行实例</strong>。当 Docker 启动容器时，它在镜像的只读层之上添加了一个<strong>可写层（Copy-on-Write）</strong>。甚至可以将镜像看作<strong>类（Class）</strong>，而容器是该类在内存中被实例化的<strong>对象（Object）</strong>。它是一个被<strong>隔离</strong>出来的<strong>运行环境</strong>，有自己的<strong>文件系统</strong>、自己的<strong>网络接口</strong>和自己的<strong>内存空间</strong>，但不像虚拟机有自己的独立内核，而是共享的宿主机的内核。</p>
