@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>关于 systemctl</title>
+    <url>/2026/03/04/about-systemctl/</url>
+    <content><![CDATA[<p><code>systemctl</code> 是 Linux 操作系统中用于<strong>管理系统和服务</strong>的核心命令行工具。它是 <strong>systemd</strong>（现代 Linux 发行版的初始化系统和服务管理器）的主要界面，取代了旧版本中的 <code>service</code> 和 <code>chkconfig</code> 命令。主要用途有：</p>
+<ul>
+<li><strong>服务状态管理</strong>：启动 (<code>start</code>)、停止 (<code>stop</code>)、重启 (<code>restart</code>) 或重新加载 (<code>reload</code>) 系统服务（如 Apache、MySQL、Docker 等）。</li>
+<li><strong>开机自启控制</strong>：设置服务在系统引导时自动启动 (<code>enable</code>) 或取消自动启动 (<code>disable</code>)。</li>
+<li><strong>状态监控</strong>：检查服务当前的运行状态 (<code>status</code>)、是否正在运行 (<code>is-active</code>) 或是否已设置为开机自启 (<code>is-enabled</code>)。</li>
+<li><strong>系统电源管理</strong>：执行系统级别的操作，如重启 (<code>reboot</code>)、关机 (<code>poweroff</code>)、挂起 (<code>suspend</code>) 或切换运行级别（如进入救援模式）。</li>
+<li><strong>单元 (Unit) 管理</strong>：不仅可以管理服务 (<code>.service</code>)，还能管理挂载点 (<code>.mount</code>)、套接字 (<code>.socket</code>) 和定时任务 (<code>.timer</code>) 等系统资源。</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
     <title>数据库基本概念</title>
     <url>/2026/01/11/basic-concept-of-db/</url>
     <content><![CDATA[<ul>
