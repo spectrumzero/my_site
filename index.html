@@ -253,7 +253,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2026-03-04 18:07:18 / Modified: 18:10:02" itemprop="dateCreated datePublished" datetime="2026-03-04T18:07:18+08:00">2026-03-04</time>
+      <time title="Created: 2026-03-04 18:07:18 / Modified: 18:24:53" itemprop="dateCreated datePublished" datetime="2026-03-04T18:07:18+08:00">2026-03-04</time>
     </span>
 
   
@@ -273,7 +273,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p><code>pacman</code> 把我的 mysql 滚到 9.6.0 了，太新了导致以前很多命令无法使用，而比如 <strong>canal</strong> 又依赖这些过去的命令，所以一直有报错写进 logs&#x2F;example.log：”Caused by: java.io.IOException: ErrorPacket [errorNumber&#x3D;1064, fieldCount&#x3D;-1, message&#x3D;You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘master status’ at line 1, sqlState&#x3D;42000, sqlStateMarker&#x3D;#] with command: show master status.”即 <code>show master status</code> 在 9.0 的版本中是无法使用的。于是利用 <strong>docker</strong> 将 mysql 回退到之前的版本，退到 8.0.35。</p>
+          <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p><code>pacman</code> 把我的 mysql 滚到 9.6.0 了，太新了导致以前很多命令无法使用，而比如 <strong>canal</strong> 又依赖这些过去的命令，所以一直有报错写进 logs&#x2F;example.log: “Caused by: java.io.IOException: ErrorPacket [errorNumber&#x3D;1064, fieldCount&#x3D;-1, message&#x3D;You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘master status’ at line 1, sqlState&#x3D;42000, sqlStateMarker&#x3D;#] with command: show master status.” 即 <code>show master status</code> 在 9.0 的版本中是无法使用的。于是利用 <strong>docker</strong> 将 mysql 回退到之前的版本，退到 8.0.35。</p>
 <p>首先，从本地高版本数据库安全导出所需要的业务库表（ <code>\</code> 是换行符，增强可读性）：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u root -p \</span><br><span class="line">--databases one_coupon_rebuild_0 one_coupon_rebuild_1 sky_take_out myhmdp game \</span><br><span class="line">--single-transaction \</span><br><span class="line">--set-gtid-purged=OFF \</span><br><span class="line">&gt; all_biz_data.sql</span><br></pre></td></tr></table></figure>
 
