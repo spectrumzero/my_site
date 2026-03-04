@@ -223,6 +223,158 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2026/03/04/learn-docker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avt.jpg">
+      <meta itemprop="name" content="spectrumzero">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="spectrumzero's blog">
+      <meta itemprop="description" content="Write for better code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | spectrumzero's blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/03/04/learn-docker/" class="post-title-link" itemprop="url">用 Docker 启动 MySQL 8.0.35</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-03-04 18:07:18 / Modified: 18:10:02" itemprop="dateCreated datePublished" datetime="2026-03-04T18:07:18+08:00">2026-03-04</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.1k</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p><code>pacman</code> 把我的 mysql 滚到 9.6.0 了，太新了导致以前很多命令无法使用，而比如 <strong>canal</strong> 又依赖这些过去的命令，所以一直有报错写进 logs&#x2F;example.log：”Caused by: java.io.IOException: ErrorPacket [errorNumber&#x3D;1064, fieldCount&#x3D;-1, message&#x3D;You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘master status’ at line 1, sqlState&#x3D;42000, sqlStateMarker&#x3D;#] with command: show master status.”即 <code>show master status</code> 在 9.0 的版本中是无法使用的。于是利用 <strong>docker</strong> 将 mysql 回退到之前的版本，退到 8.0.35。</p>
+<p>首先，从本地高版本数据库安全导出所需要的业务库表（ <code>\</code> 是换行符，增强可读性）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u root -p \</span><br><span class="line">--databases one_coupon_rebuild_0 one_coupon_rebuild_1 sky_take_out myhmdp game \</span><br><span class="line">--single-transaction \</span><br><span class="line">--set-gtid-purged=OFF \</span><br><span class="line">&gt; all_biz_data.sql</span><br></pre></td></tr></table></figure>
+
+<p>然后，彻底清理本地占用进程，并取消开机自启动：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl stop mysqld</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">disable</span> mysqld</span><br></pre></td></tr></table></figure>
+
+<p>安装 Docker，启动服务，并设置开机自启：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> pacman -S docker</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> --now docker <span class="comment"># now 是一个快捷参数，now start!</span></span><br><span class="line"><span class="built_in">sudo</span> usermod -aG docker <span class="variable">$USER</span> <span class="comment"># 将用户加入 docker 组，从而摆脱 sudo。注意一定不能忘记 -a，append</span></span><br></pre></td></tr></table></figure>
+
+<p>然后<strong>重启</strong>电脑，下次电脑启动后就会全局生效。也有一个临时方案，仅仅对当前 shell 会话生效（当然直接每次都 sudo 也可以）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">newgrp docker</span><br></pre></td></tr></table></figure>
+
+<p>用 Docker 启动 MySQL 8.0 的实例。这里使用的是稳定的 8.0.35：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run --name mysql8-canal \</span><br><span class="line">-p 3306:3306 \</span><br><span class="line">-v ~/mysql_data:/var/lib/mysql \</span><br><span class="line">-e MYSQL_ROOT_PASSWORD=root \</span><br><span class="line">-d mysql:8.0.35</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>参数解释</strong>：</p>
+<ul>
+<li><strong><code>docker run</code></strong>: Docker 的核心命令，用于<strong>新建并运行</strong>一个容器。</li>
+<li><strong><code>--name mysql8-canal</code></strong>: 给容器指定一个自定义名称（<code>mysql8-canal</code>），方便后续通过名字进行管理，而不是使用随机生成的字符串 ID。</li>
+<li><strong><code>-p 3306:3306</code></strong>: 端口映射。格式为 <code>宿主机端口:容器内端口</code>。这里将宿主机（我的 linux）的 3306 端口映射到容器的 3306 端口，这样就很方便，发送到宿主机的 IP 的请求，经过 Docker 代理转发，从而访问到容器中的 mysqld。</li>
+<li><strong><code>-v ~/mysql_data:/var/lib/mysql</code></strong>: 数据卷挂载（持久化）。将宿主机的 <code>~/mysql_data</code> 目录映射到容器内的数据库存储目录。这样即使容器被删除，数据库中的数据也不会丢失。</li>
+<li><strong><code>-e MYSQL_ROOT_PASSWORD=root</code></strong>: 设置环境变量。此处指定了 Docker 中的 MySQL实例的 <code>root</code> 用户的初始登录密码为 <code>root</code>，可以自行修改，也不要求和原本地上的 MySQL 实例一致，因为它们其实是独立的两个实例。</li>
+<li><strong><code>-d</code></strong>: 后台运行模式（Detached mode）。让容器在后台执行，不占用当前的终端窗口。</li>
+<li><strong><code>mysql:8.0.35</code></strong>: 指定使用的镜像（mysql）及版本标签（Tag，8.0.35）。如果本地没有，Docker 会去官方仓库（Docker Hub）里找名为 mysql 的镜像并拉取指定的版本然后下载到本地，最后基于这个本地镜像克隆出一个运行中的容器，即一个隔离的运行环境。</li>
+</ul>
+</blockquote>
+<p><strong>注意</strong>：如果上面的命令连接不到镜像，那么就需要配置镜像源，新建或编辑文件 <code>/etc/docker/daemon.json</code>，写入：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;https://docker.m.daocloud.io&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;https://huecker.io&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;https://dockerhub.timeweb.cloud&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;https://noohub.net&quot;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后重启 docker 服务读取新配置，再重新 <code>docker run ...</code> 一次即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p>使用下面的命令可以看到下载的镜像的信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker image <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+
+<p><code>run</code> 成功后，本地就有了 8.0.35 的镜像，且对应的 MySQL 实例也启动成功。接下来就可以登陆 MySQL 容器了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql8-canal mysql -uroot -proot</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>参数解释：</strong></p>
+<ul>
+<li><strong><code>docker exec</code></strong>: 在<strong>运行中</strong>的容器内执行新命令。</li>
+<li><strong><code>-i</code> (interactive)</strong>——交互模式，让容器的标准输入（STDIN）保持打开，确保容器里的程序能接收我输入的命令；<strong><code>-t</code> (tty)</strong>——给容器分配一个伪终端（Pseudo-TTY），这个伪终端会模拟我输入所在的终端给容器看，进而容器可以按照我的终端的显示规则来输出数据，保证了可读性。这二者一般一起用。所以是 <code>-it</code>。</li>
+<li><strong><code>mysql8-canal</code></strong>: 之前指定的容器名称。</li>
+<li><strong><code>mysql</code></strong>: 容器内要执行的程序名（即 MySQL 命令行客户端）。</li>
+<li><strong><code>-uroot</code></strong>: <code>mysql</code> 程序的参数，指定以 <code>root</code> 用户身份登录（<code>-u</code> 后紧跟用户名）。</li>
+<li><strong><code>-proot</code></strong>: <code>mysql</code> 程序的参数，指定登录密码为 <code>root</code>（<code>-p</code> 后紧跟密码）。</li>
+</ul>
+</blockquote>
+<p>这样就会连接到容器中的 MySQL 实例。接下来就可以配置 canal 的权限，用 canal 来监听数据库的变化。由于 8.0.35 的兼容性，需要给 canal 配置的其实很少，就下面几行：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 创建 canal 用户并强制使用 mysql_native_password，使用 native 是考虑与 canal 的兼容</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;canal&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">&#x27;canal&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 授予同步核心权限</span></span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">SELECT</span>, REPLICATION SLAVE, REPLICATION CLIENT <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;canal&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 刷新生效</span></span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>参数解释：</strong><br><strong>WITH mysql_native_password</strong>：MySQL 8.0 默认使用 caching_sha2_password，很多旧版 Canal 驱动不认识它，会导致连接失败。强制改成 native 模式能保证 Canal 连上。、<br><strong>REPLICATION SLAVE</strong>：让 Canal 伪装成从库，这样它才有权限读取 Binlog。</p>
+</blockquote>
+<p>然后退出 mysql 的交互命令行界面，回到原始终端，执行下面的代码，把备份的数据导入 docker 中的 mysql 实例。这会花费一点时间，完成后客户端会自动断开连接：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -i mysql8-canal mysql -uroot -proot &lt; all_biz_data.sql</span><br></pre></td></tr></table></figure>
+
+<p>然后再次进入：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql8-canal mysql -uroot -proot</span><br></pre></td></tr></table></figure>
+
+<p>执行命令，可以看到已经有我们之前的数据库表了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql&gt; show databases;</span><br><span class="line">+----------------------+</span><br><span class="line">| Database             |</span><br><span class="line">+----------------------+</span><br><span class="line">| game                 |</span><br><span class="line">| information_schema   |</span><br><span class="line">| myhmdp               |</span><br><span class="line">| mysql                |</span><br><span class="line">| one_coupon_rebuild_0 |</span><br><span class="line">| one_coupon_rebuild_1 |</span><br><span class="line">| performance_schema   |</span><br><span class="line">| sky_take_out         |</span><br><span class="line">| sys                  |</span><br><span class="line">+----------------------+</span><br><span class="line">9 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>之后回到 IDEA 中，在 DataGrip 中断开原数据库的连接，重启 IDEA，然后重新连接数据库即可，这次将连接到容器中 8.0.35 的实例。连接成功后，需要根据 IDEA 的提示，同步更新 JDBC 的驱动。最后结果如下：</p>
+<p><img data-src="/2026/03/04/learn-docker/1.png"></p>
+<p>8.0 版本的好处在于，基本上默认的配置是和 canal 兼容的，只需要设置 canal 的权限即可。剩下的根据需求，配置 canal 的全局配置文件 conf&#x2F;canal.properties 和 实例文件 conf&#x2F;example&#x2F;instance.properties 文件就好了。</p>
+<p>以及如果遇到需要删除容器的情况，就停止、删除旧容器，并清理本地数据目录，以确保整洁：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker stop mysql8-canal</span><br><span class="line">docker <span class="built_in">rm</span> mysql8-canal</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf ~/mysql_data</span><br></pre></td></tr></table></figure>
+
+<h2 id="镜像、容器与程序的关系"><a href="#镜像、容器与程序的关系" class="headerlink" title="镜像、容器与程序的关系"></a>镜像、容器与程序的关系</h2><p><strong>镜像（Image）</strong> 是一个包含应用程序及其完整运行时环境的<strong>只读分层文件系统（RootFS）</strong>。它在构建阶段（Build Time）就通过 <code>Dockerfile</code> 预装了二进制程序（如 <code>mysql</code> 客户端和服务端）、依赖库和系统工具。可以说，最小依赖，开箱即用。</p>
+<p><strong>容器（Container）</strong> 则是镜像的<strong>运行实例</strong>。当 Docker 启动容器时，它在镜像的只读层之上添加了一个<strong>可写层（Copy-on-Write）</strong>。甚至可以将镜像看作<strong>类（Class）</strong>，而容器是该类在内存中被实例化的<strong>对象（Object）</strong>。它是一个被<strong>隔离</strong>出来的<strong>运行环境</strong>，有自己的<strong>文件系统</strong>、自己的<strong>网络接口</strong>和自己的<strong>内存空间</strong>，但不像虚拟机有自己的独立内核，而是共享的宿主机的内核。</p>
+<p>在容器启动（<code>run</code>）后，就至少会启动一个已经在镜像中打包好了的程序，来作为核心的程序。在我们的场景中，它就是 <code>mysqld</code>，MySQL 的服务端。容器的生命周期是和这个主程序绑定的。容器中运行的所有程序，都不是运行在虚拟机上的，而是一个直接运行在宿主机内核上的<strong>特殊进程</strong>，因此可以直接在宿主机上找到这个进程并杀死它——容器随即销毁。</p>
+<p><code>exec</code> 的场景，就是在容器中启动了一个辅助程序&#x2F;进程（与上面的主进程相对），它与主进程共享同一个网络、文件系统和进程空间——即共处一个容器之中。而这个程序，同样，在镜像阶段就被打包好了，比如这里使用到的 <code>mysql-client</code> 来与 MySQL 服务端连接——它不是我们用 <code>pacman</code> 安装的客户端（当然也可以使用它来访问 3306 端口，然后请求会因为端口映射转发到 Docker 中），而是被打包进镜像的客户端。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2026/02/12/mysql-framework/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -251,9 +403,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2026-02-12 12:18:04 / Modified: 12:43:49" itemprop="dateCreated datePublished" datetime="2026-02-12T12:18:04+08:00">2026-02-12</time>
+      <time title="Created: 2026-02-12 12:18:04" itemprop="dateCreated datePublished" datetime="2026-02-12T12:18:04+08:00">2026-02-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-02-13 21:58:48" itemprop="dateModified" datetime="2026-02-13T21:58:48+08:00">2026-02-13</time>
     </span>
 
   
@@ -262,7 +420,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Word count in article: </span>
-      <span>2.2k</span>
+      <span>2.3k</span>
     </span>
 </div>
 
@@ -310,7 +468,8 @@
 <p>外键对于维护数据一致性非常有帮助，但是对性能有一定的损耗。因此，通常情况下，不建议在实际生产项目中使用外键。一般都在业务代码的层面来约束数据一致性。</p>
 </blockquote>
 <p>MyISAM 不具有 Crash-Safe 的能力，而使用 InnoDB 的数据库在异常崩溃后，数据库重新启动的时候会保证数据库恢复到崩溃前的状态。这个恢复的过程依赖于 redo log 。</p>
-<p>虽然 MyISAM 引擎和 InnoDB 引擎都是使用 B+Tree 作为索引结构，但是两者的实现方式不太一样。InnoDB 引擎中，其数据文件本身就是索引文件，其表数据文件本身就是按 B+Tree 组织的一个索引结构，树的叶节点 data 域保存了完整的数据记录。而 MyISAM 中，索引文件和数据文件是分离的。</p>
+<p>虽然 MyISAM 引擎和 InnoDB 引擎都是使用 B+Tree 作为索引结构，但是两者的实现方式不太一样。InnoDB 引擎中，其数据文件本身就是索引文件，其表数据文件本身就是按 B+Tree 组织的一个索引结构，树的叶节点 data 域保存了完整的数据记录。而 MyISAM 中，索引文件和数据文件是分离的，它的叶子节点 data 域不存真实数据，只存一个指向数据地址的指针，要拿到最终数据还会多一次磁盘 IO。</p>
+<p><img data-src="/2026/02/12/mysql-framework/3.png"></p>
 <p>InnoDB 使用缓冲池（Buffer Pool）缓存数据页和索引页，MyISAM 使用键缓存（Key Cache）仅缓存索引页而不缓存数据页。</p>
 <p>内容参考：<br><a target="_blank" rel="noopener" href="https://javaguide.cn/">Java Guide</a> &amp;&amp; <a target="_blank" rel="noopener" href="https://xiaolincoding.com/">小林 coding</a>。</p>
 
@@ -1244,96 +1403,6 @@
 <li><a target="_blank" rel="noopener" href="https://javaguide.cn/">Java Guide</a>.</li>
 </ul>
 
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2025/06/24/build-site/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avt.jpg">
-      <meta itemprop="name" content="spectrumzero">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="spectrumzero's blog">
-      <meta itemprop="description" content="Write for better code.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | spectrumzero's blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/24/build-site/" class="post-title-link" itemprop="url">使用github pages搭建你的个人网站</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-06-24 21:08:23" itemprop="dateCreated datePublished" datetime="2025-06-24T21:08:23+08:00">2025-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-02-10 13:41:08" itemprop="dateModified" datetime="2026-02-10T13:41:08+08:00">2026-02-10</time>
-    </span>
-
-  
-    <span class="post-meta-item" title="Word count in article">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">Word count in article: </span>
-      <span>4.5k</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          一份建站Guide。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/06/24/build-site/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
       
     </div>
 
