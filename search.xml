@@ -1,707 +1,252 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>关于 systemctl</title>
-    <url>/2026/03/04/about-systemctl/</url>
-    <content><![CDATA[<p><code>systemctl</code> 是 Linux 操作系统中用于<strong>管理系统和服务</strong>的核心命令行工具。它是 <strong>systemd</strong>（现代 Linux 发行版的初始化系统和服务管理器）的主要界面，取代了旧版本中的 <code>service</code> 和 <code>chkconfig</code> 命令。主要用途有：</p>
-<ul>
-<li><strong>服务状态管理</strong>：启动 (<code>start</code>)、停止 (<code>stop</code>)、重启 (<code>restart</code>) 或重新加载 (<code>reload</code>) 系统服务（如 Apache、MySQL、Docker 等）。</li>
-<li><strong>开机自启控制</strong>：设置服务在系统引导时自动启动 (<code>enable</code>) 或取消自动启动 (<code>disable</code>)。</li>
-<li><strong>状态监控</strong>：检查服务当前的运行状态 (<code>status</code>)、是否正在运行 (<code>is-active</code>) 或是否已设置为开机自启 (<code>is-enabled</code>)。</li>
-<li><strong>系统电源管理</strong>：执行系统级别的操作，如重启 (<code>reboot</code>)、关机 (<code>poweroff</code>)、挂起 (<code>suspend</code>) 或切换运行级别（如进入救援模式）。</li>
-<li><strong>单元 (Unit) 管理</strong>：不仅可以管理服务 (<code>.service</code>)，还能管理挂载点 (<code>.mount</code>)、套接字 (<code>.socket</code>) 和定时任务 (<code>.timer</code>) 等系统资源。</li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>数据库基本概念</title>
-    <url>/2026/01/11/basic-concept-of-db/</url>
-    <content><![CDATA[<ul>
-<li><p><strong>元组</strong>：数据库表中的每行就是一个元组。</p>
-</li>
-<li><p><strong>码</strong>：码就是能唯一标识实体的属性，对应表中的列。</p>
-</li>
-<li><p><strong>候选码</strong>：若关系中的某一属性或属性组的值能唯一的标识一个元组，而其任何子集都不能再标识，则称该属性组为候选码。例如：在学生实体中，“学号”是能唯一的区分学生实体的，同时又假设“姓名”、“班级”的属性组合足以区分学生实体，那么{学号}和{姓名，班级}都是候选码。</p>
-</li>
-<li><p><strong>主码</strong> : 主码也叫主键。主码是从候选码中选出来的。 一个实体集中只能有一个主码，但可以有多个候选码。</p>
-</li>
-<li><p><strong>外码</strong> : 外码也叫外键。如果一个关系中的一个属性是另外一个关系中的主码则这个属性为外码。一个表可以有多个外键，可以与多个表建立联系。</p>
-</li>
-<li><p><strong>主属性</strong>：候选码中出现过的属性称为主属性。比如关系：工人（工号，身份证号，姓名，性别，部门）。显然工号和身份证号都能够唯一标示这个关系，所以都是候选码。工号、身份证号这两个属性就是主属性。如果主码是一个属性组，那么属性组中的属性都是主属性。</p>
-</li>
-<li><p><strong>非主属性：</strong> 不包含在任何一个候选码中的属性称为非主属性。比如在关系：学生（学号，姓名，年龄，性别，班级）中，主码是“学号”，那么其他的“姓名”、“年龄”、“性别”、“班级”就都可以称为非主属性。</p>
-</li>
-<li><p><strong>ER 图</strong>：全称是 Entity Relationship Diagram（实体联系图），提供了表示实体类型、属性和联系的方法。由下面 3 个要素组成：</p>
-<ul>
-<li><em>实体</em>：通常是现实世界的业务对象。比如对于一个校园管理系统，会涉及学生、教师、课程、班级等等实体。在 ER 图中，实体使用<strong>矩形框</strong>表示。</li>
-<li><em>属性</em>：即某个实体拥有的属性，属性用来描述组成实体的要素。在 ER 图中，属性使用椭<strong>圆形</strong>表示。</li>
-<li><em>联系</em>：即实体与实体之间的关系，在 ER 图中用<strong>菱形</strong>表示，这个关系不仅有业务关联关系，还能通过数字表示实体之间的数量对照关系。例如，一个班级会有多个学生就是一种实体间的联系。</li>
-</ul>
-<p>下图是一个学生选课的 ER 图，每个学生可以选若干门课程，同一门课程也可以被若干人选择，所以它们之间的关系是多对多（M: N）。另外，还有其他两种实体之间的关系是：1 对 1（1:1）、1 对多（1: N）。 <img data-src="/2026/01/11/basic-concept-of-db/1.png" alt="学生与课程之间联系的E-R图"></p>
-</li>
-</ul>
-<ul>
-<li><strong>数据库基本范式</strong>：<ul>
-<li>第一范式：属性（对应于表中的字段）不能再被分割，也就是这个字段只能是一个值，不能再分为多个其他的字段了。<strong>1NF 是所有关系型数据库的最基本要求</strong> ，也就是说关系型数据库中创建的表一定满足第一范式。</li>
-<li>第二范式：2NF 在 1NF 的基础之上，消除了非主属性对于码的<strong>部分函数依赖</strong>。<ul>
-<li><strong>函数依赖（functional dependency）</strong>：若在一张表中，在属性（或属性组）X 的值确定的情况下，必定能确定属性 Y 的值，那么就可以说 Y 函数依赖于 X，写作 X → Y。</li>
-<li><strong>部分函数依赖（partial functional dependency）</strong>：如果 X→Y，<strong>并且存在 X 的一个真子集 X0</strong>，使得 X0→Y，则称 Y 对 X 部分函数依赖。</li>
-<li><strong>传递函数依赖</strong>：在关系模式 R(U)中，设 X，Y，Z 是 U 的不同的属性子集，如果 X 确定 Y、Y 确定 Z，且有 X 不包含 Y，Y 不确定 X，（X∪Y）∩Z&#x3D;空集合，则称 Z 传递函数依赖（transitive functional dependency）于 X。传递函数依赖会导致数据冗余和异常。传递函数依赖的 Y 和 Z 子集往往同属于某一个事物，因此可将其合并放到一个表中。比如在关系 R（学号 , 姓名, 系名，系主任）中，学号 → 系名，系名 → 系主任，所以存在非主属性系主任对于学号的传递函数依赖。</li>
-</ul>
-</li>
-<li>第三范式：3NF 在 2NF 的基础之上，消除了非主属性对于码的传递函数依赖 。符合 3NF 要求的数据库设计，<strong>基本</strong>上解决了数据冗余过大，插入异常，修改异常，删除异常的问题。</li>
-</ul>
-</li>
-</ul>
-<p>上述内容参考了：<a href="https://javaguide.cn/">Java Guide</a>。</p>
-]]></content>
-      <tags>
-        <tag>Database</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用github pages搭建你的个人网站</title>
-    <url>/2025/06/24/build-site/</url>
-    <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>首先，这不是一个完全手把手的指导，说明并不会事无巨细地展开。原因有两个，一是我认为我所略过的部分，完全可以通过查阅官方文档而<strong>快速而精准</strong>地解决，而不需要经过二次加工；第二是如果嫌麻烦，也完全可以问 ai 来解决——关于 ai，我十分推荐谷歌面向开发者的<a href="https://aistudio.google.com/prompts/new_chat">Google AI Studio</a>。我所提供的不是信息的重复，而是信息的聚合与组织，让你<strong>足以</strong>根据这个线路搭建自己的个人网站。</p>
-<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ol start="0">
-<li>一个 ai 工具，ai 现在几乎成了更快的搜索引擎，请积极利用它。我没有那么详细描述的部分你可以直接 copy 我的描述然后提出你的 prompt。</li>
-<li>一个 terminal 和一个 shell<ul>
-<li>对于 windows 用户，你<em>应该</em>使用 windows terminal + powershell 7</li>
-<li>对于 Linux 用户，你可以使用 Kitty + fish</li>
-<li>高贵的 mac 用户请自行 ai。</li>
-</ul>
-</li>
-<li>一个包管理器，这会简化后面很多的安装步骤<ul>
-<li>对于 windows 用户，你可以使用 scoop</li>
-<li>其他操作系统的用户可以根据自己的操作系统来决定。我使用的是 yay。</li>
-</ul>
-</li>
-<li>一个代码编辑器，比如<a href="https://code.visualstudio.com/docs">vscode</a>。它被用来编辑配置文件，也可以用来编辑我们的博客文章。在 terminal 中使用包管理器安装即可，具体如何安装和使用请自行 ai 或查阅对应文档。</li>
-<li><strong>通畅的网络环境</strong>。遇到网络问题请使用代理+tun 模式。Mihomo 和 Clash 都支持 tun 模式。还有一种比较少见的情况是，尽管你开了代理和 tun，但 shell 没有使用代理，因此获取不到资源，那么这个时候你就应该设置一下 shell 的代理。</li>
-</ol>
-<h3 id="安装-Hexo-与初始化项目"><a href="#安装-Hexo-与初始化项目" class="headerlink" title="安装 Hexo 与初始化项目"></a>安装 Hexo 与初始化项目</h3><p>这个部分请先查阅<a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85">官方文档</a>。</p>
-<p>它会要求你安装了 git 和 node.js 之后再安装 hexo 这个博客框架。那么，你应该在你的 terminal 中，利用 shell，通过你上一步安装了的包管理器，<strong>使用命令行</strong>去安装 git 和 node.js，并验证是否安装成功。</p>
-<p>比如对于<a href="https://scoop.sh/#/apps?q=git&p=2">scoop 安装 git</a>：</p>
-<figure class="highlight pwsh"><table><tr><td class="code"><pre><span class="line">scoop install main/git</span><br></pre></td></tr></table></figure>
-
-<p>验证 git 是否安装成功，输出版本号则表示安装成功：</p>
-<figure class="highlight pwsh"><table><tr><td class="code"><pre><span class="line">git <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<p>对于 node.js：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scoop install main/nodejs</span><br></pre></td></tr></table></figure>
-
-<p>验证：</p>
-<figure class="highlight pwsh"><table><tr><td class="code"><pre><span class="line">node <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<p>之后就根据文档的说明，使用命令行安装 hexo 即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-<p><em>注意因为是<code>-g</code>全局安装，所以可能需要管理员权限</em>。</p>
-<p>我们已经安装了 hexo 框架，但还没有使用它来帮助我们初始化一个网站项目，现在在命令行中键入并回车（<code>hexo-site</code>可以是其它你喜欢的任何名字）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init hexo-site</span><br></pre></td></tr></table></figure>
-
-<p>这会在<strong>当前目录</strong>下生成一个名字为<code>hexo-site</code>的文件夹（如果你对当前目录的位置不满意，可以利用<code>cd</code>指令来改变当前目录，或者使用<code>mkdir</code>指令创建一个新的目录，然后<code>cd</code>进入这个新的目录）。这个文件夹就是你的网站在你本地计算机上的一个映射。然后我们进入这个文件夹：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd hexo-site</span><br></pre></td></tr></table></figure>
-
-<p>这个时候我们其实可以在本地预览一下网站了。依次在命令行界面中（注意你现在应该处在网站项目的<strong>根目录</strong>下）使用<code>hexo c</code>，<code>hexo g</code>，<code>hexo s</code>，完成清理缓存、生成、本地预览。最后的<code>hexo s</code>命令的执行结果，会返回一个端口号（一般是 4000），打开浏览器，在地址栏输入<code>localhost:4000</code>，就会看到一个很朴素的网站界面，使用的是默认主题，所以下面我们要更换、自己配置主题。</p>
-<p><em>注意，当你预览网站的时候，会占用一个端口，即 4000，在执行<code>hexo s</code>并预览了网页后，你可以回到命令行界面，按下<code>ctrl+c</code>键盘，终止预览，为下一次的预览空出 4000 端口</em>。</p>
-<p>我们将会使用<a href="https://github.com/next-theme/hexo-theme-next">NexT 主题</a>，因为它保持了简洁的同时，还提供了丰富的配置选项和足够详细的文档支持，以及它还在<a href="https://github.com/next-theme/hexo-theme-next/releases/tag/v8.23.1">积极地更新迭代中</a>，后续应该会推出更多好玩的功能。这个主题其实已经有 10 多年的历史了，如今这个 2.6k star 的是它 2020 年之后的版本，而之前的版本有 8.2k star<a href="https://theme-next.js.org/docs/getting-started/upgrade">^1</a>。</p>
-<p>当然，你也可以使用像<a href="https://github.com/jerryc127/hexo-theme-butterfly">butterfly</a>这样的卡片式主题（上一次 release 在 25 年 3 月），或者是<a href="https://github.com/fluid-dev/hexo-theme-fluid">fluid</a>这样也很综合全面的主题（上一次 release 在 24 年 7 月），不同的主题有不同的安装方式。你可以在<a href="https://hexo.io/themes/">这里</a>找到你喜欢的主题列表。但是在选择主题时，除了外观以外，很重要的一点是它有没有得到持续的维护，有没有详细的文档，以及允许自定义的选项是否达到了你的需求。</p>
-<p>让我们继续。</p>
-<h3 id="使用-NexT-主题"><a href="#使用-NexT-主题" class="headerlink" title="使用 NexT 主题"></a>使用 NexT 主题</h3><h4 id="安装与更新"><a href="#安装与更新" class="headerlink" title="安装与更新"></a>安装与更新</h4><p>同样的，请先查看<a href="https://theme-next.js.org/docs/getting-started/#NexT-Installation">官方文档</a>。</p>
-<p>官方文档提供了两种安装（和更新）主题的方式。<strong>推荐使用 npm 的安装方式</strong>，因为这样后续的更新会非常方便。使用 git 除了需要手动<code>git clone</code>（这会让你的项目多出一个<code>themes/next</code>文件夹，这个文件夹以项目子模块的形式被纳入了 git 管理），手动<code>git pull</code>以外，由于要考虑到这个 git 子模块，也让你不太好管理你整个项目的源代码。</p>
-<p>正如文档所说，在你的项目根目录运行安装命令即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-theme-next</span><br></pre></td></tr></table></figure>
-
-<p>对于后续的更新：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-theme-next@latest</span><br></pre></td></tr></table></figure>
-
-<h4 id="启用与配置"><a href="#启用与配置" class="headerlink" title="启用与配置"></a>启用与配置</h4><p>来自官方文档的<a href="https://theme-next.js.org/docs/getting-started/#Hexo-Configuration">这个部分</a>。</p>
-<p>在安装了主题之后，你需要在<strong>hexo 的配置文件，即根目录下的<code>_config.yml</code>文件</strong>中启用这个主题。如果你之后打算使用其他主题，也在这个文件中做出修改就好：</p>
-<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">theme:</span> <span class="string">next</span></span><br></pre></td></tr></table></figure>
-
-<p>这个时候你可以在命令行界面中，在网站项目的<strong>根目录</strong>下执行<code>hexo c</code>-&gt;<code>hexo g</code>-&gt;<code>hexo s</code>，浏览器地址栏<code>localhost:4000</code>查看启用主题后的网站了。</p>
-<p>hexo 的配置文件用来配置你网页中最基本的信息，比如名称、链接、部署方式等这些<strong>与主题无关</strong>的选项，而下面介绍的 next 的配置文件，则是配置你网页的外观、功能的主要位置。</p>
-<p>首先，我们需要利用命令行，创建我们的主题配置文件，这份文件将会被放在项目根目录中：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cp node_modules/hexo-theme-next/_config.yml _config.next.yml</span><br></pre></td></tr></table></figure>
-
-<p>之后我们就可以在<code>_config.next.yml</code>文件中进行各种好玩的配置，它们最终都会覆盖默认的配置并生效。你可以随时<code>hexo c</code>-&gt;<code>g</code>-&gt;<code>s</code>-&gt;<code>localhost</code>查看，并<code>ctrl+c</code>结束预览。<code>hexo c</code>和<code>hexo g</code>并不总是必要的，但当效果不同于你的预想的时候，你总是可以且应该先清除缓存，并重新生成。</p>
-<h4 id="下一步的配置"><a href="#下一步的配置" class="headerlink" title="下一步的配置"></a>下一步的配置</h4><p>后续的自定义其实很丰富了。但有必要再强调一下：</p>
-<ul>
-<li>当你想要自定义<strong>不</strong>依赖于主题的选项时，如：<ul>
-<li>创建新的页面——例如<code>about</code>用来展示自己，<code>links</code>用来放你和你的朋友们，<code>tags</code>来展示文章标签——应该去看的是<a href="https://hexo.io/zh-cn/docs/commands">hexo 的文档</a>，<a href="https://theme-next.js.org/docs/theme-settings/custom-pages">next 的相关文档</a>可以作为更全面的支持。</li>
-<li>创建新的文章或制定文章的 scaffold，查看<a href="https://hexo.io/zh-cn/docs/writing">hexo 的文档</a>。</li>
-<li>配置网站的标题、描述、作者名、网址等等这些不依赖于任何主题的选项时，查看<a href="https://hexo.io/zh-cn/docs/configuration">hexo 的文档</a>。</li>
-</ul>
-</li>
-<li>当你想要自定义依赖于主题的选项时，你应该看的是<a href="https://theme-next.js.org/docs/theme-settings/">next 的文档</a>，除了这个超链接，官网中还提供了其他的板块来供游玩，请自行游玩。</li>
-<li>总之，你应该在 hexo 的文档和 next 的文档之间做出区分。与主题无关的，在<code>_config.yml</code>里配置或在命令行中执行以<code>hexo</code>开头的命令；与主题有关的，则在<code>_config.next.yml</code>中配置。<strong>勤查文档，查对文档</strong>。</li>
-<li>可以自行谷歌其他人写的 hexo next 主题美化博客。这里就不赘述了。对于用户来讲，配置在技术上没有什么难度，就是一些选择题。</li>
-<li>当然，你也可以直接借鉴别人的配置文件进行美化，比如<a href="https://github.com/spectrumzero/my_site/blob/main/_config.next.yml">我的</a>。</li>
-</ul>
-<h3 id="部署上线"><a href="#部署上线" class="headerlink" title="部署上线"></a>部署上线</h3><p>目前，我们的网站只能通过本地预览的方式，被我们自己看到。下一步我们就让它上线，成为整个互联网的一份子。</p>
-<h4 id="在-github-上创建一个公有仓库"><a href="#在-github-上创建一个公有仓库" class="headerlink" title="在 github 上创建一个公有仓库"></a>在 github 上创建一个公有仓库</h4><p>当然，在你创建仓库之前，你需要登陆或注册一个 github 账号。</p>
-<p>登陆之后，你有两个选项：</p>
-<ol>
-<li>创建一个名字为<code>github.username.io</code>的特殊仓库，它表示你在 github pages 上的个人主页，或根地址。如果创建这个仓库，那么之后你的网站的域名就是<code>github.username.io</code>。</li>
-<li>创建一个名字为任意的仓库，例如<code>site</code>。如果这样创建，那么之后你的网站的域名就是<code>github.username.io/site/</code>，会比较长。</li>
-</ol>
-<p>有的人可以接受<code>github.username.io</code>这个域名，但有的人想要实现域名的自定义。如果是后者，那么其实选项一和选项二都无所谓，甚至选项二更好，因为它没有占用唯一的特殊名字，就像一个普通的仓库。我想要自定义域名，所以选择了选项二。对于不想要自定义域名的读者，选择选项一就好了，选项二相对于选项一只是多了一个自定义域名的步骤，不影响接下来的配置。</p>
-<p><strong>但是请注意，如果你打算自定义域名，那么我建议选择选项二。因为之后自定义域名的步骤是基于我自身“<code>github.username.io/site</code>这个域名太长了”这个痛点牵引出来的，所以可以保证从选项二到自定义域名的过渡会相当顺利。当然，如果你选择了选项一，之后又想自定义域名，我觉得也没有任何问题，只是我自己没有经历过这个过程，所以不能保证不会出现非预期后果，但我个人觉得，其实后续的操作都是共通的</strong>。</p>
-<p>怎么创建 github 仓库请自行 ai。注意都要是<strong>public</strong>的。</p>
-<h4 id="指定部署方式"><a href="#指定部署方式" class="headerlink" title="指定部署方式"></a>指定部署方式</h4><p>我们使用 git 来完成部署。前面已经安装了 git，但是如果想要畅快使用 git，建议再做两件事：</p>
-<ol>
-<li><em>全局</em>配置 git 的用户名和邮箱，这是必须完成的初始化操作。</li>
-<li>设置 github 的公钥，让自己有推送权限，如果没有设置，将来 push 的时候会提醒你设置。</li>
-</ol>
-<p>这二者麻烦自行 ai。然后我们查看<a href="https://hexo.io/zh-cn/docs/one-command-deployment">hexo 文档</a>，继续下一步。</p>
-<p>在<code>_config.yml</code>中配置部署方式。指定部署的类型，刚刚在 github 上新建的远程仓库的名称，以及远程 repo 的分支。这里以我的仓库为例，建议使用 ssh 来指定仓库，避免网络问题（下面的 repo 项好像被阻挡了不能正常显示，完整的应为<code>git@github.com:spectrumzero/my_site.git</code>）：</p>
-<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">&quot;git&quot;</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:spectrumzero/my_site.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">gh-pages</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2025/06/24/build-site/1.png"></p>
-<p><em>注意，之所以将分支设置为<code>gh-pages</code>，是为了将整个项目的源代码和经过生成部署后的产物分开，以便更好地管理我的整个网站项目。在部署的时候，部署产物（Build Output）将会被推送到<code>gh-pages</code>分支，在此之后，自己则可以选择是否要将源代码推送到 main 分支。</em></p>
-<p>最后在同一个文件中指定网站的<code>url</code>即可，比如对于选项一：</p>
-<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="string">https://spectrumzero.github.io/</span></span><br></pre></td></tr></table></figure>
-
-<p>对于选项二：</p>
-<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="string">https://spectrumzero.github.io/my_site</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h4><p>进入你的项目的根目录，利用命令行安装部署插件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<p>这样我们就可以使用 git 进行部署了，同样在根目录下，<code>hexo c</code>-&gt;<code>hexo g</code>，可以选择要不要<code>hexo s</code>预览效果，然后直接：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>然后去远程 repo 中查看：</p>
-<p><img data-src="/2025/06/24/build-site/2.png"></p>
-<p>当<code>github-pages</code>旁边的图标变成绿色的，我们就完成了部署，可以直接通过域名访问更新后的网站了，在地址栏输入<code>github.username.io</code>或<code>github.username.io/sitename</code>即可。</p>
-<h3 id="自定义域名"><a href="#自定义域名" class="headerlink" title="自定义域名"></a>自定义域名</h3><p>如果想要获得更加个性化的域名，那么请阅读这一节。</p>
-<h4 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h4><p>有很多地方可以买到域名。我个人比较推荐的是<a href="https://porkbun.com/">porkbun</a>，因为你可以看到下一年续费需要多少钱，这个方面是比较透明的。而且也比其他商家比如 Namecheap 便宜，当然，也没有备案的说法。还有，如果你办理了<a href="https://education.github.com/pack">GitHub Student Developer Pack</a>，那么 Namecheap 好像可以免费提供域名<a href="https://education.github.com/experiences/virtual_event_kit">^2</a>（可惜我当时没有看到）。porkbun 支持 alipay，其他的商家可能不支持，但即便不支持，你或许也可以谷歌一下 wildcard。</p>
-<p>下面以猪肉包举例：</p>
-<ol>
-<li>注册并登陆，进入这个页面，然后搜索你想要的域名<br><img data-src="/2025/06/24/build-site/3.png"></li>
-<li>之后就会探出很多不同后缀的域名，选择喜欢的，购买结账就可以了。</li>
-<li>购买成功之后，你的域名就会在首页的下方展示，点击<code>details</code>，并关注<code>NAMESERVERS</code>选项，因为后面会用到：<br><img data-src="/2025/06/24/build-site/4.png"></li>
-</ol>
-<h4 id="添加自定义域名文件-CNAME"><a href="#添加自定义域名文件-CNAME" class="headerlink" title="添加自定义域名文件 CNAME"></a>添加自定义域名文件 CNAME</h4><p>在项目的<strong>根目录下的<code>source/</code>文件夹中</strong>，创建<code>CNAME</code>文件，没有后缀，全部大写，然后在文件夹中写入我们购买的域名，比如我的：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">www.spectrumzero.me</span><br></pre></td></tr></table></figure>
-
-<p>这一步是告诉 github pages，我们的项目最终会绑定哪个域名。</p>
-<h4 id="设置-github-pages"><a href="#设置-github-pages" class="headerlink" title="设置 github pages"></a>设置 github pages</h4><p>如下图所示，点到指定的区域，重点关注红框区域中的内容，<code>Source</code>中选择<code>Deploy from a branch</code>，然后在<code>Branch</code>中选择我们之前在<code>_config.yml</code>的<code>deploy</code>部分所指定的分支，以及<code>/root</code>目录：<br><img data-src="/2025/06/24/build-site/5.png"></p>
-<h4 id="设置域名-DNS-解析"><a href="#设置域名-DNS-解析" class="headerlink" title="设置域名 DNS 解析"></a>设置域名 DNS 解析</h4><p>我们使用<a href="https://www.cloudflare.com/zh-cn/">Cloudflare</a>来完成最终的域名解析。</p>
-<h5 id="登陆-Cloudflare-并获取新的域名服务器地址"><a href="#登陆-Cloudflare-并获取新的域名服务器地址" class="headerlink" title="登陆 Cloudflare 并获取新的域名服务器地址"></a>登陆 Cloudflare 并获取新的域名服务器地址</h5><p>一般如果是新用户，就会有新手引导界面，跟随引导界面即可。如果没有，可以如图点击：</p>
-<p><img data-src="/2025/06/24/build-site/6.png"></p>
-<p><img data-src="/2025/06/24/build-site/7.png"></p>
-<p><img data-src="/2025/06/24/build-site/8.png"></p>
-<p><img data-src="/2025/06/24/build-site/9.png"></p>
-<p><img data-src="/2025/06/24/build-site/10.png"></p>
-<p><img data-src="/2025/06/24/build-site/11.png"></p>
-<p>在最终的界面中，这两个就是我们需要的域名服务器的地址，把它们复制下来。<br><img data-src="/2025/06/24/build-site/12.png"></p>
-<h5 id="更改-porkbun-中默认的域名服务器地址"><a href="#更改-porkbun-中默认的域名服务器地址" class="headerlink" title="更改 porkbun 中默认的域名服务器地址"></a>更改 porkbun 中默认的域名服务器地址</h5><p>回到猪肉包中，改变<code>NAMESERVERS</code>中的内容即可。先清空，再把上面的两个地址一个一个粘贴进去，提交后就是下面的样子。<br><img data-src="/2025/06/24/build-site/13.png"></p>
-<p>之后再回到 cloudflare 的界面，检查一下域名服务器：<br><img data-src="/2025/06/24/build-site/14.png"></p>
-<p>这个过程一般会在 10 分钟之内完成。当这里变为“Active”的时候，我们就可以进行最后一步了。<br><img data-src="/2025/06/24/build-site/15.png"></p>
-<p>最后一步也很简单，点进我的截图所指的位置：<br><img data-src="/2025/06/24/build-site/16.png"></p>
-<p>你一共需要在弹出框中填写两次列表，我还是以我的为例：<br><img data-src="/2025/06/24/build-site/17.png"></p>
-<p>第一次：<code>CNAME</code>-&gt;<code>www</code>-&gt;<code>spectrumzero.github.io</code>-&gt;<code>proxied</code>-&gt;<code>Auto</code><br>第二次：<code>CNAME</code>-&gt;<code>@</code>-&gt;<code>spectrumzero.github.io</code>-&gt;<code>proxied</code>-&gt;<code>Auto</code></p>
-<p>第二次是为了方便别人可以直接通过<code>spectrumzero.me</code>来访问我的网站，而不必输入<code>www.spectrumzero.me</code>。</p>
-<p><em>请注意，这里的<code>Target</code>应该是 github pages 的根域名，后面没有路径</em>。</p>
-<p>最后记得保存即可，效果：<br><img data-src="/2025/06/24/build-site/18.png"></p>
-<p>然后回到<code>_config.yml</code>文件中，将<code>url</code>一行换成你最终自定义的域名即可，如：</p>
-<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="string">https://www.spectrumzero.me</span></span><br></pre></td></tr></table></figure>
-
-<p>之后，在项目的根目录执行<code>hexo c</code>-&gt;<code>hexo g</code>-&gt;<code>hexo d</code>，你的项目就会部署到指定的域名上了。第一次部署的时间可能会稍微会长一点，耐心等待即可。稍后即可以你喜欢的域名访问你的网站了。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>现在我们可以通过<code>github.username.io</code>，或者是自定义的域名来访问我们的网站了。这也是我的这个网站诞生的过程。网站只是一种呈现的方式，而在哪里记录则有十分丰富的选择。所以写作的流程不一定是<code>hexo new &quot;Hello World&quot;</code>，然后就很规矩地在这个网站项目的本地文件夹中写。我更喜欢的方式是，先在专门的 Obsidian Vault 中写好，然后再把文字复制到那个新的博客 markdown 中，把图片放到对应的文件夹里。这样就最大程度地避免因为呈现的繁琐而不愿意呈现。某种程度上，”<em>Learn in public</em>“确实很有道理。</p>
-<p><em>提示：为了方便管理图片，很推荐一篇文章一个文件夹的做法，可以参看这个<a href="https://chrismroberts.com/2020/01/06/using-markdown-in-hexo-to-add-images/">链接</a>。以及对于那些非文章的图片，也就是可能用来配置网站的图片，建议放在根目录下的<code>source/images</code>文件夹下。这一点也可以参照<a href="https://hexo.io/zh-cn/docs/asset-folders">hexo 官方文档</a></em>。</p>
-<p>现在，远程仓库只有一个分支，也就是<code>gh-pages</code>分支。这个分支是由源代码构建的产物。你可以选择将你的源代码推送到远程仓库的<strong>另外一个分支</strong>，以便实现更好的管理。需要先在网站根目录中执行<code>git init .</code>来将整个项目纳入 git 的追踪，之后的步骤则请自行 ai。</p>
-<p>最后，如果需要的话，你也可以参考我的<a href="https://github.com/spectrumzero/my_site/tree/main">源代码分支</a>。</p>
-]]></content>
-      <tags>
-        <tag>tips</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>GET 和 POST 方法的区别</title>
-    <url>/2025/11/14/get-and-post/</url>
-    <content><![CDATA[<p>GET 和 POST 是 HTTP 协议中两种常用的请求方法，它们在不同的场景和目的下有不同的特点和用法。一般来说，可以从以下几个方面来区分它们：</p>
-<ul>
-<li>语义上的区别：GET 通常用于获取或查询资源，而 POST 通常用于创建或修改资源。GET 请求应该是幂等的，即多次重复执行不会改变资源的状态，而 POST 请求则可能有副作用，即每次执行可能会产生不同的结果或影响资源的状态。</li>
-<li>格式上的区别：GET 请求的参数通常放在 URL 中，形成查询字符串（querystring），而 POST 请求的参数通常放在请求体（body）中，可以有多种编码格式，如 application&#x2F;x-www-form-urlencoded、multipart&#x2F;form-data、application&#x2F;json 等。GET 请求的 URL 长度受到浏览器和服务器的限制，而 POST 请求的 body 大小则没有明确的限制。</li>
-<li>缓存上的区别：由于 GET 请求是幂等的，它可以被浏览器或其他中间节点（如代理、网关）缓存起来，以提高性能和效率。而 POST 请求则不适合被缓存，因为它可能有副作用，每次执行可能需要实时的响应。</li>
-<li>安全性上的区别：GET 请求和 POST 请求都不是绝对安全的，因为 HTTP 协议本身是明文传输的，无论是 URL、header 还是 body 都可能被窃取或篡改。为了保证安全性，必须使用 HTTPS 协议来加密传输数据。不过，在一些场景下，GET 请求相比 POST 请求更容易泄露敏感数据，因为 GET 请求的参数会出现在 URL 中，而 URL 可能会被记录在浏览器历史、服务器日志、代理日志等地方。因此，一般情况下，私密数据传输应该使用 POST + body。</li>
-</ul>
-<p>上述内容参考了：<a href="https://javaguide.cn/">Java Guide</a>。</p>
-]]></content>
-      <tags>
-        <tag>System Design</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hello world</title>
-    <url>/2025/06/20/hello-world/</url>
-    <content><![CDATA[<p>基于hexo博客框架，使用NexT Gemini主题。打造独特书写体验。</p>
-<p>放一些整理得比较系统的笔记上来。在此之前，让我测试一下渲染功能吧。</p>
-<h1 id="文本格式支持"><a href="#文本格式支持" class="headerlink" title="文本格式支持"></a>文本格式支持</h1><p>Words in regular format.<br><em>斜体字</em>。<br><strong>还有加粗的标记。</strong><br><em><strong>很少用到的加粗斜体。</strong></em><br><strong>还有加粗的标记。</strong><br><em>斜体字</em>。<br>Words in regular format.</p>
-<h1 id="代码格式支持"><a href="#代码格式支持" class="headerlink" title="代码格式支持"></a>代码格式支持</h1><h2 id="java格式"><a href="#java格式" class="headerlink" title="java格式"></a>java格式</h2><p>在下面定义一个<code>java</code>类：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorld</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 这是程序的入口点，main 方法。</span></span><br><span class="line"><span class="comment">     * 当你运行这个程序时，JVM (Java 虚拟机) 会从这里开始执行。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> args 命令行参数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 使用 System.out.println() 方法将文本打印到控制台</span></span><br><span class="line">        <span class="comment">// println 会在打印后自动换行</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Hello, World!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="其它格式"><a href="#其它格式" class="headerlink" title="其它格式"></a>其它格式</h2><ul>
-<li>python</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用内置的 print() 函数来向控制台输出文本</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Hello, World!&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>cpp</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 引入输入输出流库，cout 就在这里定义</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// main 函数是 C++ 程序的入口点</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// std::cout 用于向标准输出（通常是控制台）发送数据</span></span><br><span class="line">    <span class="comment">// &lt;&lt; 是流插入运算符</span></span><br><span class="line">    <span class="comment">// std::endl 用于输出一个换行符并刷新输出缓冲区</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Hello, World!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 返回 0 表示程序成功执行完毕</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>javascript</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 使用 console.log() 方法将信息打印到控制台</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello, World!&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-
-<h1 id="图片和链接支持"><a href="#图片和链接支持" class="headerlink" title="图片和链接支持"></a>图片和链接支持</h1><p>现在来测试图片。确保使用的是<code>post_asset_folder</code>，这样会节约从obsidian迁移文档到<code>_post</code>文件夹中的时间。可以参考这个<a href="https://chrismroberts.com/2020/01/06/using-markdown-in-hexo-to-add-images/">链接</a>。</p>
-<p>下面是一张图片，推上找的。因为今天下雨了。</p>
-<p><img data-src="/2025/06/20/hello-world/1.png"></p>
-<h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1><p>嗯，好了。可以慢慢往上面搬东西。评论和目录功能也良好。i18n和l10n以后再做吧。</p>
-]]></content>
-      <tags>
-        <tag>test</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>继承与接口的比较</title>
-    <url>/2025/10/10/inheritance-and-interface/</url>
-    <content><![CDATA[<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><ol>
-<li><strong>核心关系：</strong> “is-a”（是一种）关系。子类是父类的一种更具体的类型（例如：Car is-a Vehicle）。</li>
-<li><strong>实现方式：</strong>  使用  extends  关键字来声明继承关系，例如  class Child extends Parent。</li>
-<li><strong>继承内容：</strong>  子类自动继承父类所有非  private  的成员变量和成员方法，可以直接使用。</li>
-<li><strong>不继承内容：</strong>  构造方法和被  private  修饰的成员不能被子类直接继承或访问。</li>
-<li><strong>构造方法规则：</strong>  子类的构造方法第一行必须调用父类的构造方法或本类的另一个构造方法 this(…)。如果未显式使用  super(…)  调用，编译器会自动添加一个无参的  super()。如果父类没有无参构造方法，子类必须在其所有构造方法中显式调用父类的有参构造方法。</li>
-<li><strong>方法重写 (Overriding)：</strong>  子类可以提供一个与父类方法签名（方法名、参数列表）完全相同的新实现来覆盖父类的行为。建议使用  @Override  注解进行标记。</li>
-<li><strong>重写规则：</strong>  重写的方法访问权限不能比父类更严格，返回类型必须相同或者是父类返回类型的子类。</li>
-<li><strong>成员变量隐藏 (Hiding)：</strong>  成员变量只能被隐藏，不能被重写。当子类定义了与父类同名的变量时，具体访问哪个变量取决于<strong>引用的类型</strong>，而不是对象的实际类型。</li>
-<li><strong>super  关键字：</strong>  在子类中，使用  super.成员   来访问父类中被隐藏的变量或被重写的方法；使用  super()  来调用父类的构造方法。</li>
-<li><strong>多态 (Polymorphism)：</strong>  父类的引用可以指向子类的对象（Parent p &#x3D; new Child();），这被称为向上转型。</li>
-<li><strong>多态表现：</strong>  当通过父类引用调用一个被重写的方法时，实际执行的是子类中的方法版本。</li>
-<li><strong>向下转型 (Downcasting)：</strong>  将父类引用强制转换回子类引用（Child c &#x3D; (Child) p;），这存在  ClassCastException  的风险。</li>
-<li><strong>instanceof  关键字：</strong>  在进行向下转型之前，应使用  instanceof  关键字检查引用的实际对象类型，以确保类型安全，避免异常。</li>
-<li><strong>final  关键字：</strong>  被  final  修饰的类不能被继承；被  final  修饰的方法不能被子类重写。</li>
-<li><strong>单继承原则：</strong> Java 只支持单继承，即一个类最多只能有一个直接父类，但可以通过实现多个接口来弥补。</li>
-</ol>
-<h2 id="抽象父类的继承"><a href="#抽象父类的继承" class="headerlink" title="抽象父类的继承"></a>抽象父类的继承</h2><ol>
-<li><strong>核心关系：</strong>  既是 “is-a” 关系，又是一种<strong>不完整</strong>的设计模板。它代表一个抽象的概念，其本身不能被完整地实现。</li>
-<li><strong>声明方式：</strong>  类本身必须使用  abstract  关键字声明。类中可以包含抽象方法，也必须用  abstract  声明且没有方法体。</li>
-<li><strong>不可实例化：</strong>  不能使用  new  关键字直接创建抽象类的实例，因为它是不完整的。</li>
-<li><strong>成员构成：</strong>  抽象类是普通类和接口的混合体，它可以包含<strong>成员变量、常量、构造方法、具体方法</strong>和<strong>抽象方法</strong>。</li>
-<li><strong>强制规则：</strong>  任何包含一个或多个抽象方法的类，<strong>必须</strong>被声明为抽象类。但抽象类可以不包含任何抽象方法。</li>
-<li><strong>子类责任：</strong>  继承抽象类的具体子类<strong>必须</strong>实现（重写）父类中所有的抽象方法。如果子类不想全部实现，那么该子类也必须被声明为抽象类。</li>
-<li><strong>构造方法用途：</strong>  抽象类可以有构造方法，其唯一目的是为了被子类的构造方法通过  super()  调用，以初始化从父类继承来的成员变量。</li>
-<li><strong>核心用途：</strong>  完美地结合了<strong>代码复用</strong>和<strong>行为规范</strong>。它为所有子类提供公共的状态和行为（通过成员变量和具体方法），同时强制它们必须实现某些特定的行为（通过抽象方法）。</li>
-</ol>
-<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><ol>
-<li><strong>核心关系：</strong> “can-do”（能做什么）或行为契约。接口定义了一组类必须遵守的规范或能力，强调“能做什么”，而不是“是什么”。</li>
-<li><strong>实现方式：</strong>  使用  implements  关键字来实现一个或多个接口，例如  class MyClass implements MyInterface。</li>
-<li><strong>多实现：</strong>  一个类可以同时实现多个接口，从而获得多种不同的能力。这是 Java 实现“类多重继承”效果的方式。</li>
-<li><strong>实现承诺：</strong>  实现类必须为接口中所有的抽象方法提供具体实现（方法体）。如果未能全部实现，该类必须被声明为抽象类 (abstract class)。</li>
-<li><strong>抽象方法：</strong>  接口中的方法默认是  public abstract  的，没有方法体。实现类在重写时必须使用  public  访问修饰符。</li>
-<li><strong>常量：</strong>  接口中声明的任何变量都默认是  public static final  的，即全局常量，必须在声明时初始化。</li>
-<li><strong>默认方法 (Default Methods - Java 8+)：</strong>  使用  default  关键字，接口可以提供方法的默认实现。实现类可以选择直接继承使用，也可以重写它。</li>
-<li><strong>静态方法 (Static Methods - Java 8+)：</strong>  接口可以包含  static  方法。这些方法只能通过   接口名.方法名()  的方式调用，不能被实现类继承或重写。</li>
-<li><strong>多态应用：</strong>  接口引用可以指向其任何实现类的对象（MyInterface ref &#x3D; new MyClass();），这是实现多态和程序解耦的关键。</li>
-<li><strong>不可实例化：</strong>  接口不能被直接实例化（不能使用  new  关键字创建接口自身的实例）。</li>
-<li><strong>接口间的继承：</strong>  一个接口可以使用  extends  关键字继承一个或多个其他接口，从而<strong>将父接口的所有成员合并到自身</strong>。</li>
-<li><strong>默认方法冲突：</strong>  如果一个类实现的多个接口中包含签名相同的默认方法，该类必须重写此方法以解决冲突。</li>
-<li><strong>无状态与构造方法：</strong>  接口没有成员变量（只有常量）和构造方法。它只定义行为，不关心状态的存储。</li>
-</ol>
-]]></content>
-      <tags>
-        <tag>Core Java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>用 Docker 启动 MySQL 8.0.35</title>
-    <url>/2026/03/04/learn-docker/</url>
-    <content><![CDATA[<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p><code>pacman</code> 把我的 mysql 滚到 9.6.0 了，太新了导致以前很多命令无法使用，而比如 <strong>canal</strong> 又依赖这些过去的命令，所以一直有报错写进 logs&#x2F;example.log: “Caused by: java.io.IOException: ErrorPacket [errorNumber&#x3D;1064, fieldCount&#x3D;-1, message&#x3D;You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘master status’ at line 1, sqlState&#x3D;42000, sqlStateMarker&#x3D;#] with command: show master status.”即 <code>show master status</code> 在 9.0 的版本中是无法使用的。于是利用 <strong>docker</strong> 将 mysql 回退到之前的版本，退到 8.0.35。</p>
-<p>首先，从本地高版本数据库安全导出所需要的业务库表（ <code>\</code> 是换行符，增强可读性）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u root -p \</span><br><span class="line">--databases one_coupon_rebuild_0 one_coupon_rebuild_1 sky_take_out myhmdp game \</span><br><span class="line">--single-transaction \</span><br><span class="line">--set-gtid-purged=OFF \</span><br><span class="line">&gt; all_biz_data.sql</span><br></pre></td></tr></table></figure>
-
-<p>然后，彻底清理本地占用进程，并取消开机自启动：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl stop mysqld</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">disable</span> mysqld</span><br></pre></td></tr></table></figure>
-
-<p>安装 Docker，启动服务，并设置开机自启：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> pacman -S docker</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> --now docker <span class="comment"># now 是一个快捷参数，now start!</span></span><br><span class="line"><span class="built_in">sudo</span> usermod -aG docker <span class="variable">$USER</span> <span class="comment"># 将用户加入 docker 组，从而摆脱 sudo。注意一定不能忘记 -a，append</span></span><br></pre></td></tr></table></figure>
-
-<p>然后<strong>重启</strong>电脑，下次电脑启动后就会全局生效。也有一个临时方案，仅仅对当前 shell 会话生效（当然直接每次都 sudo 也可以）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">newgrp docker</span><br></pre></td></tr></table></figure>
-
-<p>用 Docker 启动 MySQL 8.0 的实例。这里使用的是稳定的 8.0.35：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run --name mysql8-canal \</span><br><span class="line">-p 3306:3306 \</span><br><span class="line">-v ~/mysql_data:/var/lib/mysql \</span><br><span class="line">-e MYSQL_ROOT_PASSWORD=root \</span><br><span class="line">-d mysql:8.0.35</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><strong>参数解释</strong>：</p>
-<ul>
-<li><strong><code>docker run</code></strong>: Docker 的核心命令，用于<strong>新建并运行</strong>一个容器。</li>
-<li><strong><code>--name mysql8-canal</code></strong>: 给容器指定一个自定义名称（<code>mysql8-canal</code>），方便后续通过名字进行管理，而不是使用随机生成的字符串 ID。</li>
-<li><strong><code>-p 3306:3306</code></strong>: 端口映射。格式为 <code>宿主机端口:容器内端口</code>。这里将宿主机（我的 linux）的 3306 端口映射到容器的 3306 端口，这样就很方便，发送到宿主机的 IP 的请求，经过 Docker 代理转发，从而访问到容器中的 mysqld（它默认监听容器的 3306 端口）。注意需要显式指定 IP 地址，如 <code>mysql -h 127.0.0.1 -u root -p</code>，强制走 TCP 连接而不是 Socket 连接。</li>
-<li><strong><code>-v ~/mysql_data:/var/lib/mysql</code></strong>: 数据卷挂载（持久化）。将宿主机的 <code>~/mysql_data</code> 目录映射到容器内的数据库存储目录。这样即使容器被删除，数据库中的数据也不会丢失。</li>
-<li><strong><code>-e MYSQL_ROOT_PASSWORD=root</code></strong>: 设置环境变量。此处指定了 Docker 中的 MySQL实例的 <code>root</code> 用户的初始登录密码为 <code>root</code>，可以自行修改，也不要求和原本地上的 MySQL 实例一致，因为它们其实是独立的两个实例。</li>
-<li><strong><code>-d</code></strong>: 后台运行模式（Detached mode）。让容器在后台执行，不占用当前的终端窗口。</li>
-<li><strong><code>mysql:8.0.35</code></strong>: 指定使用的镜像（mysql）及版本标签（Tag，8.0.35）。如果本地没有，Docker 会去官方仓库（Docker Hub）里找名为 mysql 的镜像并拉取指定的版本然后下载到本地，最后基于这个本地镜像克隆出一个运行中的容器，即一个隔离的运行环境。</li>
-</ul>
-</blockquote>
-<p><strong>注意</strong>：如果上面的命令连接不到镜像，那么就需要配置镜像源，新建或编辑文件 <code>/etc/docker/daemon.json</code>，写入：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;https://docker.m.daocloud.io&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;https://huecker.io&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;https://dockerhub.timeweb.cloud&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;https://noohub.net&quot;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>然后重启 docker 服务读取新配置，再重新 <code>docker run ...</code> 一次即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
-
-<p>使用下面的命令可以看到下载的镜像的信息：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker image <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
-
-<p><code>run</code> 成功后，本地就有了 8.0.35 的镜像，且对应的 MySQL 实例也启动成功。接下来就可以登陆 MySQL 容器了：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql8-canal mysql -uroot -proot</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><strong>参数解释：</strong></p>
-<ul>
-<li><strong><code>docker exec</code></strong>: 在<strong>运行中</strong>的容器内执行新命令。</li>
-<li><strong><code>-i</code> (interactive)</strong>——交互模式，让容器的标准输入（STDIN）保持打开，确保容器里的程序能接收我输入的命令；<strong><code>-t</code> (tty)</strong>——给容器分配一个伪终端（Pseudo-TTY），这个伪终端会模拟我输入所在的终端给容器看，进而容器可以按照我的终端的显示规则来输出数据，保证了可读性。这二者一般一起用。所以是 <code>-it</code>。</li>
-<li><strong><code>mysql8-canal</code></strong>: 之前指定的容器名称。</li>
-<li><strong><code>mysql</code></strong>: 容器内要执行的程序名（即 MySQL 命令行客户端）。</li>
-<li><strong><code>-uroot</code></strong>: <code>mysql</code> 程序的参数，指定以 <code>root</code> 用户身份登录（<code>-u</code> 后紧跟用户名）。</li>
-<li><strong><code>-proot</code></strong>: <code>mysql</code> 程序的参数，指定登录密码为 <code>root</code>（<code>-p</code> 后紧跟密码）。</li>
-</ul>
-</blockquote>
-<p>这样就会连接到容器中的 MySQL 实例。接下来就可以配置 canal 的权限，用 canal 来监听数据库的变化。由于 8.0.35 的兼容性，需要给 canal 配置的其实很少，就下面几行：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 创建 canal 用户并强制使用 mysql_native_password，使用 native 是考虑与 canal 的兼容</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;canal&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">&#x27;canal&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 授予同步核心权限</span></span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">SELECT</span>, REPLICATION SLAVE, REPLICATION CLIENT <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;canal&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 刷新生效</span></span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><strong>参数解释：</strong><br><strong>WITH mysql_native_password</strong>：MySQL 8.0 默认使用 caching_sha2_password，很多旧版 Canal 驱动不认识它，会导致连接失败。强制改成 native 模式能保证 Canal 连上。、<br><strong>REPLICATION SLAVE</strong>：让 Canal 伪装成从库，这样它才有权限读取 Binlog。</p>
-</blockquote>
-<p>然后退出 mysql 的交互命令行界面，回到原始终端，执行下面的代码，把备份的数据导入 docker 中的 mysql 实例。这会花费一点时间，完成后客户端会自动断开连接：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -i mysql8-canal mysql -uroot -proot &lt; all_biz_data.sql</span><br></pre></td></tr></table></figure>
-
-<p>然后再次进入：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql8-canal mysql -uroot -proot</span><br></pre></td></tr></table></figure>
-
-<p>执行命令，可以看到已经有我们之前的数据库表了：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql&gt; show databases;</span><br><span class="line">+----------------------+</span><br><span class="line">| Database             |</span><br><span class="line">+----------------------+</span><br><span class="line">| game                 |</span><br><span class="line">| information_schema   |</span><br><span class="line">| myhmdp               |</span><br><span class="line">| mysql                |</span><br><span class="line">| one_coupon_rebuild_0 |</span><br><span class="line">| one_coupon_rebuild_1 |</span><br><span class="line">| performance_schema   |</span><br><span class="line">| sky_take_out         |</span><br><span class="line">| sys                  |</span><br><span class="line">+----------------------+</span><br><span class="line">9 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)</span><br></pre></td></tr></table></figure>
-
-<p>之后回到 IDEA 中，在 DataGrip 中断开原数据库的连接，重启 IDEA，然后重新连接数据库即可，这次将连接到容器中 8.0.35 的实例。连接成功后，需要根据 IDEA 的提示，同步更新 JDBC 的驱动。最后结果如下：</p>
-<p><img data-src="/2026/03/04/learn-docker/1.png"></p>
-<p>8.0 版本的好处在于，基本上默认的配置是和 canal 兼容的，只需要设置 canal 的权限即可。剩下的根据需求，配置 canal 的全局配置文件 conf&#x2F;canal.properties 和 实例文件 conf&#x2F;example&#x2F;instance.properties 文件就好了。</p>
-<h2 id="其它命令"><a href="#其它命令" class="headerlink" title="其它命令"></a>其它命令</h2><p>如果遇到需要删除容器的情况，就停止、删除旧容器。这两步是可逆的。只要没有清除本地挂载的目录 ~&#x2F;mysql_data，状态在下次 <code>run</code> 的时候就能够挂载恢复。只有在需要彻底清理数据库的情况下，才应该删除这个目录中的数据。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker stop mysql8-canal</span><br><span class="line">docker <span class="built_in">rm</span> mysql8-canal</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf ~/mysql_data <span class="comment"># 危险！</span></span><br></pre></td></tr></table></figure>
-
-<p>如果你之前已经创建过这个容器，并且数据都在里面，直接启动它即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker start mysql8-canal</span><br></pre></td></tr></table></figure>
-
-<p>查看正在运行的容器：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
-
-<h2 id="镜像、容器与程序的关系"><a href="#镜像、容器与程序的关系" class="headerlink" title="镜像、容器与程序的关系"></a>镜像、容器与程序的关系</h2><p><strong>镜像（Image）</strong> 是一个包含应用程序及其完整运行时环境的<strong>只读分层文件系统（RootFS）</strong>。它在构建阶段（Build Time）就通过 <code>Dockerfile</code> 预装了二进制程序（如 <code>mysql</code> 客户端和服务端）、依赖库和系统工具。可以说，最小依赖，开箱即用。</p>
-<p><strong>容器（Container）</strong> 则是镜像的<strong>运行实例</strong>。当 Docker 启动容器时，它在镜像的只读层之上添加了一个<strong>可写层（Copy-on-Write）</strong>。甚至可以将镜像看作<strong>类（Class）</strong>，而容器是该类在内存中被实例化的<strong>对象（Object）</strong>。它是一个被<strong>隔离</strong>出来的<strong>运行环境</strong>，有自己的<strong>文件系统</strong>、自己的<strong>网络接口</strong>和自己的<strong>内存空间</strong>，但不像虚拟机有自己的独立内核，而是共享的宿主机的内核。</p>
-<p>在容器启动（<code>run</code>）后，就至少会启动一个已经在镜像中打包好了的程序，来作为核心的程序。在我们的场景中，它就是 <code>mysqld</code>，MySQL 的服务端。容器的生命周期是和这个主程序绑定的。容器中运行的所有程序，都不是运行在虚拟机上的，而是一个直接运行在宿主机内核上的<strong>特殊进程</strong>，因此可以直接在宿主机上找到这个进程并杀死它——容器随即销毁。</p>
-<p><code>exec</code> 的场景，就是在容器中启动了一个辅助程序&#x2F;进程（与上面的主进程相对），它与主进程共享同一个网络、文件系统和进程空间——即共处一个容器之中。而这个程序，同样，在镜像阶段就被打包好了，比如这里使用到的 <code>mysql-client</code> 来与 MySQL 服务端连接——它不是我们用 <code>pacman</code> 安装的客户端（当然也可以使用它来访问 3306 端口，然后请求会因为端口映射转发到 Docker 中），而是被打包进镜像的客户端。</p>
-]]></content>
-      <tags>
-        <tag>Docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>maven常见标签</title>
-    <url>/2025/10/09/maven-tags/</url>
-    <content><![CDATA[<h2 id="基础坐标"><a href="#基础坐标" class="headerlink" title="基础坐标"></a>基础坐标</h2><ul>
-<li><code>&lt;groupId&gt;</code>: 项目组 ID。通常是公司或组织的反向域名。groupId 一般分为多段，通常情况下，第一段为域，第二段为公司名称，第三段为项目名称。</li>
-<li><code>&lt;artifactId&gt;</code>: 项目 ID。它是在 groupId 内唯一的项目名称。</li>
-<li><code>&lt;version&gt;</code>: 项目版本号。例如 0.0.1-SNAPSHOT。<ul>
-<li>SNAPSHOT 后缀表示这是一个不稳定的开发版本。</li>
-</ul>
-</li>
-<li><code>&lt;packaging&gt;</code>: 项目的打包方式。<ul>
-<li>jar (默认): 打包成 Java Archive 文件。</li>
-<li>war: 打包成 Web Application Archive 文件，用于部署到 Web 服务器。</li>
-<li>pom: 用于<strong>父模块</strong>或聚合模块，表示<strong>它只管理其他模块，本身不产生构建产物</strong>。</li>
-</ul>
-</li>
-</ul>
-<h2 id="依赖管理"><a href="#依赖管理" class="headerlink" title="依赖管理"></a>依赖管理</h2><ul>
-<li><code>&lt;dependencies&gt;</code>: 根标签，包含所有具体的依赖项。</li>
-<li><code>&lt;dependency&gt;</code>: 定义一个具体的依赖项。<ul>
-<li><code>&lt;groupId&gt;</code>, <code>&lt;artifactId&gt;</code>, <code>&lt;version&gt;</code>: 依赖项自身的 GAV 坐标。</li>
-<li><code>&lt;type&gt;</code>: 用来指定依赖项的类型。默认为 jar，也有可能为 pom——在这种情况下<strong>常常与<code>&lt;scope&gt;import&lt;/scope&gt;</code>一起使用</strong>，以实现 BOM ( Bill of Materials ) 机制，导入依赖版本配置。</li>
-<li><code>&lt;scope&gt;</code>: 依赖的范围，非常重要，决定了<strong>依赖在何时生效</strong>。<ul>
-<li>compile (默认): 编译、测试、运行时都需要。会被打包到最终产物中。</li>
-<li>provided: 编译和测试时需要，但运行时由环境（如 JDK 或 Web 容器）提供。例如 servlet-api。</li>
-<li>runtime: 编译时不需要，但运行时需要。例如 JDBC 驱动。</li>
-<li>test: 只在测试编译和运行时需要。例如 JUnit。</li>
-<li>import: 特殊，只在 <code>&lt;dependencyManagement&gt;</code> 中使用，用于从其他 POM 文件（“物料清单”）中导入依赖版本配置。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><code>&lt;dependencyManagement&gt;</code>: 依赖管理声明。<strong>它不直接引入依赖，而是用于统一管理所有子模块中依赖的版本号</strong>。在<strong>父 POM</strong>中使用此标签声明版本后，子模块在引入该依赖时就无需再写 <code>&lt;version&gt;</code>，从而保证了所有模块版本一致，避免了版本冲突。</li>
-<li><strong>注意</strong>： 定义在父 POM 的 <code>&lt;dependencies&gt;</code> 里的依赖，会被所有子模块自动继承<strong>并引入</strong>；而定义在 <code>&lt;dependencyManagement&gt;</code> 里的依赖，<strong>仅仅是声明版本</strong>，如果子模块不通过自己的 <code>&lt;dependencies&gt;</code> 标签去引入它，那么这个依赖是不会被下载的。</li>
-</ul>
-<h2 id="项目关系"><a href="#项目关系" class="headerlink" title="项目关系"></a>项目关系</h2><ul>
-<li><code>&lt;parent&gt;</code>: 在子模块中声明其父项目。子模块会继承父项目 pom.xml 中的配置（如依赖版本、插件配置等）。</li>
-<li><code>&lt;modules&gt;</code>: 在父模块（<packaging>pom</packaging>）中声明其包含的所有子模块。</li>
-</ul>
-<h2 id="构建配置"><a href="#构建配置" class="headerlink" title="构建配置"></a>构建配置</h2><ul>
-<li><code>&lt;build&gt;</code>: 构建配置的根标签。</li>
-<li><code>&lt;plugins&gt;</code>: 包含所有构建过程中使用的插件。</li>
-<li><code>&lt;plugin&gt;</code>: 定义一个具体的插件，例如 maven-compiler-plugin (用于编译代码) 或 spotless-maven-plugin (用于格式化代码)。</li>
-<li><code>&lt;resources&gt;</code>: 定义需要被包含到最终产物中的资源文件（非 .java 文件，如 .xml, .properties）。默认目录是 src&#x2F;main&#x2F;resources。</li>
-</ul>
-<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><ul>
-<li><code>&lt;properties&gt;</code>: 属性的根标签。用于定义可复用的变量，使配置更灵活、易于维护。比如可以在这里定义版本号、配置参数等，然后在<strong>该 POM 的其他地方</strong>通过 ${…} 的形式引用。</li>
-</ul>
-<h2 id="其他信息"><a href="#其他信息" class="headerlink" title="其他信息"></a>其他信息</h2><ul>
-<li><code>&lt;name&gt;</code>: 项目的名称，更具可读性。</li>
-<li><code>&lt;description&gt;</code>: 项目的详细描述。</li>
-<li><code>&lt;developers&gt;</code>: 项目开发者信息。</li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://javaguide.cn/">Java Guide</a>.</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL中的数据类型</title>
-    <url>/2026/02/10/mysql-datatype/</url>
-    <content><![CDATA[<h2 id="MySQL-的三大数据类型"><a href="#MySQL-的三大数据类型" class="headerlink" title="MySQL 的三大数据类型"></a>MySQL 的三大数据类型</h2><ol>
-<li><strong>数值类型</strong>：整型（TINYINT、SMALLINT、MEDIUMINT、INT 和 BIGINT）、浮点型（FLOAT 和 DOUBLE）、定点型（DECIMAL）。<ul>
-<li>整型可以使用可选的 UNSIGNED 属性来表示不允许负值的无符号整数，这可以将正整数的上限提高一倍，因为它不需要存储负数值。例如， TINYINT UNSIGNED 类型的取值范围是 0 ~ 255，而普通的 TINYINT 类型的值范围是 -128 ~ 127。</li>
-</ul>
-</li>
-<li><strong>字符串类型</strong>：CHAR、VARCHAR、TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT、TINYBLOB、BLOB、MEDIUMBLOB 和 LONGBLOB 等，最常用的是 CHAR 和 VARCHAR。CHAR 是定长字符串，VARCHAR 是变长字符串。CHAR(M) 和 VARCHAR(M) 的 M 都代表能够保存的字符数的最大值，且无论是字母、数字还是中文，每个都只占用一个字符。<ul>
-<li>注意，针对 VARCHAR，虽说 VARCHAR(100) 和 VARCHAR(10) 能存储的字符范围不同，但二者存储相同的字符串，所占用<strong>磁盘</strong>的存储空间其实是一样的，不过，VARCHAR(100) 会消耗更多的<strong>内存</strong>。此外，存储手机号<strong>强烈推荐使用 VARCHAR 类型</strong>，而不是 INT 或 BIGINT。这是为了保证格式的兼容性（手机号可能有各种前导）、查询的灵活性（VARCHAR 可以配合 <code>Like</code> 快速拼接）、以及<strong>加密的要求</strong>（INT 或 BIGINT 类型无法存储加密后变长的字符串密文）。</li>
-<li>DECIMAL 和 FLOAT&#x2F;DOUBLE 的区别是：DECIMAL 是定点数，FLOAT&#x2F;DOUBLE 是浮点数。DECIMAL 可以存储精确的小数值，FLOAT&#x2F;DOUBLE 只能存储近似的小数值——因为浮点数会直接截断在二进制下无法除尽的小数，而定点数则采用了另外一种表示小数的方式，确保小数的精确性。</li>
-<li>数据库规范通常不推荐使用 TEXT 和 BLOB 类型。因为检索效率较低，可能会消耗大量的网络和 IO 带宽等等。尽管它们能存储更长的字符串和二进制大对象。</li>
-</ul>
-</li>
-<li><strong>日期时间类型</strong>：YEAR、TIME、DATE、DATETIME 和 TIMESTAMP 等。<ul>
-<li>TIMESTAMP 有时区信息，DATETIME 类型没有；TIMESTAMP 使用 4 个字节的存储空间，DATETIME 需要耗费 8 个字节。但是，Timestamp 表示的时间范围更小。TIMESTAMP 的核心优势在于其内建的时区处理能力。</li>
-<li>有了专门的表示时间的类型，一般就不建议用字符串来存储日期了。与 MySQL 内建的日期时间类型相比，字符串通常需要占用更多的存储空间来表示相同的时间信息，且查询、索引性能更差，计算功能也会受到限制。</li>
-<li>然而，实践中会常用整数类型（<code>INT</code> 或 <code>BIGINT</code>）来存储所谓的“Unix 时间戳”（即从 1970 年 1 月 1 日 00:00:00 UTC 起至目标时间的总秒数（10 位），或毫秒数（13 位）），即<strong>数值型时间戳</strong>。这种存储方式具有 <code>TIMESTAMP</code> 类型的所具有一些优点，并且使用它进行日期排序以及对比等操作的效率会更高，跨系统也很方便，毕竟只是存放的数值。缺点也很明显，就是无法直观地看到具体时间。</li>
-</ul>
-</li>
-</ol>
-<blockquote>
-<p>MySQL 中没有专门的布尔类型，而是用 TINYINT(1) 类型来表示布尔值。TINYINT(1) 类型可以存储 0 或 1，分别对应 false 或 true。</p>
-</blockquote>
-<h2 id="关于-NULL"><a href="#关于-NULL" class="headerlink" title="关于 NULL"></a>关于 NULL</h2><p><code>NULL</code> 代表一个不确定的值，它不等于任何值，包括它自身。因此，<code>SELECT NULL = NULL</code> 的结果是 <code>NULL</code>，而不是 <code>true</code> 或 <code>false</code>。<code>NULL</code> 意味着缺失或未知的信息。任何值与 <code>NULL</code> 进行比较的结果都是 <code>NULL</code>，表示结果不确定。要判断一个值是否为 <code>NULL</code>，必须使用 <code>IS NULL</code> 或 <code>IS NOT NULL</code>。</p>
-<p>此外，<code>COUNT(*)</code> 会统计所有行数，包括包含 <code>NULL</code> 值的行，<code>COUNT(列名)</code> 却会统计指定列中非 <code>NULL</code> 值的行数，聚合函数对 <code>NULL</code> 的行为差异会增大代码出 Bug 的可能性。所以一般都不建议以它作为列的默认值。</p>
-<p>内容参考：<a href="https://javaguide.cn/">Java Guide</a>。</p>
-]]></content>
-      <tags>
-        <tag>Database</tag>
-        <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL 的架构</title>
-    <url>/2026/02/12/mysql-framework/</url>
-    <content><![CDATA[<p>简单来说，MySQL 主要分为 Server 层和存储引擎层。</p>
-<p><img data-src="/2026/02/12/mysql-framework/1.png"></p>
-<h2 id="Server-层基本组件"><a href="#Server-层基本组件" class="headerlink" title="Server 层基本组件"></a>Server 层基本组件</h2><h3 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h3><p>连接器主要负责用户登录数据库，进行用户的身份认证，包括校验账户密码，全局权限的校验。在 <code>mysql -u root -p</code> 时候触发，粒度较粗。连接的过程需要先经过 TCP 三次握手，<strong>因为 MySQL 是基于 TCP 协议进行传输的</strong>。如果想知道当前 MySQL 服务器被多少个客户端连接了，可以执行 <code>show processlist</code> 命令进行查看。针对空闲连接（<code>sleep</code>），MySQL 定义了最大空闲时长，默认值是 8 小时（28800 秒），如果空闲连接超过了这个时间，连接器就会自动将它断开。</p>
-<p>在连接建立时，连接器会读取该用户的权限并保存在当前会话中，这保证了即便管理员后续修改了<strong>登录密码</strong>或<strong>全局连接限制</strong>，当前已建立的连接也不会被强制断开或改变。</p>
-<p>但在执行具体的 SQL 语句时（无论是命中缓存还是由执行器执行），MySQL 都会实时核对内存中最新的  <strong>ACL（权限控制列表）</strong>。由于  <code>GRANT</code>  或  <code>REVOKE</code>  等权限变更命令会立即刷新内存中的权限状态，因此一旦管理员收回了某张表的权限，该连接下的后续操作会<strong>立即受限并报错</strong>，而不会因为连接已经建立就“终身豁免”。</p>
-<h3 id="查询缓存（MySQL-8-0-版本后移除）"><a href="#查询缓存（MySQL-8-0-版本后移除）" class="headerlink" title="查询缓存（MySQL 8.0 版本后移除）"></a>查询缓存（MySQL 8.0 版本后移除）</h3><p>查询缓存以  <strong>Key-Value</strong>  形式存储  <strong>SELECT</strong>  语句及其结果集，其 Key 是 SQL 语句的<strong>完整字符串哈希值</strong>。当连接建立并发送查询后，MySQL 会先进行“盲匹配”（不需要后面的分析）：如果 SQL 字符串完全一致（包括空格和大小写），则判定为命中。</p>
-<p>但在返回结果前，MySQL 必须进行<strong>实时权限校验</strong>。它会根据缓存中记录的表信息，核对当前用户是否仍拥有这些表的查询权限。如果权限已被管理员收回，即便缓存存在也会拒绝返回并报错；只有校验通过，才会直接将结果集返回客户端。若未命中，则进入分析器等后续环节，并在执行完成后将结果存入缓存。</p>
-<p>注意，假如你对一个表更新，这个表上的所有的查询缓存都会被清空，因此查询缓存失效在实际业务场景中可能会非常频繁，所以 MySQL 查询不建议使用缓存。MySQL 8.0 版本后删除了缓存的功能。</p>
-<h3 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h3><p>MySQL 没有命中缓存，那么就会进入分析器。分析器会分为两步：</p>
-<p><strong>第一步，词法分析</strong>，一条 SQL 语句有多个字符串组成，首先要提取关键字，比如 select，提出查询的表，提出字段名，提出查询条件等等。做完这些操作后，就会进入第二步。</p>
-<p><strong>第二步，语法分析</strong>，判断你输入的 SQL 是否正确，是否符合 MySQL 的语法。</p>
-<p>如果我们输入的 SQL 语句语法不对，就会在解析器这个阶段报错；但如果是<em>表不存在或者字段不存在</em>这样的错误，其实是在解析器后，优化器前，<strong>预处理器</strong>的阶段检测并报错的。</p>
-<p>之后，MySQL 就准备开始执行了，但是如何执行，怎么执行是最好的结果呢？这个时候就需要优化器上场了。</p>
-<h3 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h3><p>优化器的作用制定它认为的最优的执行方案&#x2F;执行计划（有时候可能也不是真正的最优），比如多个索引的时候该如何选择索引，多表查询的时候如何选择关联顺序等。可以说，经过了优化器之后这个语句具体该如何执行就已经定下来。</p>
-<h3 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h3><p>当确定了执行计划后，MySQL 就准备开始执行了，首先执行前会校验该用户有没有对某一个表甚至是某一个字段进行操作的权限（更加细粒度的校验），如果没有权限，就会返回错误信息，如果有权限，就会去调用引擎的接口，返回接口执行的结果。</p>
-<p>在执行的过程中，执行器与存储引擎的交互是以数据行为单位的。</p>
-<h3 id="通用日志模块-binlog"><a href="#通用日志模块-binlog" class="headerlink" title="通用日志模块 binlog"></a>通用日志模块 binlog</h3><p>查询语句就基本遵循上述的顺序执行了，即：全局权限校验-&gt;（查询缓存，未命中则继续）-&gt;分析器-&gt;优化器-&gt;执行器-&gt;引擎。</p>
-<p>但是对于更新操作，需要记录日志。MySQL 自带的日志模块是 <strong>binlog（归档日志）</strong> ，所有的存储引擎都可以使用。</p>
-<p>默认的 InnoDB 引擎还自带了一个日志模块 <strong>redo log（重做日志）</strong>。如果是更新语句，那么流程会稍微有点变化：</p>
-<ol>
-<li>前面的阶段不会走查询缓存。</li>
-<li>到了执行器阶段，调用存储引擎的接口后，InnoDB 引擎把数据保存在内存中，同时记录 redo log，此时 redo log 进入 prepare 状态，然后告诉执行器，执行完成了，随时可以提交。执行器收到通知后记录 binlog，然后再调用引擎接口，提交 redo log 为 commit 状态。更新完成。</li>
-</ol>
-<p>所以是这样的：全局权限校验-&gt;分析器-&gt;优化器-&gt;执行器-&gt;引擎-&gt;redo log (prepare)-&gt;binlog-&gt;redo log (commit)。</p>
-<p>Server 层的  <strong>binlog</strong> 记录的是 SQL 语句的逻辑操作（如：给 ID&#x3D;1 的余额加 100），它是为了全量备份和主从复制而生的。而 InnoDB 引擎层的  <strong>redo log</strong>  记录的是物理页的修改（如：在某页某偏移量处改了某字节），它是为了崩溃恢复（Crash-safe）而存在的。</p>
-<p>如果不采用特殊机制，无论是先写 binlog 还是先写 redo log，只要中间发生宕机，都会造成数据不一致的问题。先写 redo 成功但 binlog 失败，会导致主库有数据而从库没数据；先写 binlog 成功但 redo 失败，会导致从库多出了主库丢失的数据。</p>
-<p>所以采用对 redo 采纳了两阶段提交的方案。任何时候，prepare  状态的 redo 去找对应的 binlog，如果 binlog 里有这条记录，事务被判定为有效并提交；如果 binlog 里找不到，说明中途夭折宕机，事务直接回滚。通过这种方式，确保数据恢复与主从同步的绝对统一。</p>
-<h2 id="MySQL-存储引擎"><a href="#MySQL-存储引擎" class="headerlink" title="MySQL 存储引擎"></a>MySQL 存储引擎</h2><p>MySQL 存储引擎采用的是 <strong>插件式架构</strong> ，支持多种存储引擎，甚至可以为不同的数据库表设置不同的存储引擎以适应不同场景的需要。<strong>存储引擎是基于表的，而不是数据库。</strong></p>
-<p>MySQL 当前默认的存储引擎是 InnoDB（MySQL 5.5.5 之前，默认存储引擎是 MyISAM）。并且，所有的存储引擎中只有 InnoDB 是事务性存储引擎，也就是说只有 InnoDB 支持事务。</p>
-<h3 id="MyISAM-与-InnoDB"><a href="#MyISAM-与-InnoDB" class="headerlink" title="MyISAM 与 InnoDB"></a>MyISAM 与 InnoDB</h3><p>MyISAM 只有表级锁(table-level locking)，也就是说，MyISAM 写任意一行都会用排他锁锁住整张表。而 InnoDB 支持行级锁(row-level locking)和表级锁，默认为行级锁。MyISAM 不支持 MVCC，而 InnoDB 支持。</p>
-<p>因此，InnoDB 的性能比 MyISAM 更强大，不管是在读写混合模式下还是只读模式下，随着 CPU 核数的增加，InnoDB 的读写能力呈线性增长。MyISAM 因为写不能并发，它的处理能力跟核数没关系；读也是低效并发读。</p>
-<p><img data-src="/2026/02/12/mysql-framework/2.png" alt="InnoDB 和 MyISAM 性能对比"></p>
-<p>MyISAM 不提供事务支持，也不支持外键。</p>
-<blockquote>
-<p>外键对于维护数据一致性非常有帮助，但是对性能有一定的损耗。因此，通常情况下，不建议在实际生产项目中使用外键。一般都在业务代码的层面来约束数据一致性。</p>
-</blockquote>
-<p>MyISAM 不具有 Crash-Safe 的能力，而使用 InnoDB 的数据库在异常崩溃后，数据库重新启动的时候会保证数据库恢复到崩溃前的状态。这个恢复的过程依赖于 redo log 。</p>
-<p>虽然 MyISAM 引擎和 InnoDB 引擎都是使用 B+Tree 作为索引结构，但是两者的实现方式不太一样。InnoDB 引擎中，其数据文件本身就是索引文件，其表数据文件本身就是按 B+Tree 组织的一个索引结构，树的叶节点 data 域保存了完整的数据记录。而 MyISAM 中，索引文件和数据文件是分离的，它的叶子节点 data 域不存真实数据，只存一个指向数据地址的指针，要拿到最终数据还会多一次磁盘 IO。</p>
-<p><img data-src="/2026/02/12/mysql-framework/3.png"></p>
-<p>InnoDB 使用缓冲池（Buffer Pool）缓存数据页和索引页，MyISAM 使用键缓存（Key Cache）仅缓存索引页而不缓存数据页。</p>
-<p>内容参考：<br><a href="https://javaguide.cn/">Java Guide</a> &amp;&amp; <a href="https://xiaolincoding.com/">小林 coding</a>。</p>
-]]></content>
-      <tags>
-        <tag>Database</tag>
-        <tag>MYSQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot常用注解</title>
-    <url>/2025/10/20/springboot-annotations/</url>
-    <content><![CDATA[<h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><ul>
-<li><code>@SpringBootApplication</code>: Spring Boot 应用的核心注解，通常用于标注主启动类。可以把 <code>@SpringBootApplication</code>看作是下面<strong>三个注解的组合</strong>：<ul>
-<li><code>@EnableAutoConfiguration</code>：启用 Spring Boot 的自动配置机制。</li>
-</ul>
-<ul>
-<li><code>@ComponentScan</code>：扫描 <code>@Component</code>、<code>@Service</code>、<code>@Repository</code>、<code>@Controller</code> 等注解的类。</li>
-<li><code>@Configuration</code>：允许注册额外的 Spring Bean 或导入其他配置类。</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><code>@MapperScan</code>: 这是 MyBatis-Spring 提供的注解。它告诉框架去哪里查找 Mapper 接口。它会扫描指定的包，并将其中定义的接口注册为 Spring Bean。</li>
-</ul>
-<h2 id="Bean-注册"><a href="#Bean-注册" class="headerlink" title="Bean 注册"></a>Bean 注册</h2><p>Spring 容器需要知道哪些类需要被管理为 Bean。除了使用 <code>@Bean</code> 方法显式声明（通常在 <code>@Configuration</code> 类中），更常见的方式是使用 Stereotype（构造型） 注解<strong>标记类</strong>，并配合组件扫描（Component Scanning）机制，让 Spring 自动发现并注册这些类作为 Bean。这些 Bean 后续可以通过 <code>@Autowired</code> 等方式注入到其他组件中。下面是常见的构造型注解：</p>
-<ul>
-<li><code>@Component</code>：通用的注解，可标注任意类为 Spring 的组件。如果一个 Bean 不知道属于哪个层，可以使用<code>@Component</code> 注解标注。</li>
-<li><code>@Repository</code> : 对应持久层即 Dao 层，主要用于数据库相关操作。</li>
-<li><code>@Service</code> : 对应服务层，主要涉及一些复杂的逻辑，需要用到 Dao 层。</li>
-<li><code>@Controller</code> : 对应 Spring MVC 控制层，主要用于接受用户请求并调用 Service 层返回数据给前端页面。主要用于传统的 Spring MVC 应用，方法返回值通常是逻辑视图名，需要视图解析器配合渲染页面。如果需要返回数据（如 JSON），则需要在方法上额外添加 <code>@ResponseBody</code> 注解。</li>
-<li><code>@RestController</code>：一个组合注解，等效于 <code>@Controller</code> + <code>@ResponseBody</code>。它专门用于构建 RESTful Web 服务的控制器。标注了 <code>@RestController</code> 的类，其所有处理器方法（handler methods）的返回值都会被自动序列化（通常为 JSON）并写入 HTTP 响应体，而不是被解析为视图名称。在现代前后端分离的应用中，<code>@RestController</code> 是更常用的选择。</li>
-<li><code>@Configuration</code>: 主要用于声明一个类是 Spring 的配置类。虽然也可以用 <code>@Component</code> 注解替代，但 <code>@Configuration</code> 能够更明确地表达该类的用途（定义 Bean）。</li>
-<li><code>@Bean</code>: 通常用于标注在方法上，位于一个  <code>@Configuration</code>  类中。它告诉 Spring “这个方法会返回一个对象，请把这个对象作为 Bean 注册起来”。它适用依赖注入于你无法修改源代码的第三方库中的类，或需要进行复杂逻辑来创建 Bean（例如，根据条件创建、需要配置多个属性）等情况。<br>如果  <code>@Component</code>  或  <code>@Bean</code>  注解没有明确指定 Bean 的名字，Spring 会根据一定的默认规则来生成 Bean 的名字。对于前者， Bean 的名字将是该类的非限定类名（simple class name）的<strong>首字母小写</strong>；对于后者，Bean 的名字将是  <code>@Bean</code> 所注解的方法的<strong>方法名</strong>。</li>
-</ul>
-<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><ul>
-<li><code>@Autowired</code> 用于自动注入依赖项（即其他 Spring Bean）。它可以标注在构造器、字段、Setter 方法或配置方法上，Spring 容器会<strong>自动查找匹配类型的 Bean 并将其注入</strong>。当存在多个相同类型的 Bean 时，<code>@Autowired</code> 默认按类型注入可能产生歧义，此时，可以与 <code>@Qualifier</code> 结合使用，通过<strong>指定 Bean 的名称</strong>来精确选择需要注入的实例。</li>
-<li><code>@Resource(name=&quot;beanName&quot;)</code>是 JSR-250 规范定义的注解，也用于依赖注入。它默认按<strong>名称 (by Name)</strong> 查找 Bean 进行注入。如果未指定 <code>name</code> 属性，它会尝试根据字段名或方法名查找，如果找不到，则回退到按类型查找（类似 <code>@Autowired</code>）。<code>@Resource</code>只能标注在字段 和 Setter 方法上，不支持构造器注入。</li>
-</ul>
-<h2 id="注入配置"><a href="#注入配置" class="headerlink" title="注入配置"></a>注入配置</h2><ul>
-<li><code>@Value(&quot;$&#123;app.name&#125;&quot;)</code>  注入配置文件（如  <code>application.properties</code>  或  <code>application.yml</code>）中的单个属性值给 Bean 对象的单个属性，可以以冒号的形式提供默认值，如<code>@Value(&quot;$&#123;server.port:8080&#125;&quot;)</code></li>
-<li><code>@ConfigurationProperties</code> 用于将一组相关的配置属性绑定到一个 Bean 对象上，它将配置文件的层次结构映射到 Bean 对象的属性结构。如<code>@ConfigurationProperties(prefix = &quot;mail&quot;)</code>会绑定以“mail”为前缀的配置文件配置项到一个类上。之后无需在每一个属性上都使用<code>@Value(&quot;$&#123;mail.name&#125;&quot;)</code>注解。</li>
-</ul>
-<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><h3 id="Review：异常的层次结构"><a href="#Review：异常的层次结构" class="headerlink" title="Review：异常的层次结构"></a>Review：异常的层次结构</h3><ul>
-<li><strong>Throwable</strong>：所有错误和异常的超类。</li>
-<li><strong>Error</strong>：严重错误，通常是 JVM 自身的问题，如  OutOfMemoryError、StackOverflowError。程序通常无法处理和恢复，我们一般不捕获  Error。</li>
-<li><strong>Exception</strong>：程序本身可以处理的异常。它又分为两类： - <strong>Checked Exceptions (受检异常)</strong>：在编译时就必须处理的异常。编译器会强制你使用  try-catch  捕获或者使用  throws  声明抛出。例如  IOException、SQLException。它们通常是程序在与外部环境（如文件、网络、数据库）交互时可能发生的、可预见的问题。 - <strong>Unchecked Exceptions (非受检异常)</strong>：也叫  <strong>RuntimeException</strong>。在编译时不会被检查，在运行时才可能抛出。例如  NullPointerException、ArrayIndexOutOfBoundsException。它们通常是由于程序逻辑错误（Bugs）导致的，是应该在编码阶段就避免的。<br><img data-src="/2025/10/20/springboot-annotations/1.png"></li>
-</ul>
-<h3 id="Review：异常处理的五个关键字"><a href="#Review：异常处理的五个关键字" class="headerlink" title="Review：异常处理的五个关键字"></a>Review：异常处理的五个关键字</h3><ul>
-<li><strong>try</strong>：包裹可能会<strong>抛出</strong>异常的代码块。</li>
-<li><strong>catch</strong>：用于<strong>捕获</strong>并处理  try  块中抛出的特定类型的异常。可以有多个  catch  块来处理不同类型的异常，捕获时遵循<strong>从小到大</strong>的原则（子类异常在前，父类异常在后）。</li>
-<li><strong>finally</strong>：无论是否发生异常，finally  块中的代码<strong>总会</strong>执行（除非 JVM 退出，如  System.exit()）。通常用于释放资源，如关闭文件流、数据库连接等。</li>
-<li><strong>throw</strong>：在代码中手动抛出一个异常对象。通常用于在检测到错误条件时主动中断程序流程。</li>
-<li><strong>throws</strong>：用在方法签名上，声明该方法可能会抛出某些受检异常。<strong>它将处理异常的责任转移给了方法的调用者</strong>。</li>
-<li><strong>注意</strong>：try-with-resources (Java 7+)是对  finally  块中资源释放代码的巨大简化。任何实现了  java.lang.AutoCloseable  或  java.io.Closeable  接口的资源都可以使用此语法，JVM 会自动为你调用  close()  方法，从而替代了繁琐的 finally 块：</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 传统方式 (繁琐且容易出错)</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">copyFileLegacy</span><span class="params">(String src, String dest)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="type">FileInputStream</span> <span class="variable">in</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">FileOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        in = <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(src);</span><br><span class="line">        out = <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(dest);</span><br><span class="line">        <span class="comment">// ... copy logic ...</span></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (in != <span class="literal">null</span>) in.close();</span><br><span class="line">        <span class="keyword">if</span> (out != <span class="literal">null</span>) out.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// try-with-resources 方式 (简洁、安全)</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">copyFileModern</span><span class="params">(String src, String dest)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="keyword">try</span> (<span class="type">FileInputStream</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(src);</span><br><span class="line">         <span class="type">FileOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(dest)) &#123;</span><br><span class="line">        <span class="comment">// ... copy logic ...</span></span><br><span class="line">    &#125; <span class="comment">// in 和 out 会在这里被自动关闭，即使发生异常</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用-Spring-和第三方库进行全局异常处理"><a href="#使用-Spring-和第三方库进行全局异常处理" class="headerlink" title="使用 Spring 和第三方库进行全局异常处理"></a>使用 Spring 和第三方库进行全局异常处理</h3><p>传统的 Java Web 开发（如 Servlet）中，每个方法都可能需要写大量的  try-catch  块来<strong>捕获异常</strong>，导致业务逻辑和异常处理逻辑耦合在一起，代码非常臃肿。Spring 框架通过  <strong>AOP (面向切面编程)</strong>  的思想，<strong>将异常捕获的逻辑从业务代码中分离出来</strong>，进行集中管理，完美地解决了这个问题。这主要通过以下注解实现：</p>
-<ul>
-<li><code>@ControllerAdvice</code> &#x2F; <code>@RestControllerAdvice</code> : <code>@ControllerAdvice</code> 作用于一个类上，表明这个类是一个“全局异常处理器”。它可以<strong>拦截并处理</strong>所有（或指定包下）<code>@Controller</code> 中抛出的异常；<code>@RestControllerAdvice</code> 是 <code>@ControllerAdvice</code> 和 <code>@ResponseBody</code> 的组合。它不仅具备 <code>@ControllerAdvice</code> 的功能，还会自动将处理方法的返回值序列化为 JSON 格式。这在构建 RESTful API 时非常常用。</li>
-<li><code>@ExceptionHandler</code> : 这个注解作用于方法上，并且该方法必须位于一个被 <code>@ControllerAdvice</code> 或 <code>@RestControllerAdvice</code> 注解的类中。<strong>它指定了该方法专门负责处理哪种类型的异常</strong>。当控制器中抛出匹配类型的异常时，Spring 会自动调用这个被注解的方法，并将异常对象作为参数传入。</li>
-<li><code>@SneakyThrows</code>: 当你的方法调用了一个可能会抛出受检异常的、在方法签名上使用了 throws 关键字的方法时，编译器会强制你要么使用 try-catch 来在这里<strong>捕获受检异常</strong>，要么你的这个方法的签名上也加上 throws 关键字<strong>继续抛出受检异常</strong>传递给上层处理。而采用了全局异常处理体系的在现代分层架构中，受检异常，比如一个底层的  IOException  可能需要穿透好几层（Repository -&gt; Service -&gt; Controller）才能最终被  <code>@RestControllerAdvice</code>  捕获。这意味着每一层的每个方法签名都得加上  throws IOException。这非常繁琐。Lombok 库的 <code>@SneakyThrows</code> 的作用是利用 Java 泛型和类型擦除的一个漏洞，欺骗编译器，让它相信这个受检异常已经被处理了，允许这个受检异常被看作是非受检异常，无 throws 关键字地被抛出，进而简化了代码。当你确定某个受检异常在当前上下文中几乎不可能发生，或者你希望将它交由上层的全局异常处理器来统一处理时，可以使用它来简化代码。<ul>
-<li><em>注意</em>：受检异常是编译器强制你必须处理（try-catch  或  throws）的异常；而非受检异常则由你自行决定是否处理，编译器<strong>完全忽略</strong>它们。出于这个原因，有程序员会倾向于将自定义的业务异常（比如  UserNotFoundException, OrderStateException）定义为非受检异常，以此避免  throws  污染各层接口。</li>
-</ul>
-</li>
-</ul>
-<h2 id="控制层"><a href="#控制层" class="headerlink" title="控制层"></a>控制层</h2><ul>
-<li><code>@RequestMapping</code>: 最通用的请求映射注解，用于将 HTTP 请求（URL、请求方法等）映射到控制器的方法上。可以用于类级别（定义基础路径）和方法级别。</li>
-<li><code>@GetMapping</code>: 专门用于处理 HTTP GET 请求，<code>@GetMapping(&quot;users&quot;)</code> 等价于<code>@RequestMapping(value=&quot;/users&quot;,method=RequestMethod.GET)</code>。方法级别。</li>
-<li><code>@PathVariable</code>: 用于<strong>从 URL 的路径中提取值</strong>并绑定到方法参数上，用于参数绑定。例如，从  &#x2F;users&#x2F;{id}  中获取  id  的值。<ul>
-<li><em>注意</em>：URL 全称是  <strong>Uniform Resource Locator</strong>（统一资源定位符），一个 URL &#x3D; 协议+主机名（ip 地址或域名）+端口（80 和 443 会省略）+路径（资源在服务器上的具体位置）+ 查询参数（client 给服务器提供的额外信息，以 ? 开始，用 &amp; 分隔键值对）+片段（指向资源内部的特定部分，又称锚点，以 # 开始）。</li>
-</ul>
-</li>
-<li><code>@RequestParam</code>: 用于<strong>从请求参数或表单数据中提取值</strong>并绑定到方法参数上，用于参数绑定。例如，从 &#x2F;users?name&#x3D;john 中获取 name 的值。</li>
-<li><code>@RequestBody</code>: 用于将 HTTP 请求的 body 内容，即请求体（通常是 JSON 或 XML 数据）反序列化为一个 Java 对象，并绑定到方法参数上。用于参数绑定。</li>
-<li><code>@ResponseBody</code>: 标记方法的返回值应该被直接写入 HTTP 响应体中，而不是被解析为视图。@RestController  已经默认包含了此功能。标记在方法上。</li>
-<li><code>@ResponseStatus</code>: 用于指定方法成功执行后返回的 HTTP 状态码，例如  <code>@ResponseStatus(HttpStatus.CREATED)</code>  表示返回  201 Created。</li>
-</ul>
-<h2 id="第三方库"><a href="#第三方库" class="headerlink" title="第三方库"></a>第三方库</h2><h3 id="Lombok"><a href="#Lombok" class="headerlink" title="Lombok"></a>Lombok</h3><ul>
-<li><code>@Data</code>: 当你给一个类加上<code>@Data</code> 注解后，Lombok 会在编译时自动为你生成该类所有字段的 <code>getter</code> 方法 (例如 getName())；<code>setter</code> 方法 (例如 setName(…))；一个合适的 <code>toString()</code> 方法，用于打印对象内容；一个合适的 <code>equals()</code> 和 <code>hashCode()</code> 方法，用于比较对象是否相等；一个接收所有 final 字段的构造函数。可以把它看作包含了<code>@Getter</code>, <code>@Setter</code>, <code>@ToString</code>, <code>@EqualsAndHashCode</code> 和 <code>@RequiredArgsConstructor</code></li>
-<li><code>@Getter</code>: 当你给一个类加上 <code>@Getter</code> 注解后，Lombok 会在编译时，为该类中所有非静态的字段生成对应的 getXxx() 或 isXxx() 方法。</li>
-<li><code>@NoArgsConstructor</code>: 生成一个无参构造函数。</li>
-<li><code>@AllArgsConstructor</code>: 生成一个包含所有字段的构造函数。</li>
-<li><code>@RequiredArgsConstructor</code>: 为 final 或标记为 @NonNull 的字段生成构造函数。</li>
-<li><code>@Builder</code>: 实现建造者模式，可以链式调用来创建对象实例。</li>
-<li><code>@Slf4j</code>: “Simple Logging Facade for Java” 的缩写。它是一个日志门面，可以与多种日志实现（如 Logback, Log4j2）配合使用。当你给一个类加上 <code>@Slf4j</code> 注解后，Lombok 会在编译时自动为你生成一个名为 log 的静态 final 日志记录器对象。</li>
-</ul>
-<h3 id="MyBatis-Plus"><a href="#MyBatis-Plus" class="headerlink" title="MyBatis-Plus"></a>MyBatis-Plus</h3><ul>
-<li><code>@TableName</code>: 该注解用于指定实体类对应的数据库表名。当实体类名与数据库表名不一致，或者实体类名不是数据库表名的驼峰写法时，您需要使用这个注解来明确指定表名。</li>
-<li><code>@TableId</code>: 该注解用于标记实体类中的主键字段，如果一致则可以省略。</li>
-<li><code>@TableField</code>: 用于非主键字段上，用于当字段名与表的列名不一致，或不是列名的驼峰写法时进行映射。该注解也用来配置自动填充策略。</li>
-</ul>
-<h3 id="Swagger"><a href="#Swagger" class="headerlink" title="Swagger"></a>Swagger</h3><ul>
-<li><code>@Tag(name = &quot;...&quot;)</code>: 为控制器类提供一个分组标签，在 API 文档中进行分类。</li>
-<li><code>@Operation(summary = &quot;...&quot;)</code>: 为具体的 API 接口方法提供一个简短的摘要描述。</li>
-<li><code>@Schema(description = &quot;...&quot;)</code>: 为 DTO 的类或字段提供详细的描述和示例。</li>
-</ul>
-<h3 id="Jackson"><a href="#Jackson" class="headerlink" title="Jackson"></a>Jackson</h3><ul>
-<li><code>@JsonFormat</code>: 用于格式化日期时间字段，确保 Java 的日期对象能够按照一定的格式，如 yyyy-MM-dd HH:mm:ss，序列化为 JSON；同样也确保 JSON 可读字符串能够以一定的格式被转化为 Java 对象。</li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://javaguide.cn/">Java Guide</a></li>
-<li>《Java 核心技术 卷 1 开发基础（原书第十二版）》</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>framework</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mybatis-plus的配置与使用</title>
-    <url>/2025/11/14/use-mybatis-plus/</url>
-    <content><![CDATA[<h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><p>在 <code>pom.xml</code> 文件中，加入 <code>mybatis-plus-boot-starter</code> 的依赖。<code>mybatis-plus-boot-starter</code> 是一个“全家桶”，它会自动帮你引入 Mybatis-Plus 核心库、MyBatis 核心库以及与 Spring Boot 集成的所有必要组件。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span> <span class="comment">&lt;!-- 请根据需要选择合适的版本 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 你还需要数据库驱动，比如 MySQL --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="配置数据源"><a href="#配置数据源" class="headerlink" title="配置数据源"></a>配置数据源</h3><p>在 <code>src/main/resources/application.yaml</code> 中，配置数据库的连接信息。</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/my_database?serverTimezone=UTC</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">your_password</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="创建绑定"><a href="#创建绑定" class="headerlink" title="创建绑定"></a>创建绑定</h3><p>使用 @TableName 创建实体类 Entity 和数据库表的绑定；使用 @TableId、@TableField 来创建属性和字段的绑定。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@TableName(&quot;tb_user&quot;)</span> <span class="comment">// 将这个类映射到数据库的 &quot;tb_user&quot; 表</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="meta">@TableId(value = &quot;id&quot;, type = IdType.AUTO)</span> <span class="comment">// 声明主键，并设置为自增</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>让 Mapper 接口继承 <code>BaseMapper&lt;T&gt;</code>。通过继承 <code>BaseMapper&lt;User&gt;</code>，<code>UserMapper</code> 接口就拥有了一整套强大的、无需编写 SQL 的 CRUD 方法，例如 <code>insert</code>, <code>selectById</code>, <code>updateById</code>, <code>delete</code>, <code>selectList</code> 等。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 传入你的实体类 User</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserMapper</span> <span class="keyword">extends</span> <span class="title class_">BaseMapper</span>&lt;User&gt; &#123;</span><br><span class="line">    <span class="comment">// 通常这里是空的，因为 BaseMapper 已经提供了所有常用方法</span></span><br><span class="line">    <span class="comment">// 如果有特别复杂的 SQL，可以在这里自定义方法，并配合 XML 文件实现</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>UserMapper</code> 还是一个接口，没有实现类，所以最后还需在 Spring Boot 主启动类上，添加 <code>@MapperScan</code> 注解。<code>@MapperScan</code> 注解会告诉 Spring Boot 在启动时去扫描指定的包，为所有继承了 <code>BaseMapper</code> 的接口动态地创建一个<strong>代理实现类</strong>，并注册到 Spring 容器中。这样，你才能在其他地方通过 <code>@Autowired</code> 或 <code>@Resource</code> 注入 <code>UserMapper</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@MapperScan(&quot;com.example.project.mapper&quot;)</span> <span class="comment">// 告诉 Spring 去哪里找你的 Mapper 接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProjectApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(ProjectApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="进阶：Service-层"><a href="#进阶：Service-层" class="headerlink" title="进阶：Service 层"></a>进阶：Service 层</h3><p>让 Service 层的接口继承 <code>IService&lt;T&gt;</code>接口，Service 的实现类继承 <code>ServiceImpl&lt;M, T&gt;</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Service 接口还要继承一个接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">IUserService</span> <span class="keyword">extends</span> <span class="title class_">IService</span>&lt;User&gt; &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Service 实现类要实现它接口中定义的所有抽象方法，这通过继承 ServiceImpl 而实现</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">extends</span> <span class="title class_">ServiceImpl</span>&lt;UserMapper, User&gt; <span class="keyword">implements</span> <span class="title class_">IUserService</span> &#123;</span><br><span class="line">    <span class="comment">// 这里可以编写你的业务逻辑</span></span><br><span class="line">    <span class="comment">// 你可以直接使用 ServiceImpl 提供的方法，如 getById(), save(), list()，也可以使用 query(), update() 来进行链式操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="进阶：插件"><a href="#进阶：插件" class="headerlink" title="进阶：插件"></a>进阶：插件</h3><p>创建 Mybatis-Plus 的配置类，用来添加分页插件、乐观锁插件等。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisPlusConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MybatisPlusInterceptor <span class="title function_">mybatisPlusInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">MybatisPlusInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MybatisPlusInterceptor</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1. 添加分页插件 (最常用)</span></span><br><span class="line">        interceptor.addInnerInterceptor(<span class="keyword">new</span> <span class="title class_">PaginationInnerInterceptor</span>(DbType.MYSQL));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 添加乐观锁插件 (如果需要)</span></span><br><span class="line">        <span class="comment">// interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>framework</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用 Nginx 的小提示</title>
-    <url>/2026/01/11/use-nginx/</url>
-    <content><![CDATA[<h2 id="Nginx-的配置"><a href="#Nginx-的配置" class="headerlink" title="Nginx 的配置"></a>Nginx 的配置</h2><p>nginx 在 arch linux 中的配置，主要是注意两个路径：</p>
-<ol>
-<li><code>/etc/nginx</code>里面的<code>nginx.conf</code>文件用来配置 root，root 指向项目文件夹（是项目的 index.html 所在的文件夹，而不是 nginx 默认的欢迎页面 index.html 所在的文件夹。前者是后者的子目录）</li>
-<li>需要把项目文件夹放在<code>/usr/share/nginx/html</code>这个文件夹下。如前所述，最终 root 指向的是<code>/usr/share/nginx/html/project</code></li>
-</ol>
-<h2 id="启动-Nginx"><a href="#启动-Nginx" class="headerlink" title="启动 Nginx"></a>启动 Nginx</h2><ul>
-<li>设置 nginx 开机自启动：<code>systemctl enable nginx</code>；</li>
-<li>验证是否成功开启：<code>systemctl is-enabled nginx</code></li>
-<li>手动开&#x2F;关&#x2F;重载：<code>systemctl start/stop/reload nginx</code></li>
-<li>查看状态：<code>systemctl status nginx</code></li>
-</ul>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ol>
-<li>浏览器中的请求 URL 中的<code>api</code>来标识这是一个发向 tomcat 服务的请求。所以一般来说，对于静态资源的请求是没有<code>api</code>标识的，直接加载。</li>
-</ol>
-]]></content>
-      <tags>
-        <tag>tips</tag>
-      </tags>
-  </entry>
+<search> 
+  
+  
+    
+    <entry>
+      <title>关于 systemctl</title>
+      <link href="/2026/03/04/about-systemctl/"/>
+      <url>/2026/03/04/about-systemctl/</url>
+      
+        <content type="html"><![CDATA[<p><code>systemctl</code> 是 Linux 操作系统中用于<strong>管理系统和服务</strong>的核心命令行工具。它是 <strong>systemd</strong>（现代 Linux 发行版的初始化系统和服务管理器）的客户端，取代了旧版本中的 <code>service</code> 和 <code>chkconfig</code> 命令。主要用途有：</p><ul><li><strong>服务状态管理</strong>：启动 (<code>start</code>)、停止 (<code>stop</code>)、重启 (<code>restart</code>) 或重新加载 (<code>reload</code>) 系统服务（如 Apache、MySQL、Docker 等）。</li><li><strong>开机自启控制</strong>：设置服务在系统引导时自动启动 (<code>enable</code>) 或取消自动启动 (<code>disable</code>)。</li><li><strong>状态监控</strong>：检查服务当前的运行状态 (<code>status</code>)、是否正在运行 (<code>is-active</code>) 或是否已设置为开机自启 (<code>is-enabled</code>)。</li><li><strong>系统电源管理</strong>：执行系统级别的操作，如重启 (<code>reboot</code>)、关机 (<code>poweroff</code>)、挂起 (<code>suspend</code>) 或切换运行级别（如进入救援模式）。</li><li><strong>单元 (Unit) 管理</strong>：不仅可以管理服务 (<code>.service</code>)，还能管理挂载点 (<code>.mount</code>)、套接字 (<code>.socket</code>) 和定时任务 (<code>.timer</code>) 等系统资源。</li></ul><p>服务可以理解为进程的后台托管模式，将进程交给 <code>systemd</code> 托管。比如，如果你手动执行 <code>redis-server</code> 命令，它是以<strong>你的用户身份</strong>运行的。而通过 <code>systemctl</code> 启动它，则会启动一个后台的 redis 服务，并通常会配置为以<strong>专门的、权限受限的系统账号</strong>（比如 redis 用户）运行，这符合“最小权限原则”，是服务器安全的关键。对于服务，可以通过查看 .service 文本文件来获得用户、组、配置等信息。</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>用 Docker 启动 MySQL 8.0.35</title>
+      <link href="/2026/03/04/learn-docker/"/>
+      <url>/2026/03/04/learn-docker/</url>
+      
+        <content type="html"><![CDATA[<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p><code>pacman</code> 把我的 mysql 滚到 9.6.0 了，太新了导致以前很多命令无法使用，而比如 <strong>canal</strong> 又依赖这些过去的命令，所以一直有报错写进 logs&#x2F;example.log: “Caused by: java.io.IOException: ErrorPacket [errorNumber&#x3D;1064, fieldCount&#x3D;-1, message&#x3D;You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘master status’ at line 1, sqlState&#x3D;42000, sqlStateMarker&#x3D;#] with command: show master status.”即 <code>show master status</code> 在 9.0 的版本中是无法使用的。于是利用 <strong>docker</strong> 将 mysql 回退到之前的版本，退到 8.0.35。</p><p>首先，从本地高版本数据库安全导出所需要的业务库表（ <code>\</code> 是换行符，增强可读性）：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u root -p \</span><br><span class="line">--databases one_coupon_rebuild_0 one_coupon_rebuild_1 sky_take_out myhmdp game \</span><br><span class="line">--single-transaction \</span><br><span class="line">--set-gtid-purged=OFF \</span><br><span class="line">&gt; all_biz_data.sql</span><br></pre></td></tr></table></figure><p>然后，彻底清理本地占用进程，并取消开机自启动：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl stop mysqld</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">disable</span> mysqld</span><br></pre></td></tr></table></figure><p>安装 Docker，启动服务，并设置开机自启：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> pacman -S docker</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> --now docker <span class="comment"># now 是一个快捷参数，now start!</span></span><br><span class="line"><span class="built_in">sudo</span> usermod -aG docker <span class="variable">$USER</span> <span class="comment"># 将用户加入 docker 组，从而摆脱 sudo。注意一定不能忘记 -a，append</span></span><br></pre></td></tr></table></figure><p>然后<strong>重启</strong>电脑，下次电脑启动后就会全局生效。也有一个临时方案，仅仅对当前 shell 会话生效（当然直接每次都 sudo 也可以）：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">newgrp docker</span><br></pre></td></tr></table></figure><p>用 Docker 启动 MySQL 8.0 的实例。这里使用的是稳定的 8.0.35：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run --name mysql8-canal \</span><br><span class="line">-p 3306:3306 \</span><br><span class="line">-v ~/mysql_data:/var/lib/mysql \</span><br><span class="line">-e MYSQL_ROOT_PASSWORD=root \</span><br><span class="line">-d mysql:8.0.35</span><br></pre></td></tr></table></figure><blockquote><p><strong>参数解释</strong>：</p><ul><li><strong><code>docker run</code></strong>: Docker 的核心命令，用于<strong>新建并运行</strong>一个容器。</li><li><strong><code>--name mysql8-canal</code></strong>: 给容器指定一个自定义名称（<code>mysql8-canal</code>），方便后续通过名字进行管理，而不是使用随机生成的字符串 ID。</li><li><strong><code>-p 3306:3306</code></strong>: 端口暴露（publish）。格式为 <code>宿主机端口:容器内端口</code>。这里将容器的 3306 端口暴露给宿主机（我的 linux）的 3306 端口，这样就很方便，发送到宿主机的 IP 的请求，经过 Docker 代理转发，从而到达容器中的 3306 端口，访问到监听该端口的 mysqld 服务。注意需要显式指定 IP 地址，如 <code>mysql -h 127.0.0.1 -u root -p</code>，强制走 TCP 连接而不是 Socket 连接。</li><li><strong><code>-v ~/mysql_data:/var/lib/mysql</code></strong>: 数据卷挂载（持久化）。将宿主机的 <code>~/mysql_data</code> 目录映射到容器内的数据库存储目录。这样即使容器被删除，数据库中的数据也不会丢失。</li><li><strong><code>-e MYSQL_ROOT_PASSWORD=root</code></strong>: 设置环境变量。此处指定了 Docker 中的 MySQL实例的 <code>root</code> 用户的初始登录密码为 <code>root</code>，可以自行修改，也不要求和原本地上的 MySQL 实例一致，因为它们其实是独立的两个实例。</li><li><strong><code>-d</code></strong>: 后台运行模式（Detached mode）。让容器在后台执行，不占用当前的终端窗口。</li><li><strong><code>mysql:8.0.35</code></strong>: 指定使用的镜像（mysql）及版本标签（Tag，8.0.35）。如果本地没有，Docker 会去官方仓库（Docker Hub）里找名为 mysql 的镜像并拉取指定的版本然后下载到本地，最后基于这个本地镜像克隆出一个运行中的容器，即一个隔离的运行环境。</li></ul></blockquote><p><strong>注意</strong>：如果上面的命令连接不到镜像，那么就需要配置镜像源，新建或编辑文件 <code>/etc/docker/daemon.json</code>，写入：</p><figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;https://docker.m.daocloud.io&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;https://huecker.io&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;https://dockerhub.timeweb.cloud&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;https://noohub.net&quot;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure><p>然后重启 docker 服务读取新配置，再重新 <code>docker run ...</code> 一次即可：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure><p>使用下面的命令可以看到下载的镜像的信息：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker image <span class="built_in">ls</span></span><br></pre></td></tr></table></figure><p><code>run</code> 成功后，本地就有了 8.0.35 的镜像，且对应的 MySQL 实例也启动成功。接下来就可以登陆 MySQL 容器了：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql8-canal mysql -uroot -proot</span><br></pre></td></tr></table></figure><blockquote><p><strong>参数解释：</strong></p><ul><li><strong><code>docker exec</code></strong>: 在<strong>运行中</strong>的容器内执行新命令。</li><li><strong><code>-i</code> (interactive)</strong>——交互模式，让容器的标准输入（STDIN）保持打开，确保容器里的程序能接收我输入的命令；<strong><code>-t</code> (tty)</strong>——给容器分配一个伪终端（Pseudo-TTY），这个伪终端会模拟我输入所在的终端给容器看，进而容器可以按照我的终端的显示规则来输出数据，保证了可读性。这二者一般一起用。所以是 <code>-it</code>。</li><li><strong><code>mysql8-canal</code></strong>: 之前指定的容器名称。</li><li><strong><code>mysql</code></strong>: 容器内要执行的程序名（即 MySQL 命令行客户端）。</li><li><strong><code>-uroot</code></strong>: <code>mysql</code> 程序的参数，指定以 <code>root</code> 用户身份登录（<code>-u</code> 后紧跟用户名）。</li><li><strong><code>-proot</code></strong>: <code>mysql</code> 程序的参数，指定登录密码为 <code>root</code>（<code>-p</code> 后紧跟密码）。</li></ul></blockquote><p>这样就会连接到容器中的 MySQL 实例。接下来就可以配置 canal 的权限，用 canal 来监听数据库的变化。由于 8.0.35 的兼容性，需要给 canal 配置的其实很少，就下面几行：</p><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 创建 canal 用户并强制使用 mysql_native_password，使用 native 是考虑与 canal 的兼容</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;canal&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">&#x27;canal&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 授予同步核心权限</span></span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">SELECT</span>, REPLICATION SLAVE, REPLICATION CLIENT <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;canal&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 刷新生效</span></span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure><blockquote><p><strong>参数解释：</strong><br><strong>WITH mysql_native_password</strong>：MySQL 8.0 默认使用 caching_sha2_password，很多旧版 Canal 驱动不认识它，会导致连接失败。强制改成 native 模式能保证 Canal 连上。、<br><strong>REPLICATION SLAVE</strong>：让 Canal 伪装成从库，这样它才有权限读取 Binlog。</p></blockquote><p>然后退出 mysql 的交互命令行界面，回到原始终端，执行下面的代码，把备份的数据导入 docker 中的 mysql 实例。这会花费一点时间，完成后客户端会自动断开连接：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -i mysql8-canal mysql -uroot -proot &lt; all_biz_data.sql</span><br></pre></td></tr></table></figure><p>然后再次进入：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql8-canal mysql -uroot -proot</span><br></pre></td></tr></table></figure><p>执行命令，可以看到已经有我们之前的数据库表了：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql&gt; show databases;</span><br><span class="line">+----------------------+</span><br><span class="line">| Database             |</span><br><span class="line">+----------------------+</span><br><span class="line">| game                 |</span><br><span class="line">| information_schema   |</span><br><span class="line">| myhmdp               |</span><br><span class="line">| mysql                |</span><br><span class="line">| one_coupon_rebuild_0 |</span><br><span class="line">| one_coupon_rebuild_1 |</span><br><span class="line">| performance_schema   |</span><br><span class="line">| sky_take_out         |</span><br><span class="line">| sys                  |</span><br><span class="line">+----------------------+</span><br><span class="line">9 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)</span><br></pre></td></tr></table></figure><p>之后回到 IDEA 中，在 DataGrip 中断开原数据库的连接，重启 IDEA，然后重新连接数据库即可，这次将连接到容器中 8.0.35 的实例。连接成功后，需要根据 IDEA 的提示，同步更新 JDBC 的驱动。最后结果如下：</p><p><img data-src="/2026/03/04/learn-docker/1.png"></p><p>8.0 版本的好处在于，基本上默认的配置是和 canal 兼容的，只需要设置 canal 的权限即可。剩下的根据需求，配置 canal 的全局配置文件 conf&#x2F;canal.properties 和 实例文件 conf&#x2F;example&#x2F;instance.properties 文件就好了。</p><h2 id="其它命令"><a href="#其它命令" class="headerlink" title="其它命令"></a>其它命令</h2><p>如果遇到需要删除容器的情况，就停止、删除旧容器。这两步是可逆的。只要没有清除本地挂载的目录 ~&#x2F;mysql_data，状态在下次 <code>run</code> 的时候就能够挂载恢复。只有在需要彻底清理数据库的情况下，才应该删除这个目录中的数据。</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker stop mysql8-canal</span><br><span class="line">docker <span class="built_in">rm</span> mysql8-canal</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf ~/mysql_data <span class="comment"># 危险！</span></span><br></pre></td></tr></table></figure><p>如果你之前已经创建过这个容器，并且数据都在里面，直接启动它即可：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker start mysql8-canal</span><br></pre></td></tr></table></figure><p>查看正在运行的容器：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure><h2 id="镜像、容器与程序的关系"><a href="#镜像、容器与程序的关系" class="headerlink" title="镜像、容器与程序的关系"></a>镜像、容器与程序的关系</h2><p><strong>镜像（Image）</strong> 是一个包含应用程序及其完整运行时环境的<strong>只读分层文件系统（RootFS）</strong>。它在构建阶段（Build Time）就通过 <code>Dockerfile</code> 预装了二进制程序（如 <code>mysql</code> 客户端和服务端）、依赖库和系统工具。可以说，最小依赖，开箱即用。</p><p><strong>容器（Container）</strong> 则是镜像的<strong>运行实例</strong>。当 Docker 启动容器时，它在镜像的只读层之上添加了一个<strong>可写层（Copy-on-Write）</strong>。甚至可以将镜像看作<strong>类（Class）</strong>，而容器是该类在内存中被实例化的<strong>对象（Object）</strong>。它是一个被<strong>隔离</strong>出来的<strong>运行环境</strong>，有自己的<strong>文件系统</strong>、自己的<strong>网络接口</strong>和自己的<strong>内存空间</strong>，但不像虚拟机有自己的独立内核，而是共享的宿主机的内核。</p><p>在容器启动（<code>run</code>）后，就至少会启动一个已经在镜像中打包好了的程序，来作为核心的程序。在我们的场景中，它就是 <code>mysqld</code>，MySQL 的服务端。容器的生命周期是和这个主程序绑定的。容器中运行的所有程序，都不是运行在虚拟机上的，而是一个直接运行在宿主机内核上的<strong>特殊进程</strong>，因此可以直接在宿主机上找到这个进程并杀死它——容器随即销毁。</p><p><code>exec</code> 的场景，就是在容器中启动了一个辅助程序&#x2F;进程（与上面的主进程相对），它与主进程共享同一个网络、文件系统和进程空间——即共处一个容器之中。而这个程序，同样，在镜像阶段就被打包好了，比如这里使用到的 <code>mysql-client</code> 来与 MySQL 服务端连接——它不是我们用 <code>pacman</code> 安装的客户端（当然也可以使用它来访问 3306 端口，然后请求会因为端口映射转发到 Docker 中），而是被打包进镜像的客户端。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>MySQL 的架构</title>
+      <link href="/2026/02/12/mysql-framework/"/>
+      <url>/2026/02/12/mysql-framework/</url>
+      
+        <content type="html"><![CDATA[<p>简单来说，MySQL 主要分为 Server 层和存储引擎层。</p><p><img data-src="/2026/02/12/mysql-framework/1.png"></p><h2 id="Server-层基本组件"><a href="#Server-层基本组件" class="headerlink" title="Server 层基本组件"></a>Server 层基本组件</h2><h3 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h3><p>连接器主要负责用户登录数据库，进行用户的身份认证，包括校验账户密码，全局权限的校验。在 <code>mysql -u root -p</code> 时候触发，粒度较粗。连接的过程需要先经过 TCP 三次握手，<strong>因为 MySQL 是基于 TCP 协议进行传输的</strong>。如果想知道当前 MySQL 服务器被多少个客户端连接了，可以执行 <code>show processlist</code> 命令进行查看。针对空闲连接（<code>sleep</code>），MySQL 定义了最大空闲时长，默认值是 8 小时（28800 秒），如果空闲连接超过了这个时间，连接器就会自动将它断开。</p><p>在连接建立时，连接器会读取该用户的权限并保存在当前会话中，这保证了即便管理员后续修改了<strong>登录密码</strong>或<strong>全局连接限制</strong>，当前已建立的连接也不会被强制断开或改变。</p><p>但在执行具体的 SQL 语句时（无论是命中缓存还是由执行器执行），MySQL 都会实时核对内存中最新的  <strong>ACL（权限控制列表）</strong>。由于  <code>GRANT</code>  或  <code>REVOKE</code>  等权限变更命令会立即刷新内存中的权限状态，因此一旦管理员收回了某张表的权限，该连接下的后续操作会<strong>立即受限并报错</strong>，而不会因为连接已经建立就“终身豁免”。</p><h3 id="查询缓存（MySQL-8-0-版本后移除）"><a href="#查询缓存（MySQL-8-0-版本后移除）" class="headerlink" title="查询缓存（MySQL 8.0 版本后移除）"></a>查询缓存（MySQL 8.0 版本后移除）</h3><p>查询缓存以  <strong>Key-Value</strong>  形式存储  <strong>SELECT</strong>  语句及其结果集，其 Key 是 SQL 语句的<strong>完整字符串哈希值</strong>。当连接建立并发送查询后，MySQL 会先进行“盲匹配”（不需要后面的分析）：如果 SQL 字符串完全一致（包括空格和大小写），则判定为命中。</p><p>但在返回结果前，MySQL 必须进行<strong>实时权限校验</strong>。它会根据缓存中记录的表信息，核对当前用户是否仍拥有这些表的查询权限。如果权限已被管理员收回，即便缓存存在也会拒绝返回并报错；只有校验通过，才会直接将结果集返回客户端。若未命中，则进入分析器等后续环节，并在执行完成后将结果存入缓存。</p><p>注意，假如你对一个表更新，这个表上的所有的查询缓存都会被清空，因此查询缓存失效在实际业务场景中可能会非常频繁，所以 MySQL 查询不建议使用缓存。MySQL 8.0 版本后删除了缓存的功能。</p><h3 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h3><p>MySQL 没有命中缓存，那么就会进入分析器。分析器会分为两步：</p><p><strong>第一步，词法分析</strong>，一条 SQL 语句有多个字符串组成，首先要提取关键字，比如 select，提出查询的表，提出字段名，提出查询条件等等。做完这些操作后，就会进入第二步。</p><p><strong>第二步，语法分析</strong>，判断你输入的 SQL 是否正确，是否符合 MySQL 的语法。</p><p>如果我们输入的 SQL 语句语法不对，就会在解析器这个阶段报错；但如果是<em>表不存在或者字段不存在</em>这样的错误，其实是在解析器后，优化器前，<strong>预处理器</strong>的阶段检测并报错的。</p><p>之后，MySQL 就准备开始执行了，但是如何执行，怎么执行是最好的结果呢？这个时候就需要优化器上场了。</p><h3 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h3><p>优化器的作用制定它认为的最优的执行方案&#x2F;执行计划（有时候可能也不是真正的最优），比如多个索引的时候该如何选择索引，多表查询的时候如何选择关联顺序等。可以说，经过了优化器之后这个语句具体该如何执行就已经定下来。</p><h3 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h3><p>当确定了执行计划后，MySQL 就准备开始执行了，首先执行前会校验该用户有没有对某一个表甚至是某一个字段进行操作的权限（更加细粒度的校验），如果没有权限，就会返回错误信息，如果有权限，就会去调用引擎的接口，返回接口执行的结果。</p><p>在执行的过程中，执行器与存储引擎的交互是以数据行为单位的。</p><h3 id="通用日志模块-binlog"><a href="#通用日志模块-binlog" class="headerlink" title="通用日志模块 binlog"></a>通用日志模块 binlog</h3><p>查询语句就基本遵循上述的顺序执行了，即：全局权限校验-&gt;（查询缓存，未命中则继续）-&gt;分析器-&gt;优化器-&gt;执行器-&gt;引擎。</p><p>但是对于更新操作，需要记录日志。MySQL 自带的日志模块是 <strong>binlog（归档日志）</strong> ，所有的存储引擎都可以使用。</p><p>默认的 InnoDB 引擎还自带了一个日志模块 <strong>redo log（重做日志）</strong>。如果是更新语句，那么流程会稍微有点变化：</p><ol><li>前面的阶段不会走查询缓存。</li><li>到了执行器阶段，调用存储引擎的接口后，InnoDB 引擎把数据保存在内存中，同时记录 redo log，此时 redo log 进入 prepare 状态，然后告诉执行器，执行完成了，随时可以提交。执行器收到通知后记录 binlog，然后再调用引擎接口，提交 redo log 为 commit 状态。更新完成。</li></ol><p>所以是这样的：全局权限校验-&gt;分析器-&gt;优化器-&gt;执行器-&gt;引擎-&gt;redo log (prepare)-&gt;binlog-&gt;redo log (commit)。</p><p>Server 层的  <strong>binlog</strong> 记录的是 SQL 语句的逻辑操作（如：给 ID&#x3D;1 的余额加 100），它是为了全量备份和主从复制而生的。而 InnoDB 引擎层的  <strong>redo log</strong>  记录的是物理页的修改（如：在某页某偏移量处改了某字节），它是为了崩溃恢复（Crash-safe）而存在的。</p><p>如果不采用特殊机制，无论是先写 binlog 还是先写 redo log，只要中间发生宕机，都会造成数据不一致的问题。先写 redo 成功但 binlog 失败，会导致主库有数据而从库没数据；先写 binlog 成功但 redo 失败，会导致从库多出了主库丢失的数据。</p><p>所以采用对 redo 采纳了两阶段提交的方案。任何时候，prepare  状态的 redo 去找对应的 binlog，如果 binlog 里有这条记录，事务被判定为有效并提交；如果 binlog 里找不到，说明中途夭折宕机，事务直接回滚。通过这种方式，确保数据恢复与主从同步的绝对统一。</p><h2 id="MySQL-存储引擎"><a href="#MySQL-存储引擎" class="headerlink" title="MySQL 存储引擎"></a>MySQL 存储引擎</h2><p>MySQL 存储引擎采用的是 <strong>插件式架构</strong> ，支持多种存储引擎，甚至可以为不同的数据库表设置不同的存储引擎以适应不同场景的需要。<strong>存储引擎是基于表的，而不是数据库。</strong></p><p>MySQL 当前默认的存储引擎是 InnoDB（MySQL 5.5.5 之前，默认存储引擎是 MyISAM）。并且，所有的存储引擎中只有 InnoDB 是事务性存储引擎，也就是说只有 InnoDB 支持事务。</p><h3 id="MyISAM-与-InnoDB"><a href="#MyISAM-与-InnoDB" class="headerlink" title="MyISAM 与 InnoDB"></a>MyISAM 与 InnoDB</h3><p>MyISAM 只有表级锁(table-level locking)，也就是说，MyISAM 写任意一行都会用排他锁锁住整张表。而 InnoDB 支持行级锁(row-level locking)和表级锁，默认为行级锁。MyISAM 不支持 MVCC，而 InnoDB 支持。</p><p>因此，InnoDB 的性能比 MyISAM 更强大，不管是在读写混合模式下还是只读模式下，随着 CPU 核数的增加，InnoDB 的读写能力呈线性增长。MyISAM 因为写不能并发，它的处理能力跟核数没关系；读也是低效并发读。</p><p><img data-src="/2026/02/12/mysql-framework/2.png" alt="InnoDB 和 MyISAM 性能对比"></p><p>MyISAM 不提供事务支持，也不支持外键。</p><blockquote><p>外键对于维护数据一致性非常有帮助，但是对性能有一定的损耗。因此，通常情况下，不建议在实际生产项目中使用外键。一般都在业务代码的层面来约束数据一致性。</p></blockquote><p>MyISAM 不具有 Crash-Safe 的能力，而使用 InnoDB 的数据库在异常崩溃后，数据库重新启动的时候会保证数据库恢复到崩溃前的状态。这个恢复的过程依赖于 redo log 。</p><p>虽然 MyISAM 引擎和 InnoDB 引擎都是使用 B+Tree 作为索引结构，但是两者的实现方式不太一样。InnoDB 引擎中，其数据文件本身就是索引文件，其表数据文件本身就是按 B+Tree 组织的一个索引结构，树的叶节点 data 域保存了完整的数据记录。而 MyISAM 中，索引文件和数据文件是分离的，它的叶子节点 data 域不存真实数据，只存一个指向数据地址的指针，要拿到最终数据还会多一次磁盘 IO。</p><p><img data-src="/2026/02/12/mysql-framework/3.png"></p><p>InnoDB 使用缓冲池（Buffer Pool）缓存数据页和索引页，MyISAM 使用键缓存（Key Cache）仅缓存索引页而不缓存数据页。</p><p>内容参考：<br><a href="https://javaguide.cn/">Java Guide</a> &amp;&amp; <a href="https://xiaolincoding.com/">小林 coding</a>。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Database </tag>
+            
+            <tag> MYSQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>MySQL中的数据类型</title>
+      <link href="/2026/02/10/mysql-datatype/"/>
+      <url>/2026/02/10/mysql-datatype/</url>
+      
+        <content type="html"><![CDATA[<h2 id="MySQL-的三大数据类型"><a href="#MySQL-的三大数据类型" class="headerlink" title="MySQL 的三大数据类型"></a>MySQL 的三大数据类型</h2><ol><li><strong>数值类型</strong>：整型（TINYINT、SMALLINT、MEDIUMINT、INT 和 BIGINT）、浮点型（FLOAT 和 DOUBLE）、定点型（DECIMAL）。<ul><li>整型可以使用可选的 UNSIGNED 属性来表示不允许负值的无符号整数，这可以将正整数的上限提高一倍，因为它不需要存储负数值。例如， TINYINT UNSIGNED 类型的取值范围是 0 ~ 255，而普通的 TINYINT 类型的值范围是 -128 ~ 127。</li></ul></li><li><strong>字符串类型</strong>：CHAR、VARCHAR、TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT、TINYBLOB、BLOB、MEDIUMBLOB 和 LONGBLOB 等，最常用的是 CHAR 和 VARCHAR。CHAR 是定长字符串，VARCHAR 是变长字符串。CHAR(M) 和 VARCHAR(M) 的 M 都代表能够保存的字符数的最大值，且无论是字母、数字还是中文，每个都只占用一个字符。<ul><li>注意，针对 VARCHAR，虽说 VARCHAR(100) 和 VARCHAR(10) 能存储的字符范围不同，但二者存储相同的字符串，所占用<strong>磁盘</strong>的存储空间其实是一样的，不过，VARCHAR(100) 会消耗更多的<strong>内存</strong>。此外，存储手机号<strong>强烈推荐使用 VARCHAR 类型</strong>，而不是 INT 或 BIGINT。这是为了保证格式的兼容性（手机号可能有各种前导）、查询的灵活性（VARCHAR 可以配合 <code>Like</code> 快速拼接）、以及<strong>加密的要求</strong>（INT 或 BIGINT 类型无法存储加密后变长的字符串密文）。</li><li>DECIMAL 和 FLOAT&#x2F;DOUBLE 的区别是：DECIMAL 是定点数，FLOAT&#x2F;DOUBLE 是浮点数。DECIMAL 可以存储精确的小数值，FLOAT&#x2F;DOUBLE 只能存储近似的小数值——因为浮点数会直接截断在二进制下无法除尽的小数，而定点数则采用了另外一种表示小数的方式，确保小数的精确性。</li><li>数据库规范通常不推荐使用 TEXT 和 BLOB 类型。因为检索效率较低，可能会消耗大量的网络和 IO 带宽等等。尽管它们能存储更长的字符串和二进制大对象。</li></ul></li><li><strong>日期时间类型</strong>：YEAR、TIME、DATE、DATETIME 和 TIMESTAMP 等。<ul><li>TIMESTAMP 有时区信息，DATETIME 类型没有；TIMESTAMP 使用 4 个字节的存储空间，DATETIME 需要耗费 8 个字节。但是，Timestamp 表示的时间范围更小。TIMESTAMP 的核心优势在于其内建的时区处理能力。</li><li>有了专门的表示时间的类型，一般就不建议用字符串来存储日期了。与 MySQL 内建的日期时间类型相比，字符串通常需要占用更多的存储空间来表示相同的时间信息，且查询、索引性能更差，计算功能也会受到限制。</li><li>然而，实践中会常用整数类型（<code>INT</code> 或 <code>BIGINT</code>）来存储所谓的“Unix 时间戳”（即从 1970 年 1 月 1 日 00:00:00 UTC 起至目标时间的总秒数（10 位），或毫秒数（13 位）），即<strong>数值型时间戳</strong>。这种存储方式具有 <code>TIMESTAMP</code> 类型的所具有一些优点，并且使用它进行日期排序以及对比等操作的效率会更高，跨系统也很方便，毕竟只是存放的数值。缺点也很明显，就是无法直观地看到具体时间。</li></ul></li></ol><blockquote><p>MySQL 中没有专门的布尔类型，而是用 TINYINT(1) 类型来表示布尔值。TINYINT(1) 类型可以存储 0 或 1，分别对应 false 或 true。</p></blockquote><h2 id="关于-NULL"><a href="#关于-NULL" class="headerlink" title="关于 NULL"></a>关于 NULL</h2><p><code>NULL</code> 代表一个不确定的值，它不等于任何值，包括它自身。因此，<code>SELECT NULL = NULL</code> 的结果是 <code>NULL</code>，而不是 <code>true</code> 或 <code>false</code>。<code>NULL</code> 意味着缺失或未知的信息。任何值与 <code>NULL</code> 进行比较的结果都是 <code>NULL</code>，表示结果不确定。要判断一个值是否为 <code>NULL</code>，必须使用 <code>IS NULL</code> 或 <code>IS NOT NULL</code>。</p><p>此外，<code>COUNT(*)</code> 会统计所有行数，包括包含 <code>NULL</code> 值的行，<code>COUNT(列名)</code> 却会统计指定列中非 <code>NULL</code> 值的行数，聚合函数对 <code>NULL</code> 的行为差异会增大代码出 Bug 的可能性。所以一般都不建议以它作为列的默认值。</p><p>内容参考：<a href="https://javaguide.cn/">Java Guide</a>。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Database </tag>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>使用 Nginx 的小提示</title>
+      <link href="/2026/01/11/use-nginx/"/>
+      <url>/2026/01/11/use-nginx/</url>
+      
+        <content type="html"><![CDATA[<h2 id="Nginx-的配置"><a href="#Nginx-的配置" class="headerlink" title="Nginx 的配置"></a>Nginx 的配置</h2><p>nginx 在 arch linux 中的配置，主要是注意两个路径：</p><ol><li><code>/etc/nginx</code>里面的<code>nginx.conf</code>文件用来配置 root，root 指向项目文件夹（是项目的 index.html 所在的文件夹，而不是 nginx 默认的欢迎页面 index.html 所在的文件夹。前者是后者的子目录）</li><li>需要把项目文件夹放在<code>/usr/share/nginx/html</code>这个文件夹下。如前所述，最终 root 指向的是<code>/usr/share/nginx/html/project</code></li></ol><h2 id="启动-Nginx"><a href="#启动-Nginx" class="headerlink" title="启动 Nginx"></a>启动 Nginx</h2><ul><li>设置 nginx 开机自启动：<code>systemctl enable nginx</code>；</li><li>验证是否成功开启：<code>systemctl is-enabled nginx</code></li><li>手动开&#x2F;关&#x2F;重载：<code>systemctl start/stop/reload nginx</code></li><li>查看状态：<code>systemctl status nginx</code></li></ul><h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ol><li>浏览器中的请求 URL 中的<code>api</code>来标识这是一个发向 tomcat 服务的请求。所以一般来说，对于静态资源的请求是没有<code>api</code>标识的，直接加载。</li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> tips </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>数据库基本概念</title>
+      <link href="/2026/01/11/basic-concept-of-db/"/>
+      <url>/2026/01/11/basic-concept-of-db/</url>
+      
+        <content type="html"><![CDATA[<ul><li><p><strong>元组</strong>：数据库表中的每行就是一个元组。</p></li><li><p><strong>码</strong>：码就是能唯一标识实体的属性，对应表中的列。</p></li><li><p><strong>候选码</strong>：若关系中的某一属性或属性组的值能唯一的标识一个元组，而其任何子集都不能再标识，则称该属性组为候选码。例如：在学生实体中，“学号”是能唯一的区分学生实体的，同时又假设“姓名”、“班级”的属性组合足以区分学生实体，那么{学号}和{姓名，班级}都是候选码。</p></li><li><p><strong>主码</strong> : 主码也叫主键。主码是从候选码中选出来的。 一个实体集中只能有一个主码，但可以有多个候选码。</p></li><li><p><strong>外码</strong> : 外码也叫外键。如果一个关系中的一个属性是另外一个关系中的主码则这个属性为外码。一个表可以有多个外键，可以与多个表建立联系。</p></li><li><p><strong>主属性</strong>：候选码中出现过的属性称为主属性。比如关系：工人（工号，身份证号，姓名，性别，部门）。显然工号和身份证号都能够唯一标示这个关系，所以都是候选码。工号、身份证号这两个属性就是主属性。如果主码是一个属性组，那么属性组中的属性都是主属性。</p></li><li><p><strong>非主属性：</strong> 不包含在任何一个候选码中的属性称为非主属性。比如在关系：学生（学号，姓名，年龄，性别，班级）中，主码是“学号”，那么其他的“姓名”、“年龄”、“性别”、“班级”就都可以称为非主属性。</p></li><li><p><strong>ER 图</strong>：全称是 Entity Relationship Diagram（实体联系图），提供了表示实体类型、属性和联系的方法。由下面 3 个要素组成：</p><ul><li><em>实体</em>：通常是现实世界的业务对象。比如对于一个校园管理系统，会涉及学生、教师、课程、班级等等实体。在 ER 图中，实体使用<strong>矩形框</strong>表示。</li><li><em>属性</em>：即某个实体拥有的属性，属性用来描述组成实体的要素。在 ER 图中，属性使用椭<strong>圆形</strong>表示。</li><li><em>联系</em>：即实体与实体之间的关系，在 ER 图中用<strong>菱形</strong>表示，这个关系不仅有业务关联关系，还能通过数字表示实体之间的数量对照关系。例如，一个班级会有多个学生就是一种实体间的联系。</li></ul><p>下图是一个学生选课的 ER 图，每个学生可以选若干门课程，同一门课程也可以被若干人选择，所以它们之间的关系是多对多（M: N）。另外，还有其他两种实体之间的关系是：1 对 1（1:1）、1 对多（1: N）。 <img data-src="/2026/01/11/basic-concept-of-db/1.png" alt="学生与课程之间联系的E-R图"></p></li></ul><ul><li><strong>数据库基本范式</strong>：<ul><li>第一范式：属性（对应于表中的字段）不能再被分割，也就是这个字段只能是一个值，不能再分为多个其他的字段了。<strong>1NF 是所有关系型数据库的最基本要求</strong> ，也就是说关系型数据库中创建的表一定满足第一范式。</li><li>第二范式：2NF 在 1NF 的基础之上，消除了非主属性对于码的<strong>部分函数依赖</strong>。<ul><li><strong>函数依赖（functional dependency）</strong>：若在一张表中，在属性（或属性组）X 的值确定的情况下，必定能确定属性 Y 的值，那么就可以说 Y 函数依赖于 X，写作 X → Y。</li><li><strong>部分函数依赖（partial functional dependency）</strong>：如果 X→Y，<strong>并且存在 X 的一个真子集 X0</strong>，使得 X0→Y，则称 Y 对 X 部分函数依赖。</li><li><strong>传递函数依赖</strong>：在关系模式 R(U)中，设 X，Y，Z 是 U 的不同的属性子集，如果 X 确定 Y、Y 确定 Z，且有 X 不包含 Y，Y 不确定 X，（X∪Y）∩Z&#x3D;空集合，则称 Z 传递函数依赖（transitive functional dependency）于 X。传递函数依赖会导致数据冗余和异常。传递函数依赖的 Y 和 Z 子集往往同属于某一个事物，因此可将其合并放到一个表中。比如在关系 R（学号 , 姓名, 系名，系主任）中，学号 → 系名，系名 → 系主任，所以存在非主属性系主任对于学号的传递函数依赖。</li></ul></li><li>第三范式：3NF 在 2NF 的基础之上，消除了非主属性对于码的传递函数依赖 。符合 3NF 要求的数据库设计，<strong>基本</strong>上解决了数据冗余过大，插入异常，修改异常，删除异常的问题。</li></ul></li></ul><p>上述内容参考了：<a href="https://javaguide.cn/">Java Guide</a>。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Database </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>mybatis-plus的配置与使用</title>
+      <link href="/2025/11/14/use-mybatis-plus/"/>
+      <url>/2025/11/14/use-mybatis-plus/</url>
+      
+        <content type="html"><![CDATA[<h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><p>在 <code>pom.xml</code> 文件中，加入 <code>mybatis-plus-boot-starter</code> 的依赖。<code>mybatis-plus-boot-starter</code> 是一个“全家桶”，它会自动帮你引入 Mybatis-Plus 核心库、MyBatis 核心库以及与 Spring Boot 集成的所有必要组件。</p><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span> <span class="comment">&lt;!-- 请根据需要选择合适的版本 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 你还需要数据库驱动，比如 MySQL --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure><h3 id="配置数据源"><a href="#配置数据源" class="headerlink" title="配置数据源"></a>配置数据源</h3><p>在 <code>src/main/resources/application.yaml</code> 中，配置数据库的连接信息。</p><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/my_database?serverTimezone=UTC</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">your_password</span></span><br></pre></td></tr></table></figure><h3 id="创建绑定"><a href="#创建绑定" class="headerlink" title="创建绑定"></a>创建绑定</h3><p>使用 @TableName 创建实体类 Entity 和数据库表的绑定；使用 @TableId、@TableField 来创建属性和字段的绑定。</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@TableName(&quot;tb_user&quot;)</span> <span class="comment">// 将这个类映射到数据库的 &quot;tb_user&quot; 表</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="meta">@TableId(value = &quot;id&quot;, type = IdType.AUTO)</span> <span class="comment">// 声明主键，并设置为自增</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>让 Mapper 接口继承 <code>BaseMapper&lt;T&gt;</code>。通过继承 <code>BaseMapper&lt;User&gt;</code>，<code>UserMapper</code> 接口就拥有了一整套强大的、无需编写 SQL 的 CRUD 方法，例如 <code>insert</code>, <code>selectById</code>, <code>updateById</code>, <code>delete</code>, <code>selectList</code> 等。</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 传入你的实体类 User</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserMapper</span> <span class="keyword">extends</span> <span class="title class_">BaseMapper</span>&lt;User&gt; &#123;</span><br><span class="line">    <span class="comment">// 通常这里是空的，因为 BaseMapper 已经提供了所有常用方法</span></span><br><span class="line">    <span class="comment">// 如果有特别复杂的 SQL，可以在这里自定义方法，并配合 XML 文件实现</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><code>UserMapper</code> 还是一个接口，没有实现类，所以最后还需在 Spring Boot 主启动类上，添加 <code>@MapperScan</code> 注解。<code>@MapperScan</code> 注解会告诉 Spring Boot 在启动时去扫描指定的包，为所有继承了 <code>BaseMapper</code> 的接口动态地创建一个<strong>代理实现类</strong>，并注册到 Spring 容器中。这样，你才能在其他地方通过 <code>@Autowired</code> 或 <code>@Resource</code> 注入 <code>UserMapper</code>。</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@MapperScan(&quot;com.example.project.mapper&quot;)</span> <span class="comment">// 告诉 Spring 去哪里找你的 Mapper 接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProjectApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(ProjectApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="进阶：Service-层"><a href="#进阶：Service-层" class="headerlink" title="进阶：Service 层"></a>进阶：Service 层</h3><p>让 Service 层的接口继承 <code>IService&lt;T&gt;</code>接口，Service 的实现类继承 <code>ServiceImpl&lt;M, T&gt;</code>。</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Service 接口还要继承一个接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">IUserService</span> <span class="keyword">extends</span> <span class="title class_">IService</span>&lt;User&gt; &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Service 实现类要实现它接口中定义的所有抽象方法，这通过继承 ServiceImpl 而实现</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">extends</span> <span class="title class_">ServiceImpl</span>&lt;UserMapper, User&gt; <span class="keyword">implements</span> <span class="title class_">IUserService</span> &#123;</span><br><span class="line">    <span class="comment">// 这里可以编写你的业务逻辑</span></span><br><span class="line">    <span class="comment">// 你可以直接使用 ServiceImpl 提供的方法，如 getById(), save(), list()，也可以使用 query(), update() 来进行链式操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="进阶：插件"><a href="#进阶：插件" class="headerlink" title="进阶：插件"></a>进阶：插件</h3><p>创建 Mybatis-Plus 的配置类，用来添加分页插件、乐观锁插件等。</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisPlusConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MybatisPlusInterceptor <span class="title function_">mybatisPlusInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">MybatisPlusInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MybatisPlusInterceptor</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1. 添加分页插件 (最常用)</span></span><br><span class="line">        interceptor.addInnerInterceptor(<span class="keyword">new</span> <span class="title class_">PaginationInnerInterceptor</span>(DbType.MYSQL));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 添加乐观锁插件 (如果需要)</span></span><br><span class="line">        <span class="comment">// interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> framework </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>GET 和 POST 方法的区别</title>
+      <link href="/2025/11/14/get-and-post/"/>
+      <url>/2025/11/14/get-and-post/</url>
+      
+        <content type="html"><![CDATA[<p>GET 和 POST 是 HTTP 协议中两种常用的请求方法，它们在不同的场景和目的下有不同的特点和用法。一般来说，可以从以下几个方面来区分它们：</p><ul><li>语义上的区别：GET 通常用于获取或查询资源，而 POST 通常用于创建或修改资源。GET 请求应该是幂等的，即多次重复执行不会改变资源的状态，而 POST 请求则可能有副作用，即每次执行可能会产生不同的结果或影响资源的状态。</li><li>格式上的区别：GET 请求的参数通常放在 URL 中，形成查询字符串（querystring），而 POST 请求的参数通常放在请求体（body）中，可以有多种编码格式，如 application&#x2F;x-www-form-urlencoded、multipart&#x2F;form-data、application&#x2F;json 等。GET 请求的 URL 长度受到浏览器和服务器的限制，而 POST 请求的 body 大小则没有明确的限制。</li><li>缓存上的区别：由于 GET 请求是幂等的，它可以被浏览器或其他中间节点（如代理、网关）缓存起来，以提高性能和效率。而 POST 请求则不适合被缓存，因为它可能有副作用，每次执行可能需要实时的响应。</li><li>安全性上的区别：GET 请求和 POST 请求都不是绝对安全的，因为 HTTP 协议本身是明文传输的，无论是 URL、header 还是 body 都可能被窃取或篡改。为了保证安全性，必须使用 HTTPS 协议来加密传输数据。不过，在一些场景下，GET 请求相比 POST 请求更容易泄露敏感数据，因为 GET 请求的参数会出现在 URL 中，而 URL 可能会被记录在浏览器历史、服务器日志、代理日志等地方。因此，一般情况下，私密数据传输应该使用 POST + body。</li></ul><p>上述内容参考了：<a href="https://javaguide.cn/">Java Guide</a>。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> System Design </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>SpringBoot常用注解</title>
+      <link href="/2025/10/20/springboot-annotations/"/>
+      <url>/2025/10/20/springboot-annotations/</url>
+      
+        <content type="html"><![CDATA[<h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><ul><li><code>@SpringBootApplication</code>: Spring Boot 应用的核心注解，通常用于标注主启动类。可以把 <code>@SpringBootApplication</code>看作是下面<strong>三个注解的组合</strong>：<ul><li><code>@EnableAutoConfiguration</code>：启用 Spring Boot 的自动配置机制。</li></ul><ul><li><code>@ComponentScan</code>：扫描 <code>@Component</code>、<code>@Service</code>、<code>@Repository</code>、<code>@Controller</code> 等注解的类。</li><li><code>@Configuration</code>：允许注册额外的 Spring Bean 或导入其他配置类。</li></ul></li></ul><ul><li><code>@MapperScan</code>: 这是 MyBatis-Spring 提供的注解。它告诉框架去哪里查找 Mapper 接口。它会扫描指定的包，并将其中定义的接口注册为 Spring Bean。</li></ul><h2 id="Bean-注册"><a href="#Bean-注册" class="headerlink" title="Bean 注册"></a>Bean 注册</h2><p>Spring 容器需要知道哪些类需要被管理为 Bean。除了使用 <code>@Bean</code> 方法显式声明（通常在 <code>@Configuration</code> 类中），更常见的方式是使用 Stereotype（构造型） 注解<strong>标记类</strong>，并配合组件扫描（Component Scanning）机制，让 Spring 自动发现并注册这些类作为 Bean。这些 Bean 后续可以通过 <code>@Autowired</code> 等方式注入到其他组件中。下面是常见的构造型注解：</p><ul><li><code>@Component</code>：通用的注解，可标注任意类为 Spring 的组件。如果一个 Bean 不知道属于哪个层，可以使用<code>@Component</code> 注解标注。</li><li><code>@Repository</code> : 对应持久层即 Dao 层，主要用于数据库相关操作。</li><li><code>@Service</code> : 对应服务层，主要涉及一些复杂的逻辑，需要用到 Dao 层。</li><li><code>@Controller</code> : 对应 Spring MVC 控制层，主要用于接受用户请求并调用 Service 层返回数据给前端页面。主要用于传统的 Spring MVC 应用，方法返回值通常是逻辑视图名，需要视图解析器配合渲染页面。如果需要返回数据（如 JSON），则需要在方法上额外添加 <code>@ResponseBody</code> 注解。</li><li><code>@RestController</code>：一个组合注解，等效于 <code>@Controller</code> + <code>@ResponseBody</code>。它专门用于构建 RESTful Web 服务的控制器。标注了 <code>@RestController</code> 的类，其所有处理器方法（handler methods）的返回值都会被自动序列化（通常为 JSON）并写入 HTTP 响应体，而不是被解析为视图名称。在现代前后端分离的应用中，<code>@RestController</code> 是更常用的选择。</li><li><code>@Configuration</code>: 主要用于声明一个类是 Spring 的配置类。虽然也可以用 <code>@Component</code> 注解替代，但 <code>@Configuration</code> 能够更明确地表达该类的用途（定义 Bean）。</li><li><code>@Bean</code>: 通常用于标注在方法上，位于一个  <code>@Configuration</code>  类中。它告诉 Spring “这个方法会返回一个对象，请把这个对象作为 Bean 注册起来”。它适用依赖注入于你无法修改源代码的第三方库中的类，或需要进行复杂逻辑来创建 Bean（例如，根据条件创建、需要配置多个属性）等情况。<br>如果  <code>@Component</code>  或  <code>@Bean</code>  注解没有明确指定 Bean 的名字，Spring 会根据一定的默认规则来生成 Bean 的名字。对于前者， Bean 的名字将是该类的非限定类名（simple class name）的<strong>首字母小写</strong>；对于后者，Bean 的名字将是  <code>@Bean</code> 所注解的方法的<strong>方法名</strong>。</li></ul><h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><ul><li><code>@Autowired</code> 用于自动注入依赖项（即其他 Spring Bean）。它可以标注在构造器、字段、Setter 方法或配置方法上，Spring 容器会<strong>自动查找匹配类型的 Bean 并将其注入</strong>。当存在多个相同类型的 Bean 时，<code>@Autowired</code> 默认按类型注入可能产生歧义，此时，可以与 <code>@Qualifier</code> 结合使用，通过<strong>指定 Bean 的名称</strong>来精确选择需要注入的实例。</li><li><code>@Resource(name=&quot;beanName&quot;)</code>是 JSR-250 规范定义的注解，也用于依赖注入。它默认按<strong>名称 (by Name)</strong> 查找 Bean 进行注入。如果未指定 <code>name</code> 属性，它会尝试根据字段名或方法名查找，如果找不到，则回退到按类型查找（类似 <code>@Autowired</code>）。<code>@Resource</code>只能标注在字段 和 Setter 方法上，不支持构造器注入。</li></ul><h2 id="注入配置"><a href="#注入配置" class="headerlink" title="注入配置"></a>注入配置</h2><ul><li><code>@Value(&quot;$&#123;app.name&#125;&quot;)</code>  注入配置文件（如  <code>application.properties</code>  或  <code>application.yml</code>）中的单个属性值给 Bean 对象的单个属性，可以以冒号的形式提供默认值，如<code>@Value(&quot;$&#123;server.port:8080&#125;&quot;)</code></li><li><code>@ConfigurationProperties</code> 用于将一组相关的配置属性绑定到一个 Bean 对象上，它将配置文件的层次结构映射到 Bean 对象的属性结构。如<code>@ConfigurationProperties(prefix = &quot;mail&quot;)</code>会绑定以“mail”为前缀的配置文件配置项到一个类上。之后无需在每一个属性上都使用<code>@Value(&quot;$&#123;mail.name&#125;&quot;)</code>注解。</li></ul><h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><h3 id="Review：异常的层次结构"><a href="#Review：异常的层次结构" class="headerlink" title="Review：异常的层次结构"></a>Review：异常的层次结构</h3><ul><li><strong>Throwable</strong>：所有错误和异常的超类。</li><li><strong>Error</strong>：严重错误，通常是 JVM 自身的问题，如  OutOfMemoryError、StackOverflowError。程序通常无法处理和恢复，我们一般不捕获  Error。</li><li><strong>Exception</strong>：程序本身可以处理的异常。它又分为两类： - <strong>Checked Exceptions (受检异常)</strong>：在编译时就必须处理的异常。编译器会强制你使用  try-catch  捕获或者使用  throws  声明抛出。例如  IOException、SQLException。它们通常是程序在与外部环境（如文件、网络、数据库）交互时可能发生的、可预见的问题。 - <strong>Unchecked Exceptions (非受检异常)</strong>：也叫  <strong>RuntimeException</strong>。在编译时不会被检查，在运行时才可能抛出。例如  NullPointerException、ArrayIndexOutOfBoundsException。它们通常是由于程序逻辑错误（Bugs）导致的，是应该在编码阶段就避免的。<br><img data-src="/2025/10/20/springboot-annotations/1.png"></li></ul><h3 id="Review：异常处理的五个关键字"><a href="#Review：异常处理的五个关键字" class="headerlink" title="Review：异常处理的五个关键字"></a>Review：异常处理的五个关键字</h3><ul><li><strong>try</strong>：包裹可能会<strong>抛出</strong>异常的代码块。</li><li><strong>catch</strong>：用于<strong>捕获</strong>并处理  try  块中抛出的特定类型的异常。可以有多个  catch  块来处理不同类型的异常，捕获时遵循<strong>从小到大</strong>的原则（子类异常在前，父类异常在后）。</li><li><strong>finally</strong>：无论是否发生异常，finally  块中的代码<strong>总会</strong>执行（除非 JVM 退出，如  System.exit()）。通常用于释放资源，如关闭文件流、数据库连接等。</li><li><strong>throw</strong>：在代码中手动抛出一个异常对象。通常用于在检测到错误条件时主动中断程序流程。</li><li><strong>throws</strong>：用在方法签名上，声明该方法可能会抛出某些受检异常。<strong>它将处理异常的责任转移给了方法的调用者</strong>。</li><li><strong>注意</strong>：try-with-resources (Java 7+)是对  finally  块中资源释放代码的巨大简化。任何实现了  java.lang.AutoCloseable  或  java.io.Closeable  接口的资源都可以使用此语法，JVM 会自动为你调用  close()  方法，从而替代了繁琐的 finally 块：</li></ul><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 传统方式 (繁琐且容易出错)</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">copyFileLegacy</span><span class="params">(String src, String dest)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="type">FileInputStream</span> <span class="variable">in</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">FileOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        in = <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(src);</span><br><span class="line">        out = <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(dest);</span><br><span class="line">        <span class="comment">// ... copy logic ...</span></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (in != <span class="literal">null</span>) in.close();</span><br><span class="line">        <span class="keyword">if</span> (out != <span class="literal">null</span>) out.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// try-with-resources 方式 (简洁、安全)</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">copyFileModern</span><span class="params">(String src, String dest)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="keyword">try</span> (<span class="type">FileInputStream</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(src);</span><br><span class="line">         <span class="type">FileOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(dest)) &#123;</span><br><span class="line">        <span class="comment">// ... copy logic ...</span></span><br><span class="line">    &#125; <span class="comment">// in 和 out 会在这里被自动关闭，即使发生异常</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="使用-Spring-和第三方库进行全局异常处理"><a href="#使用-Spring-和第三方库进行全局异常处理" class="headerlink" title="使用 Spring 和第三方库进行全局异常处理"></a>使用 Spring 和第三方库进行全局异常处理</h3><p>传统的 Java Web 开发（如 Servlet）中，每个方法都可能需要写大量的  try-catch  块来<strong>捕获异常</strong>，导致业务逻辑和异常处理逻辑耦合在一起，代码非常臃肿。Spring 框架通过  <strong>AOP (面向切面编程)</strong>  的思想，<strong>将异常捕获的逻辑从业务代码中分离出来</strong>，进行集中管理，完美地解决了这个问题。这主要通过以下注解实现：</p><ul><li><code>@ControllerAdvice</code> &#x2F; <code>@RestControllerAdvice</code> : <code>@ControllerAdvice</code> 作用于一个类上，表明这个类是一个“全局异常处理器”。它可以<strong>拦截并处理</strong>所有（或指定包下）<code>@Controller</code> 中抛出的异常；<code>@RestControllerAdvice</code> 是 <code>@ControllerAdvice</code> 和 <code>@ResponseBody</code> 的组合。它不仅具备 <code>@ControllerAdvice</code> 的功能，还会自动将处理方法的返回值序列化为 JSON 格式。这在构建 RESTful API 时非常常用。</li><li><code>@ExceptionHandler</code> : 这个注解作用于方法上，并且该方法必须位于一个被 <code>@ControllerAdvice</code> 或 <code>@RestControllerAdvice</code> 注解的类中。<strong>它指定了该方法专门负责处理哪种类型的异常</strong>。当控制器中抛出匹配类型的异常时，Spring 会自动调用这个被注解的方法，并将异常对象作为参数传入。</li><li><code>@SneakyThrows</code>: 当你的方法调用了一个可能会抛出受检异常的、在方法签名上使用了 throws 关键字的方法时，编译器会强制你要么使用 try-catch 来在这里<strong>捕获受检异常</strong>，要么你的这个方法的签名上也加上 throws 关键字<strong>继续抛出受检异常</strong>传递给上层处理。而采用了全局异常处理体系的在现代分层架构中，受检异常，比如一个底层的  IOException  可能需要穿透好几层（Repository -&gt; Service -&gt; Controller）才能最终被  <code>@RestControllerAdvice</code>  捕获。这意味着每一层的每个方法签名都得加上  throws IOException。这非常繁琐。Lombok 库的 <code>@SneakyThrows</code> 的作用是利用 Java 泛型和类型擦除的一个漏洞，欺骗编译器，让它相信这个受检异常已经被处理了，允许这个受检异常被看作是非受检异常，无 throws 关键字地被抛出，进而简化了代码。当你确定某个受检异常在当前上下文中几乎不可能发生，或者你希望将它交由上层的全局异常处理器来统一处理时，可以使用它来简化代码。<ul><li><em>注意</em>：受检异常是编译器强制你必须处理（try-catch  或  throws）的异常；而非受检异常则由你自行决定是否处理，编译器<strong>完全忽略</strong>它们。出于这个原因，有程序员会倾向于将自定义的业务异常（比如  UserNotFoundException, OrderStateException）定义为非受检异常，以此避免  throws  污染各层接口。</li></ul></li></ul><h2 id="控制层"><a href="#控制层" class="headerlink" title="控制层"></a>控制层</h2><ul><li><code>@RequestMapping</code>: 最通用的请求映射注解，用于将 HTTP 请求（URL、请求方法等）映射到控制器的方法上。可以用于类级别（定义基础路径）和方法级别。</li><li><code>@GetMapping</code>: 专门用于处理 HTTP GET 请求，<code>@GetMapping(&quot;users&quot;)</code> 等价于<code>@RequestMapping(value=&quot;/users&quot;,method=RequestMethod.GET)</code>。方法级别。</li><li><code>@PathVariable</code>: 用于<strong>从 URL 的路径中提取值</strong>并绑定到方法参数上，用于参数绑定。例如，从  &#x2F;users&#x2F;{id}  中获取  id  的值。<ul><li><em>注意</em>：URL 全称是  <strong>Uniform Resource Locator</strong>（统一资源定位符），一个 URL &#x3D; 协议+主机名（ip 地址或域名）+端口（80 和 443 会省略）+路径（资源在服务器上的具体位置）+ 查询参数（client 给服务器提供的额外信息，以 ? 开始，用 &amp; 分隔键值对）+片段（指向资源内部的特定部分，又称锚点，以 # 开始）。</li></ul></li><li><code>@RequestParam</code>: 用于<strong>从请求参数或表单数据中提取值</strong>并绑定到方法参数上，用于参数绑定。例如，从 &#x2F;users?name&#x3D;john 中获取 name 的值。</li><li><code>@RequestBody</code>: 用于将 HTTP 请求的 body 内容，即请求体（通常是 JSON 或 XML 数据）反序列化为一个 Java 对象，并绑定到方法参数上。用于参数绑定。</li><li><code>@ResponseBody</code>: 标记方法的返回值应该被直接写入 HTTP 响应体中，而不是被解析为视图。@RestController  已经默认包含了此功能。标记在方法上。</li><li><code>@ResponseStatus</code>: 用于指定方法成功执行后返回的 HTTP 状态码，例如  <code>@ResponseStatus(HttpStatus.CREATED)</code>  表示返回  201 Created。</li></ul><h2 id="第三方库"><a href="#第三方库" class="headerlink" title="第三方库"></a>第三方库</h2><h3 id="Lombok"><a href="#Lombok" class="headerlink" title="Lombok"></a>Lombok</h3><ul><li><code>@Data</code>: 当你给一个类加上<code>@Data</code> 注解后，Lombok 会在编译时自动为你生成该类所有字段的 <code>getter</code> 方法 (例如 getName())；<code>setter</code> 方法 (例如 setName(…))；一个合适的 <code>toString()</code> 方法，用于打印对象内容；一个合适的 <code>equals()</code> 和 <code>hashCode()</code> 方法，用于比较对象是否相等；一个接收所有 final 字段的构造函数。可以把它看作包含了<code>@Getter</code>, <code>@Setter</code>, <code>@ToString</code>, <code>@EqualsAndHashCode</code> 和 <code>@RequiredArgsConstructor</code></li><li><code>@Getter</code>: 当你给一个类加上 <code>@Getter</code> 注解后，Lombok 会在编译时，为该类中所有非静态的字段生成对应的 getXxx() 或 isXxx() 方法。</li><li><code>@NoArgsConstructor</code>: 生成一个无参构造函数。</li><li><code>@AllArgsConstructor</code>: 生成一个包含所有字段的构造函数。</li><li><code>@RequiredArgsConstructor</code>: 为 final 或标记为 @NonNull 的字段生成构造函数。</li><li><code>@Builder</code>: 实现建造者模式，可以链式调用来创建对象实例。</li><li><code>@Slf4j</code>: “Simple Logging Facade for Java” 的缩写。它是一个日志门面，可以与多种日志实现（如 Logback, Log4j2）配合使用。当你给一个类加上 <code>@Slf4j</code> 注解后，Lombok 会在编译时自动为你生成一个名为 log 的静态 final 日志记录器对象。</li></ul><h3 id="MyBatis-Plus"><a href="#MyBatis-Plus" class="headerlink" title="MyBatis-Plus"></a>MyBatis-Plus</h3><ul><li><code>@TableName</code>: 该注解用于指定实体类对应的数据库表名。当实体类名与数据库表名不一致，或者实体类名不是数据库表名的驼峰写法时，您需要使用这个注解来明确指定表名。</li><li><code>@TableId</code>: 该注解用于标记实体类中的主键字段，如果一致则可以省略。</li><li><code>@TableField</code>: 用于非主键字段上，用于当字段名与表的列名不一致，或不是列名的驼峰写法时进行映射。该注解也用来配置自动填充策略。</li></ul><h3 id="Swagger"><a href="#Swagger" class="headerlink" title="Swagger"></a>Swagger</h3><ul><li><code>@Tag(name = &quot;...&quot;)</code>: 为控制器类提供一个分组标签，在 API 文档中进行分类。</li><li><code>@Operation(summary = &quot;...&quot;)</code>: 为具体的 API 接口方法提供一个简短的摘要描述。</li><li><code>@Schema(description = &quot;...&quot;)</code>: 为 DTO 的类或字段提供详细的描述和示例。</li></ul><h3 id="Jackson"><a href="#Jackson" class="headerlink" title="Jackson"></a>Jackson</h3><ul><li><code>@JsonFormat</code>: 用于格式化日期时间字段，确保 Java 的日期对象能够按照一定的格式，如 yyyy-MM-dd HH:mm:ss，序列化为 JSON；同样也确保 JSON 可读字符串能够以一定的格式被转化为 Java 对象。</li></ul><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul><li><a href="https://javaguide.cn/">Java Guide</a></li><li>《Java 核心技术 卷 1 开发基础（原书第十二版）》</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> framework </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>继承与接口的比较</title>
+      <link href="/2025/10/10/inheritance-and-interface/"/>
+      <url>/2025/10/10/inheritance-and-interface/</url>
+      
+        <content type="html"><![CDATA[<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><ol><li><strong>核心关系：</strong> “is-a”（是一种）关系。子类是父类的一种更具体的类型（例如：Car is-a Vehicle）。</li><li><strong>实现方式：</strong>  使用  extends  关键字来声明继承关系，例如  class Child extends Parent。</li><li><strong>继承内容：</strong>  子类自动继承父类所有非  private  的成员变量和成员方法，可以直接使用。</li><li><strong>不继承内容：</strong>  构造方法和被  private  修饰的成员不能被子类直接继承或访问。</li><li><strong>构造方法规则：</strong>  子类的构造方法第一行必须调用父类的构造方法或本类的另一个构造方法 this(…)。如果未显式使用  super(…)  调用，编译器会自动添加一个无参的  super()。如果父类没有无参构造方法，子类必须在其所有构造方法中显式调用父类的有参构造方法。</li><li><strong>方法重写 (Overriding)：</strong>  子类可以提供一个与父类方法签名（方法名、参数列表）完全相同的新实现来覆盖父类的行为。建议使用  @Override  注解进行标记。</li><li><strong>重写规则：</strong>  重写的方法访问权限不能比父类更严格，返回类型必须相同或者是父类返回类型的子类。</li><li><strong>成员变量隐藏 (Hiding)：</strong>  成员变量只能被隐藏，不能被重写。当子类定义了与父类同名的变量时，具体访问哪个变量取决于<strong>引用的类型</strong>，而不是对象的实际类型。</li><li><strong>super  关键字：</strong>  在子类中，使用  super.成员   来访问父类中被隐藏的变量或被重写的方法；使用  super()  来调用父类的构造方法。</li><li><strong>多态 (Polymorphism)：</strong>  父类的引用可以指向子类的对象（Parent p &#x3D; new Child();），这被称为向上转型。</li><li><strong>多态表现：</strong>  当通过父类引用调用一个被重写的方法时，实际执行的是子类中的方法版本。</li><li><strong>向下转型 (Downcasting)：</strong>  将父类引用强制转换回子类引用（Child c &#x3D; (Child) p;），这存在  ClassCastException  的风险。</li><li><strong>instanceof  关键字：</strong>  在进行向下转型之前，应使用  instanceof  关键字检查引用的实际对象类型，以确保类型安全，避免异常。</li><li><strong>final  关键字：</strong>  被  final  修饰的类不能被继承；被  final  修饰的方法不能被子类重写。</li><li><strong>单继承原则：</strong> Java 只支持单继承，即一个类最多只能有一个直接父类，但可以通过实现多个接口来弥补。</li></ol><h2 id="抽象父类的继承"><a href="#抽象父类的继承" class="headerlink" title="抽象父类的继承"></a>抽象父类的继承</h2><ol><li><strong>核心关系：</strong>  既是 “is-a” 关系，又是一种<strong>不完整</strong>的设计模板。它代表一个抽象的概念，其本身不能被完整地实现。</li><li><strong>声明方式：</strong>  类本身必须使用  abstract  关键字声明。类中可以包含抽象方法，也必须用  abstract  声明且没有方法体。</li><li><strong>不可实例化：</strong>  不能使用  new  关键字直接创建抽象类的实例，因为它是不完整的。</li><li><strong>成员构成：</strong>  抽象类是普通类和接口的混合体，它可以包含<strong>成员变量、常量、构造方法、具体方法</strong>和<strong>抽象方法</strong>。</li><li><strong>强制规则：</strong>  任何包含一个或多个抽象方法的类，<strong>必须</strong>被声明为抽象类。但抽象类可以不包含任何抽象方法。</li><li><strong>子类责任：</strong>  继承抽象类的具体子类<strong>必须</strong>实现（重写）父类中所有的抽象方法。如果子类不想全部实现，那么该子类也必须被声明为抽象类。</li><li><strong>构造方法用途：</strong>  抽象类可以有构造方法，其唯一目的是为了被子类的构造方法通过  super()  调用，以初始化从父类继承来的成员变量。</li><li><strong>核心用途：</strong>  完美地结合了<strong>代码复用</strong>和<strong>行为规范</strong>。它为所有子类提供公共的状态和行为（通过成员变量和具体方法），同时强制它们必须实现某些特定的行为（通过抽象方法）。</li></ol><h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><ol><li><strong>核心关系：</strong> “can-do”（能做什么）或行为契约。接口定义了一组类必须遵守的规范或能力，强调“能做什么”，而不是“是什么”。</li><li><strong>实现方式：</strong>  使用  implements  关键字来实现一个或多个接口，例如  class MyClass implements MyInterface。</li><li><strong>多实现：</strong>  一个类可以同时实现多个接口，从而获得多种不同的能力。这是 Java 实现“类多重继承”效果的方式。</li><li><strong>实现承诺：</strong>  实现类必须为接口中所有的抽象方法提供具体实现（方法体）。如果未能全部实现，该类必须被声明为抽象类 (abstract class)。</li><li><strong>抽象方法：</strong>  接口中的方法默认是  public abstract  的，没有方法体。实现类在重写时必须使用  public  访问修饰符。</li><li><strong>常量：</strong>  接口中声明的任何变量都默认是  public static final  的，即全局常量，必须在声明时初始化。</li><li><strong>默认方法 (Default Methods - Java 8+)：</strong>  使用  default  关键字，接口可以提供方法的默认实现。实现类可以选择直接继承使用，也可以重写它。</li><li><strong>静态方法 (Static Methods - Java 8+)：</strong>  接口可以包含  static  方法。这些方法只能通过   接口名.方法名()  的方式调用，不能被实现类继承或重写。</li><li><strong>多态应用：</strong>  接口引用可以指向其任何实现类的对象（MyInterface ref &#x3D; new MyClass();），这是实现多态和程序解耦的关键。</li><li><strong>不可实例化：</strong>  接口不能被直接实例化（不能使用  new  关键字创建接口自身的实例）。</li><li><strong>接口间的继承：</strong>  一个接口可以使用  extends  关键字继承一个或多个其他接口，从而<strong>将父接口的所有成员合并到自身</strong>。</li><li><strong>默认方法冲突：</strong>  如果一个类实现的多个接口中包含签名相同的默认方法，该类必须重写此方法以解决冲突。</li><li><strong>无状态与构造方法：</strong>  接口没有成员变量（只有常量）和构造方法。它只定义行为，不关心状态的存储。</li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Core Java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>maven常见标签</title>
+      <link href="/2025/10/09/maven-tags/"/>
+      <url>/2025/10/09/maven-tags/</url>
+      
+        <content type="html"><![CDATA[<h2 id="基础坐标"><a href="#基础坐标" class="headerlink" title="基础坐标"></a>基础坐标</h2><ul><li><code>&lt;groupId&gt;</code>: 项目组 ID。通常是公司或组织的反向域名。groupId 一般分为多段，通常情况下，第一段为域，第二段为公司名称，第三段为项目名称。</li><li><code>&lt;artifactId&gt;</code>: 项目 ID。它是在 groupId 内唯一的项目名称。</li><li><code>&lt;version&gt;</code>: 项目版本号。例如 0.0.1-SNAPSHOT。<ul><li>SNAPSHOT 后缀表示这是一个不稳定的开发版本。</li></ul></li><li><code>&lt;packaging&gt;</code>: 项目的打包方式。<ul><li>jar (默认): 打包成 Java Archive 文件。</li><li>war: 打包成 Web Application Archive 文件，用于部署到 Web 服务器。</li><li>pom: 用于<strong>父模块</strong>或聚合模块，表示<strong>它只管理其他模块，本身不产生构建产物</strong>。</li></ul></li></ul><h2 id="依赖管理"><a href="#依赖管理" class="headerlink" title="依赖管理"></a>依赖管理</h2><ul><li><code>&lt;dependencies&gt;</code>: 根标签，包含所有具体的依赖项。</li><li><code>&lt;dependency&gt;</code>: 定义一个具体的依赖项。<ul><li><code>&lt;groupId&gt;</code>, <code>&lt;artifactId&gt;</code>, <code>&lt;version&gt;</code>: 依赖项自身的 GAV 坐标。</li><li><code>&lt;type&gt;</code>: 用来指定依赖项的类型。默认为 jar，也有可能为 pom——在这种情况下<strong>常常与<code>&lt;scope&gt;import&lt;/scope&gt;</code>一起使用</strong>，以实现 BOM ( Bill of Materials ) 机制，导入依赖版本配置。</li><li><code>&lt;scope&gt;</code>: 依赖的范围，非常重要，决定了<strong>依赖在何时生效</strong>。<ul><li>compile (默认): 编译、测试、运行时都需要。会被打包到最终产物中。</li><li>provided: 编译和测试时需要，但运行时由环境（如 JDK 或 Web 容器）提供。例如 servlet-api。</li><li>runtime: 编译时不需要，但运行时需要。例如 JDBC 驱动。</li><li>test: 只在测试编译和运行时需要。例如 JUnit。</li><li>import: 特殊，只在 <code>&lt;dependencyManagement&gt;</code> 中使用，用于从其他 POM 文件（“物料清单”）中导入依赖版本配置。</li></ul></li></ul></li><li><code>&lt;dependencyManagement&gt;</code>: 依赖管理声明。<strong>它不直接引入依赖，而是用于统一管理所有子模块中依赖的版本号</strong>。在<strong>父 POM</strong>中使用此标签声明版本后，子模块在引入该依赖时就无需再写 <code>&lt;version&gt;</code>，从而保证了所有模块版本一致，避免了版本冲突。</li><li><strong>注意</strong>： 定义在父 POM 的 <code>&lt;dependencies&gt;</code> 里的依赖，会被所有子模块自动继承<strong>并引入</strong>；而定义在 <code>&lt;dependencyManagement&gt;</code> 里的依赖，<strong>仅仅是声明版本</strong>，如果子模块不通过自己的 <code>&lt;dependencies&gt;</code> 标签去引入它，那么这个依赖是不会被下载的。</li></ul><h2 id="项目关系"><a href="#项目关系" class="headerlink" title="项目关系"></a>项目关系</h2><ul><li><code>&lt;parent&gt;</code>: 在子模块中声明其父项目。子模块会继承父项目 pom.xml 中的配置（如依赖版本、插件配置等）。</li><li><code>&lt;modules&gt;</code>: 在父模块（<packaging>pom</packaging>）中声明其包含的所有子模块。</li></ul><h2 id="构建配置"><a href="#构建配置" class="headerlink" title="构建配置"></a>构建配置</h2><ul><li><code>&lt;build&gt;</code>: 构建配置的根标签。</li><li><code>&lt;plugins&gt;</code>: 包含所有构建过程中使用的插件。</li><li><code>&lt;plugin&gt;</code>: 定义一个具体的插件，例如 maven-compiler-plugin (用于编译代码) 或 spotless-maven-plugin (用于格式化代码)。</li><li><code>&lt;resources&gt;</code>: 定义需要被包含到最终产物中的资源文件（非 .java 文件，如 .xml, .properties）。默认目录是 src&#x2F;main&#x2F;resources。</li></ul><h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><ul><li><code>&lt;properties&gt;</code>: 属性的根标签。用于定义可复用的变量，使配置更灵活、易于维护。比如可以在这里定义版本号、配置参数等，然后在<strong>该 POM 的其他地方</strong>通过 ${…} 的形式引用。</li></ul><h2 id="其他信息"><a href="#其他信息" class="headerlink" title="其他信息"></a>其他信息</h2><ul><li><code>&lt;name&gt;</code>: 项目的名称，更具可读性。</li><li><code>&lt;description&gt;</code>: 项目的详细描述。</li><li><code>&lt;developers&gt;</code>: 项目开发者信息。</li></ul><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul><li><a href="https://javaguide.cn/">Java Guide</a>.</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> maven </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>使用github pages搭建你的个人网站</title>
+      <link href="/2025/06/24/build-site/"/>
+      <url>/2025/06/24/build-site/</url>
+      
+        <content type="html"><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>首先，这不是一个完全手把手的指导，说明并不会事无巨细地展开。原因有两个，一是我认为我所略过的部分，完全可以通过查阅官方文档而<strong>快速而精准</strong>地解决，而不需要经过二次加工；第二是如果嫌麻烦，也完全可以问 ai 来解决——关于 ai，我十分推荐谷歌面向开发者的<a href="https://aistudio.google.com/prompts/new_chat">Google AI Studio</a>。我所提供的不是信息的重复，而是信息的聚合与组织，让你<strong>足以</strong>根据这个线路搭建自己的个人网站。</p><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ol start="0"><li>一个 ai 工具，ai 现在几乎成了更快的搜索引擎，请积极利用它。我没有那么详细描述的部分你可以直接 copy 我的描述然后提出你的 prompt。</li><li>一个 terminal 和一个 shell<ul><li>对于 windows 用户，你<em>应该</em>使用 windows terminal + powershell 7</li><li>对于 Linux 用户，你可以使用 Kitty + fish</li><li>高贵的 mac 用户请自行 ai。</li></ul></li><li>一个包管理器，这会简化后面很多的安装步骤<ul><li>对于 windows 用户，你可以使用 scoop</li><li>其他操作系统的用户可以根据自己的操作系统来决定。我使用的是 yay。</li></ul></li><li>一个代码编辑器，比如<a href="https://code.visualstudio.com/docs">vscode</a>。它被用来编辑配置文件，也可以用来编辑我们的博客文章。在 terminal 中使用包管理器安装即可，具体如何安装和使用请自行 ai 或查阅对应文档。</li><li><strong>通畅的网络环境</strong>。遇到网络问题请使用代理+tun 模式。Mihomo 和 Clash 都支持 tun 模式。还有一种比较少见的情况是，尽管你开了代理和 tun，但 shell 没有使用代理，因此获取不到资源，那么这个时候你就应该设置一下 shell 的代理。</li></ol><h3 id="安装-Hexo-与初始化项目"><a href="#安装-Hexo-与初始化项目" class="headerlink" title="安装 Hexo 与初始化项目"></a>安装 Hexo 与初始化项目</h3><p>这个部分请先查阅<a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85">官方文档</a>。</p><p>它会要求你安装了 git 和 node.js 之后再安装 hexo 这个博客框架。那么，你应该在你的 terminal 中，利用 shell，通过你上一步安装了的包管理器，<strong>使用命令行</strong>去安装 git 和 node.js，并验证是否安装成功。</p><p>比如对于<a href="https://scoop.sh/#/apps?q=git&p=2">scoop 安装 git</a>：</p><figure class="highlight pwsh"><table><tr><td class="code"><pre><span class="line">scoop install main/git</span><br></pre></td></tr></table></figure><p>验证 git 是否安装成功，输出版本号则表示安装成功：</p><figure class="highlight pwsh"><table><tr><td class="code"><pre><span class="line">git <span class="literal">-v</span></span><br></pre></td></tr></table></figure><p>对于 node.js：</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scoop install main/nodejs</span><br></pre></td></tr></table></figure><p>验证：</p><figure class="highlight pwsh"><table><tr><td class="code"><pre><span class="line">node <span class="literal">-v</span></span><br></pre></td></tr></table></figure><p>之后就根据文档的说明，使用命令行安装 hexo 即可：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure><p><em>注意因为是<code>-g</code>全局安装，所以可能需要管理员权限</em>。</p><p>我们已经安装了 hexo 框架，但还没有使用它来帮助我们初始化一个网站项目，现在在命令行中键入并回车（<code>hexo-site</code>可以是其它你喜欢的任何名字）：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init hexo-site</span><br></pre></td></tr></table></figure><p>这会在<strong>当前目录</strong>下生成一个名字为<code>hexo-site</code>的文件夹（如果你对当前目录的位置不满意，可以利用<code>cd</code>指令来改变当前目录，或者使用<code>mkdir</code>指令创建一个新的目录，然后<code>cd</code>进入这个新的目录）。这个文件夹就是你的网站在你本地计算机上的一个映射。然后我们进入这个文件夹：</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd hexo-site</span><br></pre></td></tr></table></figure><p>这个时候我们其实可以在本地预览一下网站了。依次在命令行界面中（注意你现在应该处在网站项目的<strong>根目录</strong>下）使用<code>hexo c</code>，<code>hexo g</code>，<code>hexo s</code>，完成清理缓存、生成、本地预览。最后的<code>hexo s</code>命令的执行结果，会返回一个端口号（一般是 4000），打开浏览器，在地址栏输入<code>localhost:4000</code>，就会看到一个很朴素的网站界面，使用的是默认主题，所以下面我们要更换、自己配置主题。</p><p><em>注意，当你预览网站的时候，会占用一个端口，即 4000，在执行<code>hexo s</code>并预览了网页后，你可以回到命令行界面，按下<code>ctrl+c</code>键盘，终止预览，为下一次的预览空出 4000 端口</em>。</p><p>我们将会使用<a href="https://github.com/next-theme/hexo-theme-next">NexT 主题</a>，因为它保持了简洁的同时，还提供了丰富的配置选项和足够详细的文档支持，以及它还在<a href="https://github.com/next-theme/hexo-theme-next/releases/tag/v8.23.1">积极地更新迭代中</a>，后续应该会推出更多好玩的功能。这个主题其实已经有 10 多年的历史了，如今这个 2.6k star 的是它 2020 年之后的版本，而之前的版本有 8.2k star<a href="https://theme-next.js.org/docs/getting-started/upgrade">^1</a>。</p><p>当然，你也可以使用像<a href="https://github.com/jerryc127/hexo-theme-butterfly">butterfly</a>这样的卡片式主题（上一次 release 在 25 年 3 月），或者是<a href="https://github.com/fluid-dev/hexo-theme-fluid">fluid</a>这样也很综合全面的主题（上一次 release 在 24 年 7 月），不同的主题有不同的安装方式。你可以在<a href="https://hexo.io/themes/">这里</a>找到你喜欢的主题列表。但是在选择主题时，除了外观以外，很重要的一点是它有没有得到持续的维护，有没有详细的文档，以及允许自定义的选项是否达到了你的需求。</p><p>让我们继续。</p><h3 id="使用-NexT-主题"><a href="#使用-NexT-主题" class="headerlink" title="使用 NexT 主题"></a>使用 NexT 主题</h3><h4 id="安装与更新"><a href="#安装与更新" class="headerlink" title="安装与更新"></a>安装与更新</h4><p>同样的，请先查看<a href="https://theme-next.js.org/docs/getting-started/#NexT-Installation">官方文档</a>。</p><p>官方文档提供了两种安装（和更新）主题的方式。<strong>推荐使用 npm 的安装方式</strong>，因为这样后续的更新会非常方便。使用 git 除了需要手动<code>git clone</code>（这会让你的项目多出一个<code>themes/next</code>文件夹，这个文件夹以项目子模块的形式被纳入了 git 管理），手动<code>git pull</code>以外，由于要考虑到这个 git 子模块，也让你不太好管理你整个项目的源代码。</p><p>正如文档所说，在你的项目根目录运行安装命令即可：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-theme-next</span><br></pre></td></tr></table></figure><p>对于后续的更新：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-theme-next@latest</span><br></pre></td></tr></table></figure><h4 id="启用与配置"><a href="#启用与配置" class="headerlink" title="启用与配置"></a>启用与配置</h4><p>来自官方文档的<a href="https://theme-next.js.org/docs/getting-started/#Hexo-Configuration">这个部分</a>。</p><p>在安装了主题之后，你需要在<strong>hexo 的配置文件，即根目录下的<code>_config.yml</code>文件</strong>中启用这个主题。如果你之后打算使用其他主题，也在这个文件中做出修改就好：</p><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">theme:</span> <span class="string">next</span></span><br></pre></td></tr></table></figure><p>这个时候你可以在命令行界面中，在网站项目的<strong>根目录</strong>下执行<code>hexo c</code>-&gt;<code>hexo g</code>-&gt;<code>hexo s</code>，浏览器地址栏<code>localhost:4000</code>查看启用主题后的网站了。</p><p>hexo 的配置文件用来配置你网页中最基本的信息，比如名称、链接、部署方式等这些<strong>与主题无关</strong>的选项，而下面介绍的 next 的配置文件，则是配置你网页的外观、功能的主要位置。</p><p>首先，我们需要利用命令行，创建我们的主题配置文件，这份文件将会被放在项目根目录中：</p><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cp node_modules/hexo-theme-next/_config.yml _config.next.yml</span><br></pre></td></tr></table></figure><p>之后我们就可以在<code>_config.next.yml</code>文件中进行各种好玩的配置，它们最终都会覆盖默认的配置并生效。你可以随时<code>hexo c</code>-&gt;<code>g</code>-&gt;<code>s</code>-&gt;<code>localhost</code>查看，并<code>ctrl+c</code>结束预览。<code>hexo c</code>和<code>hexo g</code>并不总是必要的，但当效果不同于你的预想的时候，你总是可以且应该先清除缓存，并重新生成。</p><h4 id="下一步的配置"><a href="#下一步的配置" class="headerlink" title="下一步的配置"></a>下一步的配置</h4><p>后续的自定义其实很丰富了。但有必要再强调一下：</p><ul><li>当你想要自定义<strong>不</strong>依赖于主题的选项时，如：<ul><li>创建新的页面——例如<code>about</code>用来展示自己，<code>links</code>用来放你和你的朋友们，<code>tags</code>来展示文章标签——应该去看的是<a href="https://hexo.io/zh-cn/docs/commands">hexo 的文档</a>，<a href="https://theme-next.js.org/docs/theme-settings/custom-pages">next 的相关文档</a>可以作为更全面的支持。</li><li>创建新的文章或制定文章的 scaffold，查看<a href="https://hexo.io/zh-cn/docs/writing">hexo 的文档</a>。</li><li>配置网站的标题、描述、作者名、网址等等这些不依赖于任何主题的选项时，查看<a href="https://hexo.io/zh-cn/docs/configuration">hexo 的文档</a>。</li></ul></li><li>当你想要自定义依赖于主题的选项时，你应该看的是<a href="https://theme-next.js.org/docs/theme-settings/">next 的文档</a>，除了这个超链接，官网中还提供了其他的板块来供游玩，请自行游玩。</li><li>总之，你应该在 hexo 的文档和 next 的文档之间做出区分。与主题无关的，在<code>_config.yml</code>里配置或在命令行中执行以<code>hexo</code>开头的命令；与主题有关的，则在<code>_config.next.yml</code>中配置。<strong>勤查文档，查对文档</strong>。</li><li>可以自行谷歌其他人写的 hexo next 主题美化博客。这里就不赘述了。对于用户来讲，配置在技术上没有什么难度，就是一些选择题。</li><li>当然，你也可以直接借鉴别人的配置文件进行美化，比如<a href="https://github.com/spectrumzero/my_site/blob/main/_config.next.yml">我的</a>。</li></ul><h3 id="部署上线"><a href="#部署上线" class="headerlink" title="部署上线"></a>部署上线</h3><p>目前，我们的网站只能通过本地预览的方式，被我们自己看到。下一步我们就让它上线，成为整个互联网的一份子。</p><h4 id="在-github-上创建一个公有仓库"><a href="#在-github-上创建一个公有仓库" class="headerlink" title="在 github 上创建一个公有仓库"></a>在 github 上创建一个公有仓库</h4><p>当然，在你创建仓库之前，你需要登陆或注册一个 github 账号。</p><p>登陆之后，你有两个选项：</p><ol><li>创建一个名字为<code>github.username.io</code>的特殊仓库，它表示你在 github pages 上的个人主页，或根地址。如果创建这个仓库，那么之后你的网站的域名就是<code>github.username.io</code>。</li><li>创建一个名字为任意的仓库，例如<code>site</code>。如果这样创建，那么之后你的网站的域名就是<code>github.username.io/site/</code>，会比较长。</li></ol><p>有的人可以接受<code>github.username.io</code>这个域名，但有的人想要实现域名的自定义。如果是后者，那么其实选项一和选项二都无所谓，甚至选项二更好，因为它没有占用唯一的特殊名字，就像一个普通的仓库。我想要自定义域名，所以选择了选项二。对于不想要自定义域名的读者，选择选项一就好了，选项二相对于选项一只是多了一个自定义域名的步骤，不影响接下来的配置。</p><p><strong>但是请注意，如果你打算自定义域名，那么我建议选择选项二。因为之后自定义域名的步骤是基于我自身“<code>github.username.io/site</code>这个域名太长了”这个痛点牵引出来的，所以可以保证从选项二到自定义域名的过渡会相当顺利。当然，如果你选择了选项一，之后又想自定义域名，我觉得也没有任何问题，只是我自己没有经历过这个过程，所以不能保证不会出现非预期后果，但我个人觉得，其实后续的操作都是共通的</strong>。</p><p>怎么创建 github 仓库请自行 ai。注意都要是<strong>public</strong>的。</p><h4 id="指定部署方式"><a href="#指定部署方式" class="headerlink" title="指定部署方式"></a>指定部署方式</h4><p>我们使用 git 来完成部署。前面已经安装了 git，但是如果想要畅快使用 git，建议再做两件事：</p><ol><li><em>全局</em>配置 git 的用户名和邮箱，这是必须完成的初始化操作。</li><li>设置 github 的公钥，让自己有推送权限，如果没有设置，将来 push 的时候会提醒你设置。</li></ol><p>这二者麻烦自行 ai。然后我们查看<a href="https://hexo.io/zh-cn/docs/one-command-deployment">hexo 文档</a>，继续下一步。</p><p>在<code>_config.yml</code>中配置部署方式。指定部署的类型，刚刚在 github 上新建的远程仓库的名称，以及远程 repo 的分支。这里以我的仓库为例，建议使用 ssh 来指定仓库，避免网络问题（下面的 repo 项好像被阻挡了不能正常显示，完整的应为<code>git@github.com:spectrumzero/my_site.git</code>）：</p><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">&quot;git&quot;</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:spectrumzero/my_site.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">gh-pages</span></span><br></pre></td></tr></table></figure><p><img data-src="/2025/06/24/build-site/1.png"></p><p><em>注意，之所以将分支设置为<code>gh-pages</code>，是为了将整个项目的源代码和经过生成部署后的产物分开，以便更好地管理我的整个网站项目。在部署的时候，部署产物（Build Output）将会被推送到<code>gh-pages</code>分支，在此之后，自己则可以选择是否要将源代码推送到 main 分支。</em></p><p>最后在同一个文件中指定网站的<code>url</code>即可，比如对于选项一：</p><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="string">https://spectrumzero.github.io/</span></span><br></pre></td></tr></table></figure><p>对于选项二：</p><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="string">https://spectrumzero.github.io/my_site</span></span><br></pre></td></tr></table></figure><h4 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h4><p>进入你的项目的根目录，利用命令行安装部署插件：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure><p>这样我们就可以使用 git 进行部署了，同样在根目录下，<code>hexo c</code>-&gt;<code>hexo g</code>，可以选择要不要<code>hexo s</code>预览效果，然后直接：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure><p>然后去远程 repo 中查看：</p><p><img data-src="/2025/06/24/build-site/2.png"></p><p>当<code>github-pages</code>旁边的图标变成绿色的，我们就完成了部署，可以直接通过域名访问更新后的网站了，在地址栏输入<code>github.username.io</code>或<code>github.username.io/sitename</code>即可。</p><h3 id="自定义域名"><a href="#自定义域名" class="headerlink" title="自定义域名"></a>自定义域名</h3><p>如果想要获得更加个性化的域名，那么请阅读这一节。</p><h4 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h4><p>有很多地方可以买到域名。我个人比较推荐的是<a href="https://porkbun.com/">porkbun</a>，因为你可以看到下一年续费需要多少钱，这个方面是比较透明的。而且也比其他商家比如 Namecheap 便宜，当然，也没有备案的说法。还有，如果你办理了<a href="https://education.github.com/pack">GitHub Student Developer Pack</a>，那么 Namecheap 好像可以免费提供域名<a href="https://education.github.com/experiences/virtual_event_kit">^2</a>（可惜我当时没有看到）。porkbun 支持 alipay，其他的商家可能不支持，但即便不支持，你或许也可以谷歌一下 wildcard。</p><p>下面以猪肉包举例：</p><ol><li>注册并登陆，进入这个页面，然后搜索你想要的域名<br><img data-src="/2025/06/24/build-site/3.png"></li><li>之后就会探出很多不同后缀的域名，选择喜欢的，购买结账就可以了。</li><li>购买成功之后，你的域名就会在首页的下方展示，点击<code>details</code>，并关注<code>NAMESERVERS</code>选项，因为后面会用到：<br><img data-src="/2025/06/24/build-site/4.png"></li></ol><h4 id="添加自定义域名文件-CNAME"><a href="#添加自定义域名文件-CNAME" class="headerlink" title="添加自定义域名文件 CNAME"></a>添加自定义域名文件 CNAME</h4><p>在项目的<strong>根目录下的<code>source/</code>文件夹中</strong>，创建<code>CNAME</code>文件，没有后缀，全部大写，然后在文件夹中写入我们购买的域名，比如我的：</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">www.spectrumzero.me</span><br></pre></td></tr></table></figure><p>这一步是告诉 github pages，我们的项目最终会绑定哪个域名。</p><h4 id="设置-github-pages"><a href="#设置-github-pages" class="headerlink" title="设置 github pages"></a>设置 github pages</h4><p>如下图所示，点到指定的区域，重点关注红框区域中的内容，<code>Source</code>中选择<code>Deploy from a branch</code>，然后在<code>Branch</code>中选择我们之前在<code>_config.yml</code>的<code>deploy</code>部分所指定的分支，以及<code>/root</code>目录：<br><img data-src="/2025/06/24/build-site/5.png"></p><h4 id="设置域名-DNS-解析"><a href="#设置域名-DNS-解析" class="headerlink" title="设置域名 DNS 解析"></a>设置域名 DNS 解析</h4><p>我们使用<a href="https://www.cloudflare.com/zh-cn/">Cloudflare</a>来完成最终的域名解析。</p><h5 id="登陆-Cloudflare-并获取新的域名服务器地址"><a href="#登陆-Cloudflare-并获取新的域名服务器地址" class="headerlink" title="登陆 Cloudflare 并获取新的域名服务器地址"></a>登陆 Cloudflare 并获取新的域名服务器地址</h5><p>一般如果是新用户，就会有新手引导界面，跟随引导界面即可。如果没有，可以如图点击：</p><p><img data-src="/2025/06/24/build-site/6.png"></p><p><img data-src="/2025/06/24/build-site/7.png"></p><p><img data-src="/2025/06/24/build-site/8.png"></p><p><img data-src="/2025/06/24/build-site/9.png"></p><p><img data-src="/2025/06/24/build-site/10.png"></p><p><img data-src="/2025/06/24/build-site/11.png"></p><p>在最终的界面中，这两个就是我们需要的域名服务器的地址，把它们复制下来。<br><img data-src="/2025/06/24/build-site/12.png"></p><h5 id="更改-porkbun-中默认的域名服务器地址"><a href="#更改-porkbun-中默认的域名服务器地址" class="headerlink" title="更改 porkbun 中默认的域名服务器地址"></a>更改 porkbun 中默认的域名服务器地址</h5><p>回到猪肉包中，改变<code>NAMESERVERS</code>中的内容即可。先清空，再把上面的两个地址一个一个粘贴进去，提交后就是下面的样子。<br><img data-src="/2025/06/24/build-site/13.png"></p><p>之后再回到 cloudflare 的界面，检查一下域名服务器：<br><img data-src="/2025/06/24/build-site/14.png"></p><p>这个过程一般会在 10 分钟之内完成。当这里变为“Active”的时候，我们就可以进行最后一步了。<br><img data-src="/2025/06/24/build-site/15.png"></p><p>最后一步也很简单，点进我的截图所指的位置：<br><img data-src="/2025/06/24/build-site/16.png"></p><p>你一共需要在弹出框中填写两次列表，我还是以我的为例：<br><img data-src="/2025/06/24/build-site/17.png"></p><p>第一次：<code>CNAME</code>-&gt;<code>www</code>-&gt;<code>spectrumzero.github.io</code>-&gt;<code>proxied</code>-&gt;<code>Auto</code><br>第二次：<code>CNAME</code>-&gt;<code>@</code>-&gt;<code>spectrumzero.github.io</code>-&gt;<code>proxied</code>-&gt;<code>Auto</code></p><p>第二次是为了方便别人可以直接通过<code>spectrumzero.me</code>来访问我的网站，而不必输入<code>www.spectrumzero.me</code>。</p><p><em>请注意，这里的<code>Target</code>应该是 github pages 的根域名，后面没有路径</em>。</p><p>最后记得保存即可，效果：<br><img data-src="/2025/06/24/build-site/18.png"></p><p>然后回到<code>_config.yml</code>文件中，将<code>url</code>一行换成你最终自定义的域名即可，如：</p><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="string">https://www.spectrumzero.me</span></span><br></pre></td></tr></table></figure><p>之后，在项目的根目录执行<code>hexo c</code>-&gt;<code>hexo g</code>-&gt;<code>hexo d</code>，你的项目就会部署到指定的域名上了。第一次部署的时间可能会稍微会长一点，耐心等待即可。稍后即可以你喜欢的域名访问你的网站了。</p><h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>现在我们可以通过<code>github.username.io</code>，或者是自定义的域名来访问我们的网站了。这也是我的这个网站诞生的过程。网站只是一种呈现的方式，而在哪里记录则有十分丰富的选择。所以写作的流程不一定是<code>hexo new &quot;Hello World&quot;</code>，然后就很规矩地在这个网站项目的本地文件夹中写。我更喜欢的方式是，先在专门的 Obsidian Vault 中写好，然后再把文字复制到那个新的博客 markdown 中，把图片放到对应的文件夹里。这样就最大程度地避免因为呈现的繁琐而不愿意呈现。某种程度上，”<em>Learn in public</em>“确实很有道理。</p><p><em>提示：为了方便管理图片，很推荐一篇文章一个文件夹的做法，可以参看这个<a href="https://chrismroberts.com/2020/01/06/using-markdown-in-hexo-to-add-images/">链接</a>。以及对于那些非文章的图片，也就是可能用来配置网站的图片，建议放在根目录下的<code>source/images</code>文件夹下。这一点也可以参照<a href="https://hexo.io/zh-cn/docs/asset-folders">hexo 官方文档</a></em>。</p><p>现在，远程仓库只有一个分支，也就是<code>gh-pages</code>分支。这个分支是由源代码构建的产物。你可以选择将你的源代码推送到远程仓库的<strong>另外一个分支</strong>，以便实现更好的管理。需要先在网站根目录中执行<code>git init .</code>来将整个项目纳入 git 的追踪，之后的步骤则请自行 ai。</p><p>最后，如果需要的话，你也可以参考我的<a href="https://github.com/spectrumzero/my_site/tree/main">源代码分支</a>。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> tips </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>hello world</title>
+      <link href="/2025/06/20/hello-world/"/>
+      <url>/2025/06/20/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>基于hexo博客框架，使用NexT Gemini主题。打造独特书写体验。</p><p>放一些整理得比较系统的笔记上来。在此之前，让我测试一下渲染功能吧。</p><h1 id="文本格式支持"><a href="#文本格式支持" class="headerlink" title="文本格式支持"></a>文本格式支持</h1><p>Words in regular format.<br><em>斜体字</em>。<br><strong>还有加粗的标记。</strong><br><em><strong>很少用到的加粗斜体。</strong></em><br><strong>还有加粗的标记。</strong><br><em>斜体字</em>。<br>Words in regular format.</p><h1 id="代码格式支持"><a href="#代码格式支持" class="headerlink" title="代码格式支持"></a>代码格式支持</h1><h2 id="java格式"><a href="#java格式" class="headerlink" title="java格式"></a>java格式</h2><p>在下面定义一个<code>java</code>类：</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorld</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 这是程序的入口点，main 方法。</span></span><br><span class="line"><span class="comment">     * 当你运行这个程序时，JVM (Java 虚拟机) 会从这里开始执行。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> args 命令行参数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 使用 System.out.println() 方法将文本打印到控制台</span></span><br><span class="line">        <span class="comment">// println 会在打印后自动换行</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Hello, World!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="其它格式"><a href="#其它格式" class="headerlink" title="其它格式"></a>其它格式</h2><ul><li>python</li></ul><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用内置的 print() 函数来向控制台输出文本</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Hello, World!&quot;</span>)</span><br></pre></td></tr></table></figure><ul><li>cpp</li></ul><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 引入输入输出流库，cout 就在这里定义</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// main 函数是 C++ 程序的入口点</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// std::cout 用于向标准输出（通常是控制台）发送数据</span></span><br><span class="line">    <span class="comment">// &lt;&lt; 是流插入运算符</span></span><br><span class="line">    <span class="comment">// std::endl 用于输出一个换行符并刷新输出缓冲区</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Hello, World!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 返回 0 表示程序成功执行完毕</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>javascript</li></ul><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 使用 console.log() 方法将信息打印到控制台</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello, World!&quot;</span>);</span><br></pre></td></tr></table></figure><h1 id="图片和链接支持"><a href="#图片和链接支持" class="headerlink" title="图片和链接支持"></a>图片和链接支持</h1><p>现在来测试图片。确保使用的是<code>post_asset_folder</code>，这样会节约从obsidian迁移文档到<code>_post</code>文件夹中的时间。可以参考这个<a href="https://chrismroberts.com/2020/01/06/using-markdown-in-hexo-to-add-images/">链接</a>。</p><p>下面是一张图片，推上找的。因为今天下雨了。</p><p><img data-src="/2025/06/20/hello-world/1.png"></p><h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1><p>嗯，好了。可以慢慢往上面搬东西。评论和目录功能也良好。i18n和l10n以后再做吧。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> test </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
 </search>

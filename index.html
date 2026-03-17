@@ -251,9 +251,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2026-03-04 20:02:07 / Modified: 20:02:31" itemprop="dateCreated datePublished" datetime="2026-03-04T20:02:07+08:00">2026-03-04</time>
+      <time title="Created: 2026-03-04 20:02:07" itemprop="dateCreated datePublished" datetime="2026-03-04T20:02:07+08:00">2026-03-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-03-17 14:09:19" itemprop="dateModified" datetime="2026-03-17T14:09:19+08:00">2026-03-17</time>
     </span>
 
   
@@ -262,7 +268,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Word count in article: </span>
-      <span>241</span>
+      <span>379</span>
     </span>
 </div>
 
@@ -273,7 +279,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><code>systemctl</code> 是 Linux 操作系统中用于<strong>管理系统和服务</strong>的核心命令行工具。它是 <strong>systemd</strong>（现代 Linux 发行版的初始化系统和服务管理器）的主要界面，取代了旧版本中的 <code>service</code> 和 <code>chkconfig</code> 命令。主要用途有：</p>
+          <p><code>systemctl</code> 是 Linux 操作系统中用于<strong>管理系统和服务</strong>的核心命令行工具。它是 <strong>systemd</strong>（现代 Linux 发行版的初始化系统和服务管理器）的客户端，取代了旧版本中的 <code>service</code> 和 <code>chkconfig</code> 命令。主要用途有：</p>
 <ul>
 <li><strong>服务状态管理</strong>：启动 (<code>start</code>)、停止 (<code>stop</code>)、重启 (<code>restart</code>) 或重新加载 (<code>reload</code>) 系统服务（如 Apache、MySQL、Docker 等）。</li>
 <li><strong>开机自启控制</strong>：设置服务在系统引导时自动启动 (<code>enable</code>) 或取消自动启动 (<code>disable</code>)。</li>
@@ -281,6 +287,7 @@
 <li><strong>系统电源管理</strong>：执行系统级别的操作，如重启 (<code>reboot</code>)、关机 (<code>poweroff</code>)、挂起 (<code>suspend</code>) 或切换运行级别（如进入救援模式）。</li>
 <li><strong>单元 (Unit) 管理</strong>：不仅可以管理服务 (<code>.service</code>)，还能管理挂载点 (<code>.mount</code>)、套接字 (<code>.socket</code>) 和定时任务 (<code>.timer</code>) 等系统资源。</li>
 </ul>
+<p>服务可以理解为进程的后台托管模式，将进程交给 <code>systemd</code> 托管。比如，如果你手动执行 <code>redis-server</code> 命令，它是以<strong>你的用户身份</strong>运行的。而通过 <code>systemctl</code> 启动它，则会启动一个后台的 redis 服务，并通常会配置为以<strong>专门的、权限受限的系统账号</strong>（比如 redis 用户）运行，这符合“最小权限原则”，是服务器安全的关键。对于服务，可以通过查看 .service 文本文件来获得用户、组、配置等信息。</p>
 
       
     </div>
@@ -335,9 +342,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2026-03-04 18:07:18 / Modified: 19:42:43" itemprop="dateCreated datePublished" datetime="2026-03-04T18:07:18+08:00">2026-03-04</time>
+      <time title="Created: 2026-03-04 18:07:18" itemprop="dateCreated datePublished" datetime="2026-03-04T18:07:18+08:00">2026-03-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-03-17 14:10:17" itemprop="dateModified" datetime="2026-03-17T14:10:17+08:00">2026-03-17</time>
     </span>
 
   
@@ -378,7 +391,7 @@
 <ul>
 <li><strong><code>docker run</code></strong>: Docker 的核心命令，用于<strong>新建并运行</strong>一个容器。</li>
 <li><strong><code>--name mysql8-canal</code></strong>: 给容器指定一个自定义名称（<code>mysql8-canal</code>），方便后续通过名字进行管理，而不是使用随机生成的字符串 ID。</li>
-<li><strong><code>-p 3306:3306</code></strong>: 端口映射。格式为 <code>宿主机端口:容器内端口</code>。这里将宿主机（我的 linux）的 3306 端口映射到容器的 3306 端口，这样就很方便，发送到宿主机的 IP 的请求，经过 Docker 代理转发，从而访问到容器中的 mysqld（它默认监听容器的 3306 端口）。注意需要显式指定 IP 地址，如 <code>mysql -h 127.0.0.1 -u root -p</code>，强制走 TCP 连接而不是 Socket 连接。</li>
+<li><strong><code>-p 3306:3306</code></strong>: 端口暴露（publish）。格式为 <code>宿主机端口:容器内端口</code>。这里将容器的 3306 端口暴露给宿主机（我的 linux）的 3306 端口，这样就很方便，发送到宿主机的 IP 的请求，经过 Docker 代理转发，从而到达容器中的 3306 端口，访问到监听该端口的 mysqld 服务。注意需要显式指定 IP 地址，如 <code>mysql -h 127.0.0.1 -u root -p</code>，强制走 TCP 连接而不是 Socket 连接。</li>
 <li><strong><code>-v ~/mysql_data:/var/lib/mysql</code></strong>: 数据卷挂载（持久化）。将宿主机的 <code>~/mysql_data</code> 目录映射到容器内的数据库存储目录。这样即使容器被删除，数据库中的数据也不会丢失。</li>
 <li><strong><code>-e MYSQL_ROOT_PASSWORD=root</code></strong>: 设置环境变量。此处指定了 Docker 中的 MySQL实例的 <code>root</code> 用户的初始登录密码为 <code>root</code>，可以自行修改，也不要求和原本地上的 MySQL 实例一致，因为它们其实是独立的两个实例。</li>
 <li><strong><code>-d</code></strong>: 后台运行模式（Detached mode）。让容器在后台执行，不占用当前的终端窗口。</li>
