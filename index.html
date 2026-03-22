@@ -223,6 +223,157 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2026/03/22/git-commit-convention/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avt.jpg">
+      <meta itemprop="name" content="spectrumzero">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="spectrumzero's blog">
+      <meta itemprop="description" content="Write for better code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | spectrumzero's blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/03/22/git-commit-convention/" class="post-title-link" itemprop="url">git commit 规范</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-03-22 18:18:07 / Modified: 18:29:31" itemprop="dateCreated datePublished" datetime="2026-03-22T18:18:07+08:00">2026-03-22</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>367</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>以下是 Conventional Commits 中最常用的一些类型，它们大多源自 <a target="_blank" rel="noopener" href="https://www.google.com/url?sa=E&q=https://github.com/angular/angular/blob/main/CONTRIBUTING.md%23commit">Angular 团队的提交规范</a>：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>类型 (Type)</td>
+<td>含义 (Meaning)</td>
+<td>示例</td>
+</tr>
+<tr>
+<td><strong>feat</strong></td>
+<td><strong>新功能</strong> (feature)</td>
+<td>feat: allow users to upload avatars</td>
+</tr>
+<tr>
+<td><strong>fix</strong></td>
+<td><strong>修复 Bug</strong> (bug fix)</td>
+<td>fix: prevent memory leak when closing modal</td>
+</tr>
+<tr>
+<td><strong>docs</strong></td>
+<td><strong>文档</strong> (documentation) 的变更</td>
+<td>docs: update installation guide</td>
+</tr>
+<tr>
+<td><strong>style</strong></td>
+<td><strong>代码格式</strong>的变更 (不影响代码运行的变动，如空格、分号)</td>
+<td>style: format code with Prettier</td>
+</tr>
+<tr>
+<td><strong>refactor</strong></td>
+<td><strong>代码重构</strong> (既不是新增功能，也不是修复 bug 的代码变动)</td>
+<td>refactor: simplify user authentication logic</td>
+</tr>
+<tr>
+<td><strong>perf</strong></td>
+<td><strong>性能优化</strong> (performance) 的代码更改</td>
+<td>perf: improve image loading speed by using lazy loading</td>
+</tr>
+<tr>
+<td><strong>test</strong></td>
+<td><strong>增加或修改测试</strong></td>
+<td>test: add unit tests for user service</td>
+</tr>
+<tr>
+<td><strong>build</strong></td>
+<td>影响<strong>构建系统或外部依赖</strong>的更改 (如 gulp, broccoli, npm)</td>
+<td>build: update webpack to version 5</td>
+</tr>
+<tr>
+<td><strong>ci</strong></td>
+<td>影响<strong>CI 配置文件和脚本</strong>的更改 (如 Travis, Circle, GH Actions)</td>
+<td>ci: fix deployment script for production environment</td>
+</tr>
+<tr>
+<td><strong>chore</strong></td>
+<td><strong>其他不修改 src 或 test 文件的更改</strong> (如上所述)</td>
+<td>chore: add .editorconfig</td>
+</tr>
+<tr>
+<td><strong>revert</strong></td>
+<td><strong>回退</strong>之前的提交</td>
+<td>revert: feat: add ‘remember me’ checkbox (后面跟要回退的提交)</td>
+</tr>
+</tbody></table>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">&lt;type&gt;(&lt;scope&gt;): &lt;short summary&gt;</span><br><span class="line">  │       │             │</span><br><span class="line">  │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.</span><br><span class="line">  │       │</span><br><span class="line">  │       └─⫸ Commit Scope: animations|bazel|benchpress|common|compiler|compiler-cli|core|</span><br><span class="line">  │                          elements|forms|http|language-service|localize|platform-browser|</span><br><span class="line">  │                          platform-browser-dynamic|platform-server|router|service-worker|</span><br><span class="line">  │                          upgrade|zone.js|packaging|changelog|docs-infra|migrations|</span><br><span class="line">  │                          devtools</span><br><span class="line">  │</span><br><span class="line">  └─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|test</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：如果一次提交引入了不兼容的 API 变更，需要在类型&#x2F;范围后面用 ! 标记，表示破坏性变更 (BREAKING CHANGE)。这对于版本管理至关重要。</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2026/03/04/about-systemctl/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1246,130 +1397,6 @@
 <li><a target="_blank" rel="noopener" href="https://javaguide.cn/">Java Guide</a></li>
 <li>《Java 核心技术 卷 1 开发基础（原书第十二版）》</li>
 </ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.spectrumzero.me/2025/10/10/inheritance-and-interface/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avt.jpg">
-      <meta itemprop="name" content="spectrumzero">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="spectrumzero's blog">
-      <meta itemprop="description" content="Write for better code.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | spectrumzero's blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/10/10/inheritance-and-interface/" class="post-title-link" itemprop="url">继承与接口的比较</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-10-10 17:11:55" itemprop="dateCreated datePublished" datetime="2025-10-10T17:11:55+08:00">2025-10-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-02-10 13:47:57" itemprop="dateModified" datetime="2026-02-10T13:47:57+08:00">2026-02-10</time>
-    </span>
-
-  
-    <span class="post-meta-item" title="Word count in article">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">Word count in article: </span>
-      <span>1.6k</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><ol>
-<li><strong>核心关系：</strong> “is-a”（是一种）关系。子类是父类的一种更具体的类型（例如：Car is-a Vehicle）。</li>
-<li><strong>实现方式：</strong>  使用  extends  关键字来声明继承关系，例如  class Child extends Parent。</li>
-<li><strong>继承内容：</strong>  子类自动继承父类所有非  private  的成员变量和成员方法，可以直接使用。</li>
-<li><strong>不继承内容：</strong>  构造方法和被  private  修饰的成员不能被子类直接继承或访问。</li>
-<li><strong>构造方法规则：</strong>  子类的构造方法第一行必须调用父类的构造方法或本类的另一个构造方法 this(…)。如果未显式使用  super(…)  调用，编译器会自动添加一个无参的  super()。如果父类没有无参构造方法，子类必须在其所有构造方法中显式调用父类的有参构造方法。</li>
-<li><strong>方法重写 (Overriding)：</strong>  子类可以提供一个与父类方法签名（方法名、参数列表）完全相同的新实现来覆盖父类的行为。建议使用  @Override  注解进行标记。</li>
-<li><strong>重写规则：</strong>  重写的方法访问权限不能比父类更严格，返回类型必须相同或者是父类返回类型的子类。</li>
-<li><strong>成员变量隐藏 (Hiding)：</strong>  成员变量只能被隐藏，不能被重写。当子类定义了与父类同名的变量时，具体访问哪个变量取决于<strong>引用的类型</strong>，而不是对象的实际类型。</li>
-<li><strong>super  关键字：</strong>  在子类中，使用  super.成员   来访问父类中被隐藏的变量或被重写的方法；使用  super()  来调用父类的构造方法。</li>
-<li><strong>多态 (Polymorphism)：</strong>  父类的引用可以指向子类的对象（Parent p &#x3D; new Child();），这被称为向上转型。</li>
-<li><strong>多态表现：</strong>  当通过父类引用调用一个被重写的方法时，实际执行的是子类中的方法版本。</li>
-<li><strong>向下转型 (Downcasting)：</strong>  将父类引用强制转换回子类引用（Child c &#x3D; (Child) p;），这存在  ClassCastException  的风险。</li>
-<li><strong>instanceof  关键字：</strong>  在进行向下转型之前，应使用  instanceof  关键字检查引用的实际对象类型，以确保类型安全，避免异常。</li>
-<li><strong>final  关键字：</strong>  被  final  修饰的类不能被继承；被  final  修饰的方法不能被子类重写。</li>
-<li><strong>单继承原则：</strong> Java 只支持单继承，即一个类最多只能有一个直接父类，但可以通过实现多个接口来弥补。</li>
-</ol>
-<h2 id="抽象父类的继承"><a href="#抽象父类的继承" class="headerlink" title="抽象父类的继承"></a>抽象父类的继承</h2><ol>
-<li><strong>核心关系：</strong>  既是 “is-a” 关系，又是一种<strong>不完整</strong>的设计模板。它代表一个抽象的概念，其本身不能被完整地实现。</li>
-<li><strong>声明方式：</strong>  类本身必须使用  abstract  关键字声明。类中可以包含抽象方法，也必须用  abstract  声明且没有方法体。</li>
-<li><strong>不可实例化：</strong>  不能使用  new  关键字直接创建抽象类的实例，因为它是不完整的。</li>
-<li><strong>成员构成：</strong>  抽象类是普通类和接口的混合体，它可以包含<strong>成员变量、常量、构造方法、具体方法</strong>和<strong>抽象方法</strong>。</li>
-<li><strong>强制规则：</strong>  任何包含一个或多个抽象方法的类，<strong>必须</strong>被声明为抽象类。但抽象类可以不包含任何抽象方法。</li>
-<li><strong>子类责任：</strong>  继承抽象类的具体子类<strong>必须</strong>实现（重写）父类中所有的抽象方法。如果子类不想全部实现，那么该子类也必须被声明为抽象类。</li>
-<li><strong>构造方法用途：</strong>  抽象类可以有构造方法，其唯一目的是为了被子类的构造方法通过  super()  调用，以初始化从父类继承来的成员变量。</li>
-<li><strong>核心用途：</strong>  完美地结合了<strong>代码复用</strong>和<strong>行为规范</strong>。它为所有子类提供公共的状态和行为（通过成员变量和具体方法），同时强制它们必须实现某些特定的行为（通过抽象方法）。</li>
-</ol>
-<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><ol>
-<li><strong>核心关系：</strong> “can-do”（能做什么）或行为契约。接口定义了一组类必须遵守的规范或能力，强调“能做什么”，而不是“是什么”。</li>
-<li><strong>实现方式：</strong>  使用  implements  关键字来实现一个或多个接口，例如  class MyClass implements MyInterface。</li>
-<li><strong>多实现：</strong>  一个类可以同时实现多个接口，从而获得多种不同的能力。这是 Java 实现“类多重继承”效果的方式。</li>
-<li><strong>实现承诺：</strong>  实现类必须为接口中所有的抽象方法提供具体实现（方法体）。如果未能全部实现，该类必须被声明为抽象类 (abstract class)。</li>
-<li><strong>抽象方法：</strong>  接口中的方法默认是  public abstract  的，没有方法体。实现类在重写时必须使用  public  访问修饰符。</li>
-<li><strong>常量：</strong>  接口中声明的任何变量都默认是  public static final  的，即全局常量，必须在声明时初始化。</li>
-<li><strong>默认方法 (Default Methods - Java 8+)：</strong>  使用  default  关键字，接口可以提供方法的默认实现。实现类可以选择直接继承使用，也可以重写它。</li>
-<li><strong>静态方法 (Static Methods - Java 8+)：</strong>  接口可以包含  static  方法。这些方法只能通过   接口名.方法名()  的方式调用，不能被实现类继承或重写。</li>
-<li><strong>多态应用：</strong>  接口引用可以指向其任何实现类的对象（MyInterface ref &#x3D; new MyClass();），这是实现多态和程序解耦的关键。</li>
-<li><strong>不可实例化：</strong>  接口不能被直接实例化（不能使用  new  关键字创建接口自身的实例）。</li>
-<li><strong>接口间的继承：</strong>  一个接口可以使用  extends  关键字继承一个或多个其他接口，从而<strong>将父接口的所有成员合并到自身</strong>。</li>
-<li><strong>默认方法冲突：</strong>  如果一个类实现的多个接口中包含签名相同的默认方法，该类必须重写此方法以解决冲突。</li>
-<li><strong>无状态与构造方法：</strong>  接口没有成员变量（只有常量）和构造方法。它只定义行为，不关心状态的存储。</li>
-</ol>
 
       
     </div>
